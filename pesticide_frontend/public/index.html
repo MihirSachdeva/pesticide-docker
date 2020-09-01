@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="The ultimate project-management and bug-tracking app."
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <title>Pesticide</title>
+    <script
+      src="https://cdn.tiny.cloud/1/70hrav5zmnbwb38il76o11o83c3zn8d9cnert345fyla6khs/tinymce/5/tinymce.min.js"
+      referrerpolicy="origin"
+    ></script>
+    <script>
+      const theme = localStorage.getItem("theme");
+      const themeColors = {
+        default: "#ffffff",
+        dark: "#282828",
+        palpatine: "#1a1a1a",
+        solarizedLight: "#fdf7dd",
+        solarizedDark: "#0e2b36",
+      };
+      const themeColor = themeColors[theme] || "#ffffff";
+      document
+        .querySelector('meta[name="theme-color"]')
+        .setAttribute("content", themeColor);
+    </script>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

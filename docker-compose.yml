@@ -1,0 +1,59 @@
+version: "3.2"
+services:
+  redis:
+    restart: always
+    image: redis:5
+    ports:
+      - "6379:6379"
+    networks:
+      - db-net
+
+  db:
+    restart: always
+    image: mysql:5.7
+    environment:
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=pesticide_docker
+      - MYSQL_USER=test_user
+      - MYSQL_PASSWORD=test_user_password
+      - MYSQL_ROOT_PASSWORD=2972
+    ports:
+      - "3302:3306"
+    networks:
+      - db-net
+
+  backend:
+    restart: always
+    container_name: pesticide_backend
+    command: bash -c "cd ./src && python check_db.py --service-name db --ip db --port 3306 && python manage.py makemigrations pesticide_app && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - ./pesticide_backend/src/config/settings.ini
+    build:
+      context: ./pesticide_backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - db-net
+
+  frontend:
+    restart: always
+    command: npm start
+    container_name: pesticide_frontend
+    build:
+      context: ./pesticide_frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - backend
+    networks:
+      - db-net
+
+networks:
+  db-net:
+    driver: bridge
