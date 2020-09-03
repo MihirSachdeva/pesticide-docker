@@ -16,6 +16,7 @@ import ArrowDownwardRoundedIcon from "@material-ui/icons/ArrowDownwardRounded";
 import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
+import { Editor } from "@tinymce/tinymce-react";
 import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
@@ -235,11 +236,10 @@ const Issue = (props) => {
     }
   };
 
-  const handleNewComment = (event) => {
-    const text = event.target.value;
+  const handleNewComment = (content, editor) => {
     setNewComment((prevNewCommentState) => ({
       ...prevNewCommentState,
-      text: text,
+      text: content,
     }));
   };
 
@@ -971,7 +971,10 @@ const Issue = (props) => {
                             </Typography>
                           </Link>
                         </div>
-                        <div className="comment-content">{comment.text}</div>
+                        <div
+                          className="comment-content"
+                          dangerouslySetInnerHTML={{ __html: comment.text }}
+                        />
                         <div className="comment-bottom">
                           {isSentByCurrentUser ? (
                             <div>
@@ -1020,20 +1023,55 @@ const Issue = (props) => {
                 <form
                   onSubmit={handleCommentSubmit}
                   autoComplete="off"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  className="comment-input-form"
                 >
-                  <Input
-                    type="text"
-                    value={newComment.text}
-                    name="text"
-                    onChange={handleNewComment}
-                    placeholder="Type a comment..."
-                    className="comment-send-input"
-                  ></Input>
+                  {!props.darkTheme ? (
+                    <Editor
+                      value={newComment.text}
+                      init={{
+                        skin: "material-classic",
+                        content_css: "material-classic",
+                        placeholder: "Type a comment...",
+                        icons: "thin",
+                        height: 250,
+                        menubar: false,
+                        plugins: [
+                          "advlist autolink lists link image charmap print preview anchor",
+                          "searchreplace visualblocks code fullscreen",
+                          "insertdatetime media table paste code help wordcount table",
+                        ],
+                        toolbar: [
+                          "undo redo | formatselect | bold italic backcolor | \
+                            alignleft aligncenter alignright alignjustify | \
+                            bullist numlist outdent indent | removeformat | table | code | help",
+                        ],
+                      }}
+                      onEditorChange={handleNewComment}
+                    />
+                  ) : (
+                    <Editor
+                      value={newComment.text}
+                      init={{
+                        skin: "oxide-dark",
+                        content_css: "dark",
+                        placeholder: "Type a comment...",
+                        icons: "thin",
+                        height: 250,
+                        menubar: false,
+                        plugins: [
+                          "advlist autolink lists link image charmap print preview anchor",
+                          "searchreplace visualblocks code fullscreen",
+                          "insertdatetime media table paste code help wordcount table",
+                        ],
+                        toolbar: [
+                          "undo redo | formatselect | bold italic backcolor | \
+                            alignleft aligncenter alignright alignjustify | \
+                            bullist numlist outdent indent | removeformat | table | code | help",
+                        ],
+                      }}
+                      onEditorChange={handleNewComment}
+                    />
+                  )}
                   <Tooltip title="Send" placement="bottom">
                     <Button
                       type="submit"
@@ -1042,6 +1080,7 @@ const Issue = (props) => {
                       style={{
                         borderRadius: "4px",
                         height: "38px",
+                        margin: "10px",
                         marginLeft: "20px",
                       }}
                     >

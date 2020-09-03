@@ -1179,6 +1179,7 @@ header.MuiAppBar-positionAbsolute {
 
 .comment-sender {
   margin: 10px;
+  margin-bottom: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1198,7 +1199,7 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .comment-recieved {
-  margin-right: 25%;
+  margin-right: 10%;
   background-attachment: fixed !important;
   position: relative;
   color: #1a1a1a;
@@ -1231,7 +1232,7 @@ header.MuiAppBar-positionAbsolute {
 
 .comment-sent {
   color: white;
-  margin-left: 25%;
+  margin-left: 10%;
   background-attachment: fixed !important;
   position: relative;
   align-self: flex-end;
@@ -1273,11 +1274,26 @@ header.MuiAppBar-positionAbsolute {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 10px 7px 0;
+  margin: 10px 10px 0 0;
 }
 
 .comment-write-form {
   margin: 10px 0;
+}
+
+.comment-input-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+@media screen and (max-width: 700px) {
+  .comment-input-form {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+  }
 }
 
 .comment-send-input {
