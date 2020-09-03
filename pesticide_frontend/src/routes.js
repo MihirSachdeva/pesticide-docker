@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 import Signin from "./containers/Signin";
@@ -13,6 +13,7 @@ import UsersPage from "./containers/UsersPage";
 import UserPage from "./containers/UserPage";
 import Admin from "./containers/Admin";
 import Issue from "./containers/Issue";
+import Page404 from "./containers/404";
 
 const BaseRouter = (props) => {
   return (
@@ -28,7 +29,15 @@ const BaseRouter = (props) => {
       <Route exact path="/users/:enrollmentNumber" component={UserPage} />
       <Route exact path="/projects/:projectslug" component={ProjectPage} />
       <Route exact path="/issues/:issueId" component={Issue} />
-      <Route exact path="/issues/:issueId/comment/:commentId" component={Issue} />
+      <Route
+        exact
+        path="/issues/:issueId/comment/:commentId"
+        component={Issue}
+      />
+      <Route exact path="/404" component={Page404} />
+      <Route exact path="">
+        <Redirect to="/404" />
+      </Route>
     </Switch>
   );
 };

@@ -19,7 +19,7 @@ const Layout = (props) => {
       flexGrow: 1,
       height: "100vh",
       overflow: "auto",
-      paddingBottom: (props.isAuthenticated && isMobile) && "60px"
+      paddingBottom: props.isAuthenticated && isMobile && "60px",
     },
   }));
   const classes = useStyles();
@@ -30,13 +30,13 @@ const Layout = (props) => {
         <Header />
         <main id="main-main" className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {props.children}
+          <div id="main-content">{props.children}</div>
         </main>
         {isMobile && <BottomNav />}
       </div>
     </>
   );
-}
+};
 
 const mapStateToProps = (state) => {
   return {

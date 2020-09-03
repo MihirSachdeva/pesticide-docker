@@ -73,7 +73,7 @@ const Dashboard = (props) => {
     "'It's not a bug - it's an undocumented feature.'",
     "Let he who has a bug free software cast the first stone.",
     "Debugging : Removing Bugs :: Programming : Adding Bugs",
-    "Testing can be used to show the presence of bugs, but never to show their absence!",
+    "Testing can be used to show the presence of bugs, but never to show their absence.",
   ];
 
   const starWarsQuoteList = [
@@ -91,10 +91,7 @@ const Dashboard = (props) => {
         <div
           className="dashboard-hero-image image-shadow"
           style={{
-            backgroundImage:
-              props.theme != "palpatine"
-                ? "url(./fix.svg)"
-                : "url(./jedi_order.png",
+            backgroundImage: props.bgImage,
           }}
         ></div>
         <div className="dashboard-hero-text">
@@ -107,8 +104,8 @@ const Dashboard = (props) => {
               {props.theme != "palpatine"
                 ? bugQuoteList[Math.floor(Math.random() * bugQuoteList.length)]
                 : starWarsQuoteList[
-                Math.floor(Math.random() * starWarsQuoteList.length)
-                ]}
+                    Math.floor(Math.random() * starWarsQuoteList.length)
+                  ]}
             </Typography>
             <div className="dashboard-hero-buttons">
               <Link to="/issues">
@@ -193,6 +190,22 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.token !== null,
     theme: state.theme.theme || "default",
+    bgImage: ((theme) => {
+      switch (theme) {
+        case "default":
+          return "url(../bug/bug_light.svg)";
+        case "dark":
+          return "url(../bug/bug_dark.svg)";
+        case "solarizedLight":
+          return "url(../bug/bug_sol_light.svg)";
+        case "solarizedDark":
+          return "url(../bug/bug_sol_dark.svg)";
+        case "palpatine":
+          return "url(../bug/bug_red.svg)";
+        default:
+          return "url(../bug/bug_light.svg)";
+      }
+    })(state.theme.theme),
   };
 };
 

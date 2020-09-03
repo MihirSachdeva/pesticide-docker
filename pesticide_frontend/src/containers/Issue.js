@@ -132,7 +132,10 @@ const Issue = (props) => {
           WebSocketInstance.fetchComments(res.data.id);
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.location.href = "/404";
+      });
 
     setAlert({
       open: false,
@@ -414,7 +417,7 @@ const Issue = (props) => {
 
   return (
     <>
-      <div ref={topRef}></div>
+      <div ref={topRef} style={{ display: "none" }}></div>
 
       <UtilityComponent
         title={HEADER_NAV_TITLES.ISSUE}
@@ -444,7 +447,9 @@ const Issue = (props) => {
                       src={
                         issue.project_details.icon
                           ? api_links.ROOT + issue.project_details.icon
-                          : "../sunglasses.svg"
+                          : props.theme == "palpatine"
+                          ? "../icon/project/appicon_red.svg"
+                          : "../icon/project/appicon.svg"
                       }
                       alt="Issue Reporter"
                       style={{ borderRadius: "6px", width: "30px" }}

@@ -19,12 +19,10 @@ const SignIn = (props) => {
     root: {
       height: "91.55vh",
     },
-    image: {
-      backgroundImage: props.bgImage,
-      backgroundRepeat: "no-repeat",
-      backgroundColor: props.bgColor,
-      backgroundSize: "contain",
-      backgroundPosition: "center",
+    illustrationContainer: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
     paper: {
       marginTop: "170px",
@@ -54,8 +52,28 @@ const SignIn = (props) => {
       <UtilityComponent not title={HEADER_NAV_TITLES.SIGNIN} page="SIGNIN" />
 
       <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid
+        item
+        xs={false}
+        sm={false}
+        md={7}
+        className={classes.illustrationContainer}
+      >
+        <img
+          src={props.bgImage}
+          className={"signin-illustration"}
+          alt="Background"
+        />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        md={5}
+        component={Paper}
+        square
+        style={{ borderLeft: "1px solid #8787874d" }}
+      >
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
             <BugReportRoundedIcon style={{ fontSize: "40px" }} />
@@ -120,10 +138,11 @@ const mapStateToProps = (state) => {
           return "#ffffff";
       }
     })(state.theme.theme),
-    bgImage:
-      state.theme.theme != "palpatine"
-        ? "url(../illustrations/code_default.svg)"
-        : "url(../illustrations/code_palpatine.svg)",
+    // bgImage:
+    //   state.theme.theme != "palpatine"
+    //     ? "../illustrations/code_default.svg"
+    //     : "../illustrations/code_palpatine.svg",
+    bgImage: "../logo/logo.svg",
   };
 };
 

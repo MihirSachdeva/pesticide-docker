@@ -20,8 +20,8 @@ while True:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     result = sock.connect_ex((ip, port))
     if result == 0:
-        print("Port {0} is open. Starting Django app...".format(service_name))
+        print("\033[1mPort {0} is open. Starting Django app...\033[0m".format(service_name))
         break
     else:
-        print("Port {0} is not open, rechecking...".format(service_name))
+        print("\033[1mPort {0} is not open, rechecking...\033[0m".format(service_name))
         time.sleep(3)

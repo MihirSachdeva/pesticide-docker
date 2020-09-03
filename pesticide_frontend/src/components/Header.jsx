@@ -9,10 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import BugReportRoundedIcon from "@material-ui/icons/BugReportRounded";
 import SettingsIcon from "@material-ui/icons/Settings";
 import WidgetsRoundedIcon from "@material-ui/icons/WidgetsRounded";
@@ -25,18 +22,15 @@ import ListItemText from "@material-ui/core/ListItemText";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import PeopleIcon from "@material-ui/icons/People";
 import DefaultTooltip from "@material-ui/core/Tooltip";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import Brightness4RoundedIcon from "@material-ui/icons/Brightness4Rounded";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-
 import NewProjectWithModal from "../components/NewProjectWithModal";
 import HeaderSidePanel from "./HeaderSidePanel";
 import BackButton from "./BackButton";
 import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
 import * as api_links from "../APILinks";
-
 import axios from "axios";
 
 const drawerWidth = 240;
@@ -583,7 +577,9 @@ const Header = (props) => {
                               src={
                                 project.icon != undefined
                                   ? api_links.ROOT + project.icon
-                                  : "../appicon.png"
+                                  : props.currentTheme == "palpatine"
+                                  ? "../icon/project/appicon_red.svg"
+                                  : "../icon/project/appicon.svg"
                               }
                               style={{
                                 width: "35px",

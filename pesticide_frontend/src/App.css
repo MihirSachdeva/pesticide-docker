@@ -49,6 +49,20 @@
   scroll-behavior: smooth !important;
 }
 
+#main-content > main:first-child,
+#main-content > center:first-child,
+#main-content > div:first-child {
+  height: calc(100vh - 64px);
+}
+
+@media screen and (max-width: 600px) {
+  #main-content > main:first-child,
+  #main-content > center:first-child,
+  #main-content > div:first-child {
+    height: calc(100vh - 120px);
+  }
+}
+
 h2 {
   font-weight: 700 !important;
 }
@@ -400,6 +414,16 @@ header.MuiAppBar-positionAbsolute {
   background-color: #8787874d;
 }
 
+.signin-illustration {
+  width: 35% !important;
+}
+
+@media screen and (max-width: 960px) {
+  .signin-illustration {
+    display: none;
+  }
+}
+
 .signin-title {
   font-weight: 900 !important;
   font-size: 30px !important;
@@ -455,6 +479,7 @@ header.MuiAppBar-positionAbsolute {
   background-color: #8787874d;
   margin: 0 5px 0 10px;
   flex-grow: 100;
+  min-width: 30px;
 }
 
 .sidepanel-section-heading {
@@ -758,10 +783,10 @@ header.MuiAppBar-positionAbsolute {
   text-transform: none !important;
   padding: 10px !important;
   margin-left: 10px !important;
-  /* margin-right: 10px !important; */
   justify-content: flex-start !important;
   width: 92% !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
 }
 
 .btn-filled:hover {
@@ -773,8 +798,28 @@ header.MuiAppBar-positionAbsolute {
   color: #ea4237 !important;
 }
 
+.btn-filled-blue {
+  background-color: #356eff38 !important;
+  color: #356fff !important;
+  width: auto !important;
+}
+
+.btn-filled-pink {
+  background-color: #ff58d531 !important;
+  color: #ff58d6 !important;
+  width: auto !important;
+}
+
 .btn-filled-error:hover {
   background-color: rgba(244, 67, 54, 0.15) !important;
+}
+
+.btn-filled-blue:hover {
+  background-color: #356eff67 !important;
+}
+
+.btn-filled-pink:hover {
+  background-color: #ff58d552 !important;
 }
 
 .btn-filled-small {
@@ -1630,3 +1675,59 @@ header.MuiAppBar-positionAbsolute {
 .MuiListItem-button:active {
   transform: scale(0.97);
 } */
+
+.not-found {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.not-found-illustration {
+  width: 45%;
+  margin: 45px 0;
+  max-width: 200px;
+}
+
+.not-found-title {
+  font-size: 45px;
+  font-weight: 800;
+  margin: 10px;
+}
+
+.not-found-text {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 10px;
+  max-width: 470px;
+}
+
+img.vert-move {
+  -webkit-animation: mover 1s infinite alternate;
+  animation: mover 1s infinite alternate;
+}
+
+img.vert-move {
+  -webkit-animation: mover 1s infinite alternate;
+  animation: mover 1s infinite alternate;
+}
+
+@-webkit-keyframes mover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes mover {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-15px);
+  }
+}

@@ -13,25 +13,26 @@ const UtilityComponent = (props) => {
   });
   React.useEffect(() => {
     const docTitle =
-      props.title == "Pesticide" ? "Pesticide" : "Pesticide | " + props.title;
+      props.title == "Pesticide" ? "Pesticide" : props.title + " - Pesticide";
     document.title = docTitle;
     let token = localStorage.getItem("token") || "";
     axios.defaults.headers = {
       "Content-Type": "application/json",
       Authorization: "Token " + token,
     };
-    axios
-      .get(API_ROOT + "user_logged_in/")
-      .then((res) => {
-        setUser({
-          status: "LOGGED_IN",
-          is_master: res.data[0].is_master,
+    !props.error404 &&
+      axios
+        .get(API_ROOT + "user_logged_in/")
+        .then((res) => {
+          setUser({
+            status: "LOGGED_IN",
+            is_master: res.data[0].is_master,
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          setUser({ status: "NOT_LOGGED_IN" });
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        setUser({ status: "NOT_LOGGED_IN" });
-      });
   }, [props]);
   React.useEffect(() => {
     props.changeHeaderTitle(props.title);
@@ -43,7 +44,8 @@ const UtilityComponent = (props) => {
     ["HOME", "PROJECTS", "ISSUES"].includes(props.page)
       ? props.changeBottomNav(props.page)
       : props.changeBottomNav("");
-    !props.customRenderScroll && document.getElementById("main-main").scrollTo(0, 0);
+    !props.customRenderScroll &&
+      document.getElementById("main-main").scrollTo(0, 0);
   }, [props.title]);
   return (
     <div style={{ display: "none" }}>
@@ -61,16 +63,10 @@ const UtilityComponent = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeHeaderTitle: (title) => dispatch(headerActions.changeTitle(title)),
-    changeBackButton: (
-      showBack,
-      backText,
-      backLink
-    ) => dispatch(themeActions.changeBackButton(
-      showBack,
-      backText,
-      backLink
-    )),
-    changeBottomNav: (bottomNav) => dispatch(themeActions.changeBottomNav(bottomNav))
+    changeBackButton: (showBack, backText, backLink) =>
+      dispatch(themeActions.changeBackButton(showBack, backText, backLink)),
+    changeBottomNav: (bottomNav) =>
+      dispatch(themeActions.changeBottomNav(bottomNav)),
   };
 };
 

@@ -252,7 +252,9 @@ const ProjectPage = (props) => {
               ),
             });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+          });
 
         axios
           .get(api_links.API_ROOT + "tags/")
@@ -270,7 +272,10 @@ const ProjectPage = (props) => {
           })
           .catch((err) => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.location.href = "/404";
+      });
   }, [props.match.params.projectslug]);
 
   const getIssues = () => {

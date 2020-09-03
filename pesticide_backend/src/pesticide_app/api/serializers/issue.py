@@ -42,11 +42,16 @@ class IssueSerializer(serializers.ModelSerializer):
 
     def projectDetails(self, obj):
         name = obj.project.name
+        try:
+            p_icon = obj.project.project_icon.image.url
+        except:
+            p_icon = ""
+
         project_info = {
             'id': obj.project.id,
             'name': name,
             'slug': slugify(name),
-            'icon': obj.project.project_icon.image.url
+            'icon': p_icon
         }
         return project_info
 

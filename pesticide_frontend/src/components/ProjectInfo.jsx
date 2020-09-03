@@ -12,7 +12,8 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 import EditProjectWithModal from "./EditProjectWithModal";
 import * as api_links from "../APILinks";
@@ -38,14 +39,12 @@ const useStyles = makeStyles((theme) => ({
 const memberCardContainer = {
   display: "flex",
   flexDirection: "row",
-  // height: "110px",
   padding: "17px",
   alignItems: "center",
   overflowY: "auto",
 };
-// const isMobile = window.innerWidth < 600;
 
-export default function ProjectInfo(props) {
+const ProjectInfo = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [wiki, setWiki] = React.useState("");
@@ -81,7 +80,11 @@ export default function ProjectInfo(props) {
             .includes(currentUser.id);
         });
         setProjecticon(
-          res.data.icon ? api_links.ROOT + res.data.icon : "../appicon.png"
+          res.data.icon
+            ? api_links.ROOT + res.data.icon
+            : props.currentTheme == "palpatine"
+            ? "../icon/project/appicon_red.svg"
+            : "../icon/project/appicon.svg"
         );
         setWiki(res.data.wiki);
       })
@@ -340,4 +343,12 @@ export default function ProjectInfo(props) {
       </div>
     </Card>
   );
-}
+};
+
+const mapStateToProps = (state) => {
+  return {
+    currentTheme: state.theme.theme,
+  };
+};
+
+export default withRouter(connect(mapStateToProps, null)(ProjectInfo));

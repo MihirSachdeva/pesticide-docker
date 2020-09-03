@@ -343,7 +343,9 @@ const HeaderSidePanel = (props) => {
                           src={
                             project.icon
                               ? api_links.ROOT + project.icon
-                              : "../omniport.png"
+                              : props.currentTheme == "palpatine"
+                              ? "../icon/project/appicon_red.svg"
+                              : "../icon/project/appicon.svg"
                           }
                           className="sidepanel-item-icon"
                         />
@@ -449,7 +451,15 @@ const HeaderSidePanel = (props) => {
                           </div>
                           <div className="sidepanel-item-context">
                             <div className="sidepanel-item-context-item">
-                              {"Issue " + comment.issue}
+                              {"Issue " + comment.issue + " •"}
+                            </div>
+                            <div className="sidepanel-item-context-item">
+                              {comment.issue_details.project_name.length < 15
+                                ? comment.issue_details.project_name
+                                : comment.issue_details.project_name.split(
+                                    0,
+                                    15
+                                  ) + "..."}
                             </div>
                             <div className="sidepanel-item-context-item">
                               {comment.project_name}

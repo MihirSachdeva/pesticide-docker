@@ -214,7 +214,10 @@ export default function UserPage(props) {
           })
           .catch((err) => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.location.href = "/404";
+      });
   }, [props.match.params.enrollmentNumber]);
 
   const getIssues = () => {
@@ -272,17 +275,17 @@ export default function UserPage(props) {
           />
         ))
       ) : (
-          <Card
-            style={{
-              padding: "15px",
-              margin: "15px",
-              borderRadius: "15px",
-            }}
-            variant="outlined"
-          >
-            No Projects
-          </Card>
-        )}
+        <Card
+          style={{
+            padding: "15px",
+            margin: "15px",
+            borderRadius: "15px",
+          }}
+          variant="outlined"
+        >
+          No Projects
+        </Card>
+      )}
 
       <hr className="divider2" />
 
@@ -292,11 +295,11 @@ export default function UserPage(props) {
 
       <div
         className="issues-list"
-      // style={{
-      //   margin: '10px',
-      //   paddingBottom: '7px'
-      // }}
-      // variant="outlined"
+        // style={{
+        //   margin: '10px',
+        //   paddingBottom: '7px'
+        // }}
+        // variant="outlined"
       >
         {issueList.issuesReported.length != 0 ? (
           issueList.issuesReported.map((issue, index) => (
@@ -329,17 +332,17 @@ export default function UserPage(props) {
             />
           ))
         ) : (
-            <Card
-              style={{
-                padding: "15px",
-                margin: "15px",
-                borderRadius: "15px",
-              }}
-              variant="outlined"
-            >
-              No Issues Reported.
-            </Card>
-          )}
+          <Card
+            style={{
+              padding: "15px",
+              margin: "15px",
+              borderRadius: "15px",
+            }}
+            variant="outlined"
+          >
+            No Issues Reported.
+          </Card>
+        )}
       </div>
 
       <div className="pagination-container">
@@ -360,11 +363,11 @@ export default function UserPage(props) {
 
       <div
         className="issues-list"
-      // style={{
-      //   margin: '10px',
-      //   paddingBottom: '7px'
-      // }}
-      // variant="outlined"
+        // style={{
+        //   margin: '10px',
+        //   paddingBottom: '7px'
+        // }}
+        // variant="outlined"
       >
         {issueList.issuesAssigned.length != 0 ? (
           issueList.issuesAssigned.map((issue, index) => (
@@ -397,17 +400,17 @@ export default function UserPage(props) {
             />
           ))
         ) : (
-            <Card
-              style={{
-                padding: "15px",
-                margin: "10px",
-                borderRadius: "15px",
-              }}
-              variant="outlined"
-            >
-              No Issues Assigned.
-            </Card>
-          )}
+          <Card
+            style={{
+              padding: "15px",
+              margin: "10px",
+              borderRadius: "15px",
+            }}
+            variant="outlined"
+          >
+            No Issues Assigned.
+          </Card>
+        )}
       </div>
       <div className="pagination-container">
         <Pagination
