@@ -78,6 +78,21 @@ const Issue = (props) => {
     document.getElementById("main-main").addEventListener("scroll", scrollFunc);
     scrollToTop();
     const issueId = props.match.params.issueId;
+    const projectSlug = props.match.params.projectslug;
+    console.log(props.match.params);
+    // projectSlug &&
+    //   axios
+    //     .get(api_links.API_ROOT + "projectnameslug/")
+    //     .then((res) => {
+    //       const requiredProject = res.data.filter(
+    //         (project) => project.projectslug == projectSlug
+    //       )[0];
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       window.location.href = "/404";
+    //     });
+
     axios
       .get(api_links.API_ROOT + `issues/${issueId}/`)
       .then((res) => {
@@ -351,50 +366,50 @@ const Issue = (props) => {
     switch (theme) {
       case "default":
         return {
-          sentColor: "#ffffff",
-          recievedColor: "#000000",
-          sent: "linear-gradient(to bottom, #00a0ea 0%, #006dea 100%)",
-          recieved: "linear-gradient(to bottom, #e3e3e3 0%, #c8c8c8 100%)",
+          sent: "#008eff4d",
+          sentColor: "#008eff1a",
+          recieved: "#c5c5c5",
+          recievedColor: "#e3e3e3",
           after: "#f0f2f5",
         };
       case "dark":
         return {
-          sentColor: "#ffffff",
-          recievedColor: "#ffffff",
-          sent: "linear-gradient(to bottom, #00a0ea 0%, #006dea 100%)",
-          recieved: "#3c3c3c",
+          sent: "#3c5aa45e",
+          sentColor: "#3c5aa45e",
+          recieved: "#3c3c3ca1",
+          recievedColor: "#3c3c3ca1",
           after: "#18191a",
         };
       case "palpatine":
         return {
-          sentColor: "#ffffff",
-          recievedColor: "#ffffff",
           sent: "#4a1111",
-          recieved: "#272727",
+          sentColor: "#4a1111",
+          recieved: "#3c3c3ca1",
+          recievedColor: "#3c3c3ca1",
           after: "#101010",
         };
       case "solarizedLight":
         return {
-          sentColor: "#ffffff",
-          recievedColor: "#000000",
-          sent: "linear-gradient(#256377 0%, #234b5a 100%)",
-          recieved: "#ccc7b8",
+          sent: "#234b5a4a",
+          sentColor: "#234b5a4a",
+          recieved: "#ccc7b8a6",
+          recievedColor: "#ccc7b8a6",
           after: "#eee8d5",
         };
       case "solarizedDark":
         return {
-          sentColor: "#0a232c",
-          recievedColor: "#ece6d6",
-          sent: "linear-gradient(to bottom, #eee8d5 0%, #bcb396 100%)",
-          recieved: "#183d49",
+          sent: "#183d49b8",
+          sentColor: "#183d49b8",
+          recieved: "#183d49b8",
+          recievedColor: "#183d49b8",
           after: "#092129",
         };
       default:
         return {
-          sentColor: "#ffffff",
-          recievedColor: "#000000",
-          sent: "linear-gradient(to bottom, #00a0ea 0%, #006dea 100%)",
-          recieved: "linear-gradient(to bottom, #e3e3e3 0%, #c8c8c8 100%)",
+          sent: "#008eff4d",
+          sentColor: "#008eff1a",
+          recieved: "#e3e3e3",
+          recievedColor: "#e3e3e3",
           after: "#f0f2f5",
         };
     }
@@ -434,7 +449,7 @@ const Issue = (props) => {
               >
                 <Button
                   variant="outlined"
-                  className="project-issue-reporter issue-button-filled"
+                  className="project-issue-reporter issue-button-filled-bg-transparent"
                   style={{
                     textTransform: "none",
                     whiteSpace: "nowrap",
@@ -448,44 +463,42 @@ const Issue = (props) => {
                         issue.project_details.icon
                           ? api_links.ROOT + issue.project_details.icon
                           : props.theme == "palpatine"
-                          ? "../icon/project/appicon_red.svg"
-                          : "../icon/project/appicon.svg"
+                          ? "/icon/project/appicon_red.svg"
+                          : "/icon/project/appicon.svg"
                       }
                       alt="Issue Reporter"
                       style={{ borderRadius: "6px", width: "30px" }}
                     />
                   </div>
-                  &nbsp;
                   {issue.project_details.name}
                 </Button>
-                &nbsp;&nbsp;
               </Link>
 
-              {"Issue " + issue.id}
+              {" - Issue " + issue.id}
             </div>
             {(issue.reporter_details.id == props.currentUser.id ||
               props.currentUser.is_master ||
               projectMembersIdList.includes(props.currentUser.id)) && (
-              <div>
-                <Button
-                  className="btn-filled btn-filled-error btn-no-margin btn-round"
-                  onClick={() => {
-                    openAlert(
-                      "delete_issue",
-                      "Delete this Issue?",
-                      "This issue, and all it's comments will be deleted permanently.",
-                      "Cancel",
-                      "Delete",
-                      issue.id
-                    );
-                  }}
-                  size="small"
-                >
-                  <DeleteOutlineOutlinedIcon color="error" />
-                </Button>
-              </div>
+              <Button
+                className="btn-filled btn-filled-error btn-no-margin btn-round"
+                onClick={() => {
+                  openAlert(
+                    "delete_issue",
+                    "Delete this Issue?",
+                    "This issue, and all it's comments will be deleted permanently.",
+                    "Cancel",
+                    "Delete",
+                    issue.id
+                  );
+                }}
+                size="small"
+              >
+                <DeleteOutlineOutlinedIcon color="error" />
+              </Button>
             )}
           </div>
+
+          <hr className="divider2" style={{ margin: "0 10px" }} />
 
           <div className="issue-container">
             <div className="issue-section">
@@ -498,7 +511,7 @@ const Issue = (props) => {
                     </Typography>
                     <Button
                       variant="outlined"
-                      className="project-reporter issue-button-filled"
+                      className="project-reporter issue-button-filled-bg-transparent"
                       style={{
                         borderRadius: "10px",
                         textTransform: "none",
@@ -575,7 +588,7 @@ const Issue = (props) => {
                     >
                       <Button
                         variant="outlined"
-                        className="project-issue-reporter issue-button-filled"
+                        className="project-issue-reporter issue-button-filled-bg-transparent"
                         style={{
                           borderRadius: "10px",
                           textTransform: "none",
@@ -587,7 +600,7 @@ const Issue = (props) => {
                             src={
                               issue.reporter_details.display_picture
                                 ? issue.reporter_details.display_picture
-                                : "../sunglasses.svg"
+                                : "/sunglasses.svg"
                             }
                             alt="Issue Reporter"
                           />
@@ -602,19 +615,15 @@ const Issue = (props) => {
                     className="issue-buttons"
                     style={{ alignItems: "flex-start" }}
                   >
-                    <Typography
-                      component="span"
-                      className="issue-button-label"
-                      style={{ marginTop: "5px" }}
-                    >
+                    <Typography component="span" className="issue-button-label">
                       Tags:{" "}
                     </Typography>
 
                     <div className="project-issue-tags issue-tag-text">
-                      {issue.tags != [] ? (
+                      {issue.tags && issue.tags.length != 0 ? (
                         issue.tags.map((tag) => (
                           <Button
-                            className="project-issue-tag issue-button-filled"
+                            className="project-issue-tag issue-button-filled-bg-transparent"
                             variant="outlined"
                             style={{
                               borderRadius: "10px",
@@ -656,7 +665,7 @@ const Issue = (props) => {
                             <Button
                               onClick="event.stopPropagation()"
                               variant="outlined"
-                              className="project-issue-reporter issue-button-filled"
+                              className="project-issue-reporter issue-button-filled-bg-transparent"
                               style={{
                                 borderRadius: "10px",
                                 textTransform: "none",
@@ -667,7 +676,7 @@ const Issue = (props) => {
                                 <img
                                   src={
                                     assignee.display_picture ||
-                                    "../sunglasses.svg"
+                                    "/sunglasses.svg"
                                   }
                                   alt="Issue Reporter"
                                 />
@@ -687,7 +696,7 @@ const Issue = (props) => {
                           <>
                             <Button
                               variant="outlined"
-                              className="project-reporter issue-button-filled"
+                              className="project-reporter issue-button-filled-bg-transparent"
                               style={{
                                 textTransform: "none",
                                 borderRadius: "10px",
@@ -753,7 +762,7 @@ const Issue = (props) => {
                                         <img
                                           src={
                                             user.display_picture ||
-                                            "../sunglasses.svg"
+                                            "/sunglasses.svg"
                                           }
                                           alt={user.name}
                                         />
@@ -799,7 +808,7 @@ const Issue = (props) => {
                                       <img
                                         src={
                                           user.display_picture ||
-                                          "../sunglasses.svg"
+                                          "/sunglasses.svg"
                                         }
                                         alt={user.name}
                                       />
@@ -851,7 +860,7 @@ const Issue = (props) => {
             <div
               style={{
                 position: "absolute",
-                top: "75px",
+                top: "70px",
                 right: "10px",
                 display: "flex",
                 flexDirection: "column",
@@ -867,7 +876,7 @@ const Issue = (props) => {
                   backdropFilter: "blur(20px)",
                   backgroundColor: props.darkTheme ? "#45454575" : "#cfcfcf6e",
                   borderRadius: "100px",
-                  padding: "7px 10px",
+                  padding: "10px",
                   marginLeft: "auto",
                   marginBottom: "10px",
                   width: "min-content",
@@ -875,7 +884,6 @@ const Issue = (props) => {
                 }}
                 onClick={scrollToTop}
               >
-                {"Top "}
                 <ArrowUpwardRoundedIcon fontSize="small" />
               </Button>
 
@@ -886,23 +894,22 @@ const Issue = (props) => {
                   backdropFilter: "blur(20px)",
                   backgroundColor: props.darkTheme ? "#45454575" : "#cfcfcf6e",
                   borderRadius: "100px",
-                  padding: "7px 10px",
+                  padding: "10px",
                   marginLeft: "auto",
                   width: "min-content",
                   border: "1px solid #8787874d",
                 }}
                 onClick={scrollToBottom}
               >
-                {"Bottom "}
                 <ArrowDownwardRoundedIcon fontSize="small" />
               </Button>
             </div>
 
-            <hr className="divider2" />
+            <hr className="divider2" style={{ marginBottom: "10px" }} />
             <div className="comments-section">
-              <div className="comments-header">
+              {/* <div className="comments-header">
                 <div>Comments</div>
-              </div>
+              </div> */}
               <div className="comments-container">
                 {comments &&
                   comments.map((comment) => {
@@ -936,48 +943,51 @@ const Issue = (props) => {
                     let commentClass = isSentByCurrentUser
                       ? "comment comment-sent"
                       : "comment comment-recieved";
-                    let commentAfterClass = isSentByCurrentUser
-                      ? "comment comment-sent-after"
-                      : "comment comment-recieved-after";
                     return (
-                      <div
-                        className={commentClass}
-                        style={{
-                          background: isSentByCurrentUser
-                            ? commentThemeColors(props.theme).sent
-                            : commentThemeColors(props.theme).recieved,
-                          color: isSentByCurrentUser
-                            ? commentThemeColors(props.theme).sentColor
-                            : commentThemeColors(props.theme).recievedColor,
-                          maxWidth: isMobile ? "80vw" : "40vw",
-                        }}
-                      >
-                        <div className="comment-sender">
-                          <div className="comment-sender-image">
-                            <img
-                              src={
-                                comment.commentor_details.display_picture ||
-                                "../sunglasses.svg"
-                              }
-                              alt="Commentor"
-                              className="commentor-img"
-                            />
-                          </div>
-                          <Link
-                            to={`/users/${comment.commentor_details.enrollment_number}`}
-                          >
-                            <Typography className="commentor-name">
-                              {comment.commentor_details.name}
-                            </Typography>
-                          </Link>
-                        </div>
+                      <>
                         <div
-                          className="comment-content"
-                          dangerouslySetInnerHTML={{ __html: comment.text }}
-                        />
-                        <div className="comment-bottom">
-                          {isSentByCurrentUser ? (
-                            <div>
+                          className={commentClass}
+                          style={{
+                            border: isSentByCurrentUser
+                              ? `1px solid ${
+                                  commentThemeColors(props.theme).sent
+                                }`
+                              : `1px solid ${
+                                  commentThemeColors(props.theme).recieved
+                                }`,
+                          }}
+                        >
+                          {" "}
+                          <div
+                            className="comment-header"
+                            style={{
+                              backgroundColor: isSentByCurrentUser
+                                ? commentThemeColors(props.theme).sentColor
+                                : commentThemeColors(props.theme).recievedColor,
+                            }}
+                          >
+                            <div className="comment-sender">
+                              <div className="comment-sender-image">
+                                <img
+                                  src={
+                                    comment.commentor_details.display_picture ||
+                                    "/sunglasses.svg"
+                                  }
+                                  alt="Commentor"
+                                  className="commentor-img"
+                                />
+                              </div>
+                              <Typography className="commentor-name">
+                                <Link
+                                  to={`/users/${comment.commentor_details.enrollment_number}`}
+                                >
+                                  {!isSentByCurrentUser
+                                    ? comment.commentor_details.name
+                                    : "You"}
+                                </Link>
+                              </Typography>
+                            </div>
+                            {isSentByCurrentUser && (
                               <Button
                                 onClick={() => {
                                   openAlert(
@@ -991,25 +1001,24 @@ const Issue = (props) => {
                                 }}
                                 size="small"
                                 style={{
-                                  marginLeft: "5px",
+                                  margin: "0",
                                 }}
-                                className="btn-filled-xs btn-filled-xs-error btn-round"
+                                className="btn-filled-xs btn-filled-xs-error btn-round btn-no-margin"
                               >
                                 <DeleteOutlineOutlinedIcon color="error" />
                               </Button>
-                            </div>
-                          ) : (
-                            <div></div>
-                          )}
-                          <div>{date}</div>
+                            )}
+                          </div>
                           <div
-                            className={commentAfterClass}
-                            style={{
-                              background: commentThemeColors(props.theme).after,
-                            }}
+                            className="comment-content"
+                            dangerouslySetInnerHTML={{ __html: comment.text }}
                           />
+                          <div className="comment-bottom">
+                            <div>{date}</div>
+                          </div>
                         </div>
-                      </div>
+                        <div className="comment-between"></div>
+                      </>
                     );
                   })}
 
@@ -1029,8 +1038,12 @@ const Issue = (props) => {
                     <Editor
                       value={newComment.text}
                       init={{
-                        skin: "material-classic",
-                        content_css: "material-classic",
+                        skin: !props.darkTheme
+                          ? "material-classic"
+                          : "oxide-dark",
+                        content_css: !props.darkTheme
+                          ? "material-classic"
+                          : "dark",
                         placeholder: "Type a comment...",
                         icons: "thin",
                         height: 250,
@@ -1038,10 +1051,10 @@ const Issue = (props) => {
                         plugins: [
                           "advlist autolink lists link image charmap print preview anchor",
                           "searchreplace visualblocks code fullscreen",
-                          "insertdatetime media table paste code help wordcount table",
+                          "insertdatetime media table code help wordcount table codesample",
                         ],
                         toolbar: [
-                          "undo redo | formatselect | bold italic backcolor | \
+                          "undo redo | formatselect | bold italic backcolor | codesample \
                             alignleft aligncenter alignright alignjustify | \
                             bullist numlist outdent indent | removeformat | table | code | help",
                         ],
@@ -1061,11 +1074,11 @@ const Issue = (props) => {
                         plugins: [
                           "advlist autolink lists link image charmap print preview anchor",
                           "searchreplace visualblocks code fullscreen",
-                          "insertdatetime media table paste code help wordcount table",
+                          "insertdatetime media table code help wordcount table codesample",
                         ],
                         toolbar: [
                           "undo redo | formatselect | bold italic backcolor | \
-                            alignleft aligncenter alignright alignjustify | \
+                            alignleft aligncenter alignright alignjustify | codesample \
                             bullist numlist outdent indent | removeformat | table | code | help",
                         ],
                       }}

@@ -19,8 +19,9 @@ const Page404 = (props) => {
         <div className="not-found-text">
           Grats! You broke it! 🥳
           <br />
-          This page doesn't exist or some other horrible error has occurred. Now
-          either you need a typing lesson or I need to fix some silly bugs.
+          The page you were trying to open doesn't exist or some other horrible
+          error has occurred. Now either you need a typing lesson or I need to
+          fix some silly bugs.
           <br />
           Feel free to hit me up{" "}
           <a href="http://www.github.com/mihirsachdeva">

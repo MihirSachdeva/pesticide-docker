@@ -347,9 +347,7 @@ const Header = (props) => {
                 >
                   <div className="menu-list-section-header">
                     <div className="menu-list-section-title">
-                      {props.currentTheme != "palpatine"
-                        ? "Hey!"
-                        : "Use The Force"}
+                      {props.currentTheme != "palpatine" ? "" : "Use The Force"}
                     </div>
                     <div className="menu-list-section-divider"></div>
                   </div>

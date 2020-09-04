@@ -50,7 +50,13 @@ const IssueItem = (props) => {
   ];
 
   return (
-    <Link to={"/issues/" + props.id}>
+    <Link
+      to={
+        props.projectSlug
+          ? `/projects/${props.projectSlug}/issues/${props.id}`
+          : `/issues/${props.id}`
+      }
+    >
       <div>
         {props.reporterDetails.name == undefined && <SkeletonIssue />}
         <div
@@ -78,7 +84,7 @@ const IssueItem = (props) => {
                   color: status && status.color,
                   fontWeight: "700",
                 }}
-                className="issue-button-filled"
+                className="issue-button-filled-outline"
               >
                 {status &&
                   (!fullScreen
@@ -132,7 +138,7 @@ const IssueItem = (props) => {
               {props.tags.map((tag) => (
                 <Button
                   onClick="event.stopPropagation()"
-                  className="project-issue-tag issue-button-filled"
+                  className="project-issue-tag issue-button-filled-outline"
                   variant="outlined"
                   style={{
                     borderRadius: "10px",
@@ -163,7 +169,7 @@ const IssueItem = (props) => {
                   <Button
                     onClick="event.stopPropagation()"
                     variant="outlined"
-                    className="project-issue-reporter issue-button-filled"
+                    className="project-issue-reporter issue-button-filled-outline"
                     style={{
                       borderRadius: "10px",
                       textTransform: "none",

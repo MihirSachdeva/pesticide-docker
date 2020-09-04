@@ -629,6 +629,7 @@ const ProjectPage = (props) => {
                 reporterDetails={issue.reporter_details}
                 assigneeDetails={issue.assignee_details}
                 currentUser={currentUser}
+                projectSlug={props.match.params.projectslug}
               />
             ))
           ) : issues.length == 0 ? (

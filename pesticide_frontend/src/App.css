@@ -555,6 +555,32 @@ header.MuiAppBar-positionAbsolute {
   margin-right: 5px;
 }
 
+.sidepanel-comment p,
+.sidepanel-comment h1,
+.sidepanel-comment h2,
+.sidepanel-comment h3,
+.sidepanel-comment h4,
+.sidepanel-comment h5,
+.sidepanel-comment h6,
+.sidepanel-comment div,
+.sidepanel-comment span,
+.sidepanel-comment img,
+.sidepanel-comment pre,
+.sidepanel-comment table {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  max-width: 15ch !important;
+  max-height: 3ch !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  color: inherit !important;
+  background-color: inherit !important;
+}
+
 .list-title-card {
   margin: 20px !important;
   border-radius: 7px !important;
@@ -616,6 +642,28 @@ header.MuiAppBar-positionAbsolute {
   background-color: rgba(129, 129, 129, 0.226) !important;
 }
 
+.issue-button-filled-outline {
+  border-radius: 50px !important;
+  border: none !important;
+  border: 1.4px solid rgba(140, 140, 140, 0.274) !important;
+  white-space: nowrap;
+}
+
+.issue-button-filled-outline:hover {
+  background-color: rgba(129, 129, 129, 0.226) !important;
+}
+
+.issue-button-filled-bg-transparent {
+  border-radius: 7px !important;
+  border: none !important;
+  /* border: 1px solid rgba(140, 140, 140, 0.2) !important; */
+  white-space: nowrap;
+}
+
+.issue-button-filled-bg-transparent:hover {
+  background-color: rgba(129, 129, 129, 0.116) !important;
+}
+
 .wave-color-start {
   stop-color: #6617cb;
   stop-opacity: 1;
@@ -639,6 +687,7 @@ header.MuiAppBar-positionAbsolute {
   border-radius: 4px !important;
   border: none !important;
   font-family: Ubuntu, sans-serif !important;
+  width: 100% !important;
 }
 
 .Draftail-Editor {
@@ -879,6 +928,7 @@ header.MuiAppBar-positionAbsolute {
 
 .btn-no-margin {
   margin: 0 !important;
+  width: auto !important;
 }
 
 .btn-round {
@@ -908,7 +958,7 @@ header.MuiAppBar-positionAbsolute {
 
 .issue-filter-tag-chip {
   margin-right: 5px !important;
-  border-radius: 7px !important;
+  border-radius: 50px !important;
   background-color: transparent !important;
   border: 1px solid rgba(149, 149, 149, 0.383) !important;
   width: auto !important;
@@ -942,7 +992,6 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .project-issue-reporter {
-  margin-right: 5px !important;
   font-weight: 600 !important;
 }
 
@@ -1056,7 +1105,7 @@ header.MuiAppBar-positionAbsolute {
 .issue-buttons {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .issue-button-label {
@@ -1142,7 +1191,7 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .issue-assigned-to {
-  margin-top: 10px;
+  margin-top: 5px;
   display: flex;
   align-items: center;
 }
@@ -1165,10 +1214,21 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .comment {
-  border-radius: 20px;
-  padding: 2px;
-  margin: 10px;
-  max-width: 80vw;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.comment-between {
+  height: 25px;
+  width: 2px;
+  background-color: #8787874d;
+  margin-left: 20px;
+}
+
+@media screen and (min-width: 600px) {
+  .comment {
+    max-width: 90% !important;
+  }
 }
 
 .comments-container {
@@ -1177,13 +1237,21 @@ header.MuiAppBar-positionAbsolute {
   flex-direction: column;
 }
 
-.comment-sender {
-  margin: 10px;
-  margin-bottom: 0;
+.comment-header {
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 10px 10px 0 0 !important;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  border-radius: 3px 3px 0 0;
+}
+
+.comment-sender {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .commentor-name {
@@ -1195,71 +1263,19 @@ header.MuiAppBar-positionAbsolute {
   border-radius: 20px;
   max-width: 30px;
   max-height: 30px;
-  margin-right: 3px;
+  margin-right: 5px;
 }
 
 .comment-recieved {
-  margin-right: 10%;
   background-attachment: fixed !important;
   position: relative;
-  color: #1a1a1a;
   align-self: flex-start;
 }
 
-.comment-recieved:before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  bottom: 0;
-  left: -7px;
-  height: 20px;
-  width: 20px;
-  background: inherit;
-  background-attachment: fixed !important;
-  border-bottom-right-radius: 15px;
-}
-
-.comment-recieved-after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  bottom: -10px;
-  left: -20px;
-  width: 10px;
-  height: 25px;
-  border-bottom-right-radius: 40px;
-}
-
 .comment-sent {
-  color: white;
-  margin-left: 10%;
   background-attachment: fixed !important;
   position: relative;
-  align-self: flex-end;
-}
-
-.comment-sent:before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  bottom: 0;
-  right: -8px;
-  height: 20px;
-  width: 20px;
-  background: inherit;
-  background-attachment: fixed !important;
-  border-bottom-left-radius: 15px;
-}
-
-.comment-sent-after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  bottom: -10px;
-  right: -20px;
-  width: 10px;
-  height: 25px;
-  border-bottom-left-radius: 40px;
+  align-self: flex-start;
 }
 
 .comment-content {
@@ -1270,15 +1286,41 @@ header.MuiAppBar-positionAbsolute {
   font-weight: 500;
 }
 
+.comment-content p,
+.comment-content h1,
+.comment-content h2,
+.comment-content h3,
+.comment-content h4,
+.comment-content h5,
+.comment-content h6,
+.comment-content div,
+.comment-content span,
+.comment-content img,
+.comment-content pre,
+.comment-content table {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  line-height: 1.3;
+}
+
+.comment-content pre {
+  font-size: 16px;
+  margin: 0;
+  white-space: normal;
+}
+
 .comment-bottom {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin: 10px 10px 0 0;
+  margin: 10px;
 }
 
 .comment-write-form {
-  margin: 10px 0;
+  border-top: 1px solid #8787874d;
+  padding-top: 15px;
 }
 
 .comment-input-form {
@@ -1687,10 +1729,10 @@ header.MuiAppBar-positionAbsolute {
   margin: 0 auto;
 }
 
-/* button:active,
+button:active,
 .MuiListItem-button:active {
   transform: scale(0.97);
-} */
+}
 
 .not-found {
   padding: 0 20px;

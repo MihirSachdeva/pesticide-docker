@@ -202,12 +202,6 @@ const HeaderSidePanel = (props) => {
       })
       .catch((err) => console.log(err));
     axios
-      .get(api_links.API_ROOT + "comments/")
-      .then((res) => {
-        setComments(res.data.reverse().slice(0, 5));
-      })
-      .catch((err) => console.log(err));
-    axios
       .get(api_links.API_ROOT + "users/")
       .then((res) => {
         setUsers(res.data);
@@ -344,8 +338,8 @@ const HeaderSidePanel = (props) => {
                             project.icon
                               ? api_links.ROOT + project.icon
                               : props.currentTheme == "palpatine"
-                              ? "../icon/project/appicon_red.svg"
-                              : "../icon/project/appicon.svg"
+                              ? "/icon/project/appicon_red.svg"
+                              : "/icon/project/appicon.svg"
                           }
                           className="sidepanel-item-icon"
                         />
@@ -366,7 +360,7 @@ const HeaderSidePanel = (props) => {
                                     )[0] &&
                                     users.filter((user) => user.id == member)[0]
                                       .display_picture) ||
-                                  "../sunglasses.svg"
+                                  "/sunglasses.svg"
                                 }
                                 className="sidepanel-item-member-image"
                               />
@@ -396,7 +390,7 @@ const HeaderSidePanel = (props) => {
                           src={
                             (issue.reporter_details &&
                               issue.reporter_details.display_picture) ||
-                            "../sunglasses.svg"
+                            "/sunglasses.svg"
                           }
                           className="sidepanel-item-icon"
                           style={{ borderRadius: "100px" }}
@@ -412,7 +406,9 @@ const HeaderSidePanel = (props) => {
                               {issue.project_details.name + " •"}
                             </div>
                             <div className="sidepanel-item-context-item">
-                              {issue.status_text}
+                              {issue.status_text.length < 10
+                                ? issue.status_text
+                                : issue.status_text.slice(0, 10) + "..."}
                             </div>
                           </div>
                         </div>
@@ -423,7 +419,7 @@ const HeaderSidePanel = (props) => {
               </>
             )}
 
-            {comments.length != 0 && (
+            {searchQuery != "" && comments.length != 0 && (
               <>
                 <div className="sidepanel-section-heading">
                   <div className="sidepanel-section-title">
@@ -438,17 +434,16 @@ const HeaderSidePanel = (props) => {
                         <img
                           src={
                             comment.commentor_details.display_picture ||
-                            "../sunglasses.svg"
+                            "/sunglasses.svg"
                           }
                           className="sidepanel-item-icon"
                           style={{ borderRadius: "100px" }}
                         />
                         <div className="sidepanel-item-contents">
-                          <div className="sidepanel-item-title">
-                            {comment.text.length < 15
-                              ? comment.text
-                              : comment.text.slice(0, 15) + "..."}
-                          </div>
+                          <div
+                            className="sidepanel-item-title sidepanel-comment"
+                            dangerouslySetInnerHTML={{ __html: comment.text }}
+                          ></div>
                           <div className="sidepanel-item-context">
                             <div className="sidepanel-item-context-item">
                               {"Issue " + comment.issue + " •"}
@@ -484,7 +479,7 @@ const HeaderSidePanel = (props) => {
                     <ListItem button className="drawer-btn-filled">
                       <div className="sidepanel-item sidepanel-item-issue">
                         <img
-                          src={user.display_picture || "../sunglasses.svg"}
+                          src={user.display_picture || "/sunglasses.svg"}
                           className="sidepanel-item-icon"
                           style={{ borderRadius: "100px" }}
                         />
