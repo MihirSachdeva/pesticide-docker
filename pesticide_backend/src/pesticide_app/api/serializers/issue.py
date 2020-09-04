@@ -116,27 +116,30 @@ class IssueSearchSerializer(serializers.ModelSerializer):
     status_color = serializers.SerializerMethodField('statusColor')
     status_type = serializers.SerializerMethodField('statusType')
     project_details = serializers.SerializerMethodField('projectDetails')
+    reporter_details = serializers.SerializerMethodField('reporterDetails')
 
     def projectDetails(self, obj):
         name = obj.project.name
+        try:
+            p_icon = obj.project.project_icon.image.url
+        except:
+            p_icon = ""
+
         project_info = {
             'id': obj.project.id,
             'name': name,
             'slug': slugify(name),
-            'icon': obj.project.project_icon.image.url
+            'icon': p_icon
         }
         return project_info
 
-    def assigneeDetails(self, obj):
-        if obj.assigned_to != None:
-            details = {
-                'id': obj.assigned_to.id,
-                'name': obj.assigned_to.name,
-                'enrollment_number': obj.assigned_to.enrollment_number,
-                'display_picture': obj.assigned_to.display_picture
-            }
-        else:
-            details = None
+    def reporterDetails(self, obj):
+        details = {
+            'id': obj.reporter.id,
+            'name': obj.reporter.name,
+            'enrollment_number': obj.reporter.enrollment_number,
+            'display_picture': obj.reporter.display_picture
+        }
         return details
 
     def statusText(self, obj):
