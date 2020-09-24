@@ -16,6 +16,7 @@ import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import TitleCard from "../components/TitleCard";
 import HEADER_NAV_TITLES from "../header_nav_titles";
+import * as snackbarActions from "../store/actions/snackbar";
 
 import axios from "axios";
 
@@ -57,6 +58,7 @@ function a11yProps(index) {
 const Admin = (props) => {
   const [tags, setTags] = React.useState([]);
   const [statuses, setStatuses] = React.useState([]);
+  const [statusTypes, setStatusTypes] = React.useState([]);
   const [formDialog, setFormDialog] = React.useState({
     open: false,
   });
@@ -92,11 +94,21 @@ const Admin = (props) => {
       .catch((err) => console.log(err));
   }
 
+  async function fetchIssueStatusTypes() {
+    axios
+      .options(api_links.API_ROOT + "issuestatus/")
+      .then((res) => {
+        setStatusTypes(res.data.actions.POST.type.choices);
+      })
+      .catch((err) => console.log(err));
+  }
+
   React.useEffect(() => {
     fetchTags();
     fetchStatuses();
     setFormDialog({ open: false });
     fetchUsers();
+    fetchIssueStatusTypes();
   }, []);
 
   const openFormDialog = (
@@ -108,7 +120,8 @@ const Admin = (props) => {
     data,
     fields,
     showColorSwatches,
-    colorSwatchesType
+    colorSwatchesType,
+    options = []
   ) => {
     setFormDialog({
       open: true,
@@ -121,6 +134,7 @@ const Admin = (props) => {
       fields,
       showColorSwatches,
       colorSwatchesType,
+      options,
     });
   };
 
@@ -130,7 +144,7 @@ const Admin = (props) => {
     }));
   };
 
-  const confirmFormDialog = (action, choice, data, fields) => {
+  const confirmFormDialog = (action, choice, data, fields, options) => {
     switch (action) {
       case "edit_tag":
         choice && editTag(data, fields);
@@ -139,10 +153,10 @@ const Admin = (props) => {
         choice && addTag(fields);
         break;
       case "edit_status":
-        choice && editStatus(data, fields);
+        choice && editStatus(data, fields, options);
         break;
       case "add_status":
-        choice && addStatus(fields);
+        choice && addStatus(fields, options);
         break;
     }
   };
@@ -162,12 +176,19 @@ const Admin = (props) => {
       .patch(api_links.API_ROOT + `tags/${id}/`, tag)
       .then((res) => {
         fetchTags();
-        console.log(res.data);
+        props.showSnackbar("success", `Tag '${tag_text}' updated.`, 6000);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't update tag. Try again later.",
+          6000
+        );
+      });
   };
 
-  const editStatus = (data, fields) => {
+  const editStatus = (data, fields, options) => {
     let id = data.id;
     let status_text_index = fields.findIndex(
       (field) => field.name == "status_text"
@@ -175,18 +196,31 @@ const Admin = (props) => {
     let color_index = fields.findIndex((field) => field.name == "color");
     let status_text = fields[status_text_index].value;
     let color = fields[color_index].value;
+    let type = options[0].value;
     let status = {
       status_text: status_text,
       color: color,
+      type: type,
     };
     console.log(status);
     axios
       .patch(api_links.API_ROOT + `issuestatus/${id}/`, status)
       .then((res) => {
         fetchStatuses();
-        console.log(res.data);
+        props.showSnackbar(
+          "success",
+          `Issue status '${status_text}' updated.`,
+          6000
+        );
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't update issue status. Try again later.",
+          6000
+        );
+      });
   };
 
   const addTag = (fields) => {
@@ -203,30 +237,49 @@ const Admin = (props) => {
       .post(api_links.API_ROOT + "tags/", tag)
       .then((res) => {
         fetchTags();
-        console.log(res.data);
+        props.showSnackbar("success", `New tag '${tag_text}' added.`, 6000);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't add new tag. Try again later.",
+          6000
+        );
+      });
   };
 
-  const addStatus = (fields) => {
+  const addStatus = (fields, options) => {
     let status_text_index = fields.findIndex(
       (field) => field.name == "status_text"
     );
     let color_index = fields.findIndex((field) => field.name == "color");
     let status_text = fields[status_text_index].value;
     let color = fields[color_index].value;
+    let type = options[0].value;
     let status = {
       status_text: status_text,
       color: color,
+      type: type,
     };
-    console.log(status);
     axios
       .post(api_links.API_ROOT + "issuestatus/", status)
       .then((res) => {
         fetchStatuses();
-        console.log(res.data);
+        props.showSnackbar(
+          "success",
+          `New status '${status_text}' added.`,
+          6000
+        );
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't add new issue status. Try again later.",
+          6000
+        );
+      });
   };
 
   const [value, setValue] = React.useState(0);
@@ -259,10 +312,17 @@ const Admin = (props) => {
     axios
       .patch(api_links.API_ROOT + `user_status/${id}/`, data)
       .then((res) => {
-        console.log(res);
         fetchUsers();
+        props.showSnackbar("success", `User permissions updated.`, 6000);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't update user permissions. Try again later.",
+          6000
+        );
+      });
   };
 
   const confirmAlert = (action, choice, data) => {
@@ -271,7 +331,11 @@ const Admin = (props) => {
 
   return (
     <>
-      <UtilityComponent onlyAdmins title={HEADER_NAV_TITLES.ADMIN} page="ADMIN" />
+      <UtilityComponent
+        onlyAdmins
+        title={HEADER_NAV_TITLES.ADMIN}
+        page="ADMIN"
+      />
 
       <div>
         <TitleCard title="Admin" />
@@ -332,11 +396,13 @@ const Admin = (props) => {
                           title: "Tag",
                           name: "tag_text",
                           value: " ",
+                          is_required: true,
                         },
                         {
                           title: "Tag color",
                           name: "color",
                           value: " ",
+                          is_required: true,
                         },
                       ],
                       true,
@@ -352,18 +418,16 @@ const Admin = (props) => {
                   tags.map((tag) => (
                     <Button
                       style={{
-                        color: tag.color,
                         textTransform: "none",
-                        fontWeight: "900",
                         fontSize: "17px",
                         width: "fit-content",
                         margin: "10px auto",
                       }}
-                      className="project-issue-tag issue-button-filled"
+                      className="project-issue-tag issue-button-filled-outline"
                       onClick={() => {
                         openFormDialog(
                           "edit_tag",
-                          `Edit ${tag.tag_text} Tag`,
+                          `Edit tag '${tag.tag_text}'`,
                           "You can change the tag text and color. Color can be any valid CSS color.",
                           "Cancel",
                           "Save",
@@ -375,11 +439,13 @@ const Admin = (props) => {
                               title: "Tag",
                               name: "tag_text",
                               value: tag.tag_text,
+                              is_required: true,
                             },
                             {
                               title: "Tag color",
                               name: "color",
                               value: tag.color,
+                              is_required: true,
                             },
                           ],
                           true,
@@ -387,7 +453,13 @@ const Admin = (props) => {
                         );
                       }}
                     >
-                      {tag.tag_text}
+                      <div
+                        style={{
+                          backgroundColor: tag.color,
+                        }}
+                        className="tag-color"
+                      ></div>
+                      <span>{tag.tag_text}</span>
                     </Button>
                   ))}
               </div>
@@ -418,7 +490,7 @@ const Admin = (props) => {
                     openFormDialog(
                       "add_status",
                       "Create a New Issue Status",
-                      "Status text has to be unique, color can be any valid CSS color.",
+                      "Status text has to be unique and color can be any valid CSS color. Choose a status type from the dropdown.",
                       "Cancel",
                       "Save",
                       {},
@@ -427,15 +499,26 @@ const Admin = (props) => {
                           title: "Status",
                           name: "status_text",
                           value: " ",
+                          is_required: true,
                         },
                         {
                           title: "Status color",
                           name: "color",
                           value: " ",
+                          is_required: true,
                         },
                       ],
                       true,
-                      "issue_status_colors"
+                      "issue_status_colors",
+                      [
+                        {
+                          title: "Status type",
+                          name: "status_type",
+                          choices: statusTypes,
+                          value: "",
+                          is_required: true,
+                        },
+                      ]
                     );
                   }}
                 >
@@ -447,19 +530,18 @@ const Admin = (props) => {
                   statuses.map((status, index) => (
                     <Button
                       style={{
-                        color: status.color,
+                        backgroundColor: status && status.color,
                         textTransform: "none",
                         fontWeight: "900",
-                        fontSize: "17px",
                         width: "fit-content",
                         margin: "10px auto",
                       }}
-                      className="project-issue-tag issue-button-filled"
+                      className="project-issue-status-button"
                       onClick={() => {
                         openFormDialog(
                           "edit_status",
-                          `Edit ${status.status_text} status`,
-                          "You can change the status text and color. Status text has to be unique, color can be any valid CSS color.",
+                          `Edit status '${status.status_text}'`,
+                          "Status text has to be unique and color can be any valid CSS color. Status type can be selected from the dropdown.",
                           "Cancel",
                           "Save",
                           {
@@ -470,15 +552,26 @@ const Admin = (props) => {
                               title: "Status",
                               name: "status_text",
                               value: status.status_text,
+                              is_required: true,
                             },
                             {
                               title: "Status color",
                               name: "color",
                               value: status.color,
+                              is_required: true,
                             },
                           ],
                           true,
-                          "issue_status_colors"
+                          "issue_status_colors",
+                          [
+                            {
+                              title: "Status type",
+                              name: "status_type",
+                              choices: statusTypes,
+                              value: status.type,
+                              is_required: true,
+                            },
+                          ]
                         );
                       }}
                     >
@@ -526,6 +619,7 @@ const Admin = (props) => {
           fields={formDialog.fields}
           showColorSwatches={formDialog.showColorSwatches}
           colorSwatchesType={formDialog.colorSwatchesType}
+          options={formDialog.options}
         />
         <AlertDialog
           open={alert.open}
@@ -549,4 +643,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, null)(Admin));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showSnackbar: (style, text, duration) =>
+      dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Admin));

@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -12,12 +12,48 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import DefaultTooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 import EditProjectWithModal from "./EditProjectWithModal";
 import * as api_links from "../APILinks";
 import MemberButton from "./MemberButton";
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+
+const RedTooltip = withStyles({
+  tooltip: {
+    backgroundColor: "#e40000c0",
+    color: "#ffffff",
+    fontSize: "15px",
+    padding: "5px",
+    border: "1px solid #808080",
+    borderRadius: "7px",
+  },
+})(DefaultTooltip);
+
+const BlueTooltip = withStyles({
+  tooltip: {
+    backgroundColor: "#196df5c0",
+    color: "#ffffff",
+    fontSize: "15px",
+    padding: "5px",
+    border: "1px solid #808080",
+    borderRadius: "7px",
+  },
+})(DefaultTooltip);
+
+const GreenTooltip = withStyles({
+  tooltip: {
+    backgroundColor: "#00b81fc0",
+    color: "#ffffff",
+    fontSize: "15px",
+    padding: "5px",
+    border: "1px solid #808080",
+    borderRadius: "7px",
+  },
+})(DefaultTooltip);
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -49,6 +85,7 @@ const ProjectInfo = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [wiki, setWiki] = React.useState("");
   const [project, setProject] = React.useState({});
+  const [projectIssueStatus, setProjectIssueStatus] = React.useState();
   const [projecticon, setProjecticon] = React.useState();
   const [currentUserIsMember, setCurrentUserIsMember] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
@@ -68,8 +105,7 @@ const ProjectInfo = (props) => {
       .catch((err) => console.log(err));
   }
 
-  React.useEffect(() => {
-    fetchCurrentUserInfo();
+  async function fetchProjectData() {
     axios
       .get(api_links.API_ROOT + `projects/${props.projectID}/`)
       .then((res) => {
@@ -89,7 +125,62 @@ const ProjectInfo = (props) => {
         setWiki(res.data.wiki);
       })
       .catch((err) => console.log(err));
+  }
+
+  async function fetchProjectIssueStatusTally() {
+    axios
+      .get(api_links.API_ROOT + `project_issue_status/${props.projectID}/`)
+      .then((res) => {
+        let resolved = 0,
+          pending = 0,
+          closed = 0;
+        res.data.issue_status_list.forEach((status) => {
+          switch (status.type) {
+            case "Pending":
+              pending += status.number_of_issues;
+              break;
+            case "Resolved":
+              resolved += status.number_of_issues;
+              break;
+            case "Closed":
+              closed += status.number_of_issues;
+              break;
+          }
+          let total = pending + resolved + closed;
+          let issuesData = {
+            total: total,
+            pending: (100 * pending) / total,
+            resolved: (100 * resolved) / total,
+            closed: (100 * closed) / total,
+          };
+          setProjectIssueStatus(issuesData);
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  Prism.highlightAll();
+
+  React.useEffect(() => {
+    fetchCurrentUserInfo();
+    fetchProjectData();
+    fetchProjectIssueStatusTally();
   }, [props.projectID]);
+
+  const monthList = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   return (
     <Card className="project-info-card">
@@ -172,10 +263,10 @@ const ProjectInfo = (props) => {
                 <Skeleton width={180} animation="wave" />
               ) : (
                 <div style={{ fontWeight: "400" }}>
-                  {new Date(project.timestamp).getDate() +
-                    "/" +
-                    new Date(project.timestamp).getMonth() +
-                    "/" +
+                  {monthList[new Date(project.timestamp).getMonth()] +
+                    " " +
+                    new Date(project.timestamp).getDate() +
+                    ", " +
                     new Date(project.timestamp).getFullYear()}
                   <br />
                   <span style={{ fontWeight: "500" }}>{project.status}</span>
@@ -221,6 +312,7 @@ const ProjectInfo = (props) => {
                       <EditProjectWithModal
                         projectID={props.projectID}
                         projectName={project.name}
+                        fetchData={fetchProjectData}
                       />
                       <Button
                         className="btn-filled-small btn-filled-small-error"
@@ -314,6 +406,7 @@ const ProjectInfo = (props) => {
                     projectID={props.projectID}
                     projectName={project.name}
                     large
+                    fetchData={fetchProjectData}
                   />
 
                   <Button
@@ -339,6 +432,54 @@ const ProjectInfo = (props) => {
               )}
             </div>
           </Card>
+        )}
+      </div>
+      <div className="project-info-issue-status-bar">
+        {projectIssueStatus && (
+          <>
+            <BlueTooltip
+              title={
+                "Pending Issues - " +
+                (projectIssueStatus["pending"] * projectIssueStatus["total"]) /
+                  100
+              }
+              placement="bottom"
+              arrow
+            >
+              <div
+                className="project-info-issue-status-bar-blue"
+                style={{ width: `${projectIssueStatus["pending"]}%` }}
+              ></div>
+            </BlueTooltip>
+            <RedTooltip
+              title={
+                "Closed Issues - " +
+                (projectIssueStatus["closed"] * projectIssueStatus["total"]) /
+                  100
+              }
+              placement="bottom"
+              arrow
+            >
+              <div
+                className="project-info-issue-status-bar-red"
+                style={{ width: `${projectIssueStatus["closed"]}%` }}
+              ></div>
+            </RedTooltip>
+            <GreenTooltip
+              title={
+                "Fixed Issues - " +
+                (projectIssueStatus["resolved"] * projectIssueStatus["total"]) /
+                  100
+              }
+              placement="bottom"
+              arrow
+            >
+              <div
+                className="project-info-issue-status-bar-green"
+                style={{ width: `${projectIssueStatus["resolved"]}%` }}
+              ></div>
+            </GreenTooltip>
+          </>
         )}
       </div>
     </Card>

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import Header from "../components/Header";
 import BottomNav from "../components/BottomNav";
+import Snackbar from "../components/Snackbar";
 
 const Layout = (props) => {
   const theme = useTheme();
@@ -33,6 +34,7 @@ const Layout = (props) => {
           <div id="main-content">{props.children}</div>
         </main>
         {isMobile && <BottomNav />}
+        <Snackbar />
       </div>
     </>
   );

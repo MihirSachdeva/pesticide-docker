@@ -329,6 +329,7 @@ export default function UserPage(props) {
               reporterDetails={issue.reporter_details}
               assigneeDetails={issue.assignee_details}
               getIssues={getIssues}
+              commentsLength={issue.comments.length}
             />
           ))
         ) : (
@@ -397,6 +398,7 @@ export default function UserPage(props) {
               reporterDetails={issue.reporter_details}
               assigneeDetails={issue.assignee_details}
               getIssues={getIssues}
+              commentsLength={issue.comments.length}
             />
           ))
         ) : (

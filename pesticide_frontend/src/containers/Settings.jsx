@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import * as themeActions from "../store/actions/theme";
+import * as snackbarActions from "../store/actions/snackbar";
 import UtilityComponent from "../components/UtilityComponent";
 import UserCard from "../components/UserCard";
 import * as api_links from "../APILinks";
@@ -45,8 +46,16 @@ const Settings = (props) => {
           ...prevEmailSubs,
           [id]: !value,
         }));
+        props.showSnackbar("success", "Email subscription updated!", 6000);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't update email subscription. Try again later.",
+          6000
+        );
+      });
   };
 
   return (
@@ -84,7 +93,9 @@ const Settings = (props) => {
               Email Settings
             </div>
             <div>Select when you would like to get notified by email.</div>
-            <div>Your email address is: {"mihir_s@pp.iitr.ac.in"}</div>
+            <div>
+              Your email address is: <strong>{user && user.email}</strong>
+            </div>
           </div>
         </center>
 
@@ -263,7 +274,7 @@ const Settings = (props) => {
       <center style={{ margin: "5px" }}>
         <Typography style={{ fontWeight: "300" }}>
           "The dark side of the Force is a pathway to many abilities some
-          consider to be unnatural." - Emperor{" "}
+          consider to be unnatural." - Emperor
           <strong
             className={
               props.currentTheme == "palpatine"
@@ -276,7 +287,7 @@ const Settings = (props) => {
             }}
             onClick={() => props.changeTheme("palpatine")}
           >
-            Palpatine
+            {" Palpatine"}
           </strong>
         </Typography>
         <Typography
@@ -303,6 +314,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeTheme: (newTheme) => dispatch(themeActions.changeTheme(newTheme)),
+    showSnackbar: (style, text, duration) =>
+      dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
   };
 };
 

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: "inherit",
-    width: "100%"
+    width: "100%",
   },
   inputInput: {
     padding: 0,
@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
-
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -99,13 +98,15 @@ const Issues = (props) => {
   const searchClass = {
     position: "relative",
     borderRadius: "7px",
-    backgroundColor: props.darkTheme ? "rgba(141, 141, 141, 0.096)" : "rgba(0,0,0,0.10)",
+    backgroundColor: props.darkTheme
+      ? "rgba(141, 141, 141, 0.096)"
+      : "rgba(0,0,0,0.10)",
     width: !isMobile ? "15vw" : "100%",
     display: "flex",
     alignItems: "center",
     padding: "10px 5px",
     height: "45px",
-    marginLeft: "3px"
+    marginLeft: "3px",
   };
 
   const [value, setValue] = React.useState(0);
@@ -150,7 +151,7 @@ const Issues = (props) => {
         setIssues(res1.data.results);
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   const [currentUser, setCurrentUser] = React.useState({});
 
@@ -164,7 +165,6 @@ const Issues = (props) => {
   }
 
   React.useEffect(() => {
-
     axios
       .get(api_links.API_ROOT + "issuestatus/")
       .then((res) => {
@@ -219,11 +219,7 @@ const Issues = (props) => {
     setAnchorElTag(null);
   };
 
-  const getFilteredIssues = (
-    pageNumber = 1,
-    tags,
-    searchQuery,
-    statusType) => {
+  const getFilteredIssues = (pageNumber = 1, tags, searchQuery, statusType) => {
     const token = props.token;
     let config = {
       headers: { Authorization: "Token " + token },
@@ -234,20 +230,16 @@ const Issues = (props) => {
     var url = "issues/";
 
     if (tags.length != 0) {
-      tags.forEach((tag, index) => (
-        index != 0
-          ? url += `&tags=${tag}`
-          : url += `?tags=${tag}`
-      ));
+      let csTags = tags.join(",");
+      url += `?tags=${csTags}`;
       searchQuery && (url += `&search=${searchQuery}`);
       statusType != "All" && (url += `&status__type=${statusType}`);
     } else {
       searchQuery && (url += `?search=${searchQuery}`);
-      statusType != "All" && (
-        searchQuery
-          ? url += `&status__type=${statusType}`
-          : url += `?status__type=${statusType}`
-      );
+      statusType != "All" &&
+        (searchQuery
+          ? (url += `&status__type=${statusType}`)
+          : (url += `?status__type=${statusType}`));
     }
 
     axios
@@ -353,29 +345,33 @@ const Issues = (props) => {
           >
             <div style={{ display: "flex", width: "100%" }}>
               <>
-                {isMobile && <div style={searchClass}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
+                {isMobile && (
+                  <div style={searchClass}>
+                    <div className={classes.searchIcon}>
+                      <SearchIcon />
+                    </div>
+                    <InputBase
+                      value={search}
+                      onChange={handleSearch}
+                      placeholder="Search"
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                      }}
+                      inputProps={{ "aria-label": "search" }}
+                    />
                   </div>
-                  <InputBase
-                    value={search}
-                    onChange={handleSearch}
-                    placeholder="Search"
-                    classes={{
-                      root: classes.inputRoot,
-                      input: classes.inputInput,
-                    }}
-                    inputProps={{ "aria-label": "search" }}
-                  />
-                </div>}
+                )}
 
                 {!isMobile && (
-                  <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "100%"
-                  }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
                     <div style={searchClass}>
                       <div className={classes.searchIcon}>
                         <SearchIcon />
@@ -398,14 +394,18 @@ const Issues = (props) => {
                           <Chip
                             className="issue-filter-tag-chip"
                             label={
-                              <div
-                                style={{
-                                  color: tagNameColorList[tag].tagColor,
-                                  fontWeight: "900",
-                                }}
-                              >
-                                #
-                              <span className="issue-tag-text">
+                              <div className="issue-filter-tag-chip-item">
+                                <div
+                                  style={{
+                                    backgroundColor:
+                                      tagNameColorList &&
+                                      tagNameColorList[tag] &&
+                                      tagNameColorList[tag].tagColor,
+                                    marginRight: "7px",
+                                  }}
+                                  className="tag-color"
+                                ></div>
+                                <span className="issue-tag-text">
                                   {tagNameColorList[tag].tagText}
                                 </span>
                               </div>
@@ -452,14 +452,12 @@ const Issues = (props) => {
                       >
                         <div
                           style={{
-                            color: tag.color,
-                            fontWeight: "900",
+                            backgroundColor: tag.color,
+                            marginRight: "10px",
                           }}
-                        >
-                          <span className="issue-tag-text">
-                            {"#" + tag.tag_text}
-                          </span>
-                        </div>
+                          className="tag-color"
+                        ></div>
+                        <span className="issue-tag-text">{tag.tag_text}</span>
                       </MenuItem>
                     ))}
                 </Menu>
@@ -475,13 +473,17 @@ const Issues = (props) => {
                 <Chip
                   className="issue-filter-tag-chip"
                   label={
-                    <div
-                      style={{
-                        color: tagNameColorList[tag].tagColor,
-                        fontWeight: "900",
-                      }}
-                    >
-                      #
+                    <div className="issue-filter-tag-chip-item">
+                      <div
+                        style={{
+                          backgroundColor:
+                            tagNameColorList &&
+                            tagNameColorList[tag] &&
+                            tagNameColorList[tag].tagColor,
+                          marginRight: "7px",
+                        }}
+                        className="tag-color"
+                      ></div>
                       <span className="issue-tag-text">
                         {tagNameColorList[tag].tagText}
                       </span>
@@ -523,6 +525,7 @@ const Issues = (props) => {
                 assigneeDetails={issue.assignee_details}
                 currentUser={currentUser}
                 showProjectNameOnCard
+                commentsLength={issue.comments.length}
               />
             ))
           ) : issues.length == 0 ? (
@@ -530,14 +533,14 @@ const Issues = (props) => {
               <Typography>No issue to show.</Typography>
             </center>
           ) : (
-                <>
-                  <SkeletonIssue first />
-                  <SkeletonIssue />
-                  <SkeletonIssue />
-                  <SkeletonIssue />
-                  <SkeletonIssue last />
-                </>
-              )}
+            <>
+              <SkeletonIssue first />
+              <SkeletonIssue />
+              <SkeletonIssue />
+              <SkeletonIssue />
+              <SkeletonIssue last />
+            </>
+          )}
         </div>
         {issues.length != 0 && (
           <div className="pagination-container">
@@ -561,7 +564,9 @@ const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.token !== null,
     token: state.auth.token,
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(state.theme.theme)
+    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+      state.theme.theme
+    ),
   };
 };
 

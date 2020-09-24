@@ -12,9 +12,9 @@ import Chip from "@material-ui/core/Chip";
 import { withRouter, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { Editor } from "@tinymce/tinymce-react";
-
 import axios from "axios";
 
+import * as snackbarActions from "../store/actions/snackbar";
 import ImageWithModal from "./ImageWithModal";
 import * as api_links from "../APILinks";
 
@@ -29,6 +29,10 @@ const EditProjectForm = (props) => {
   const [userList, setUserList] = React.useState([]);
   const [projectImage, setProjectImage] = React.useState(null);
   const [projectDescription, setProjectDescription] = React.useState("");
+  const [refresh, setRefresh] = React.useState({
+    refresh: false,
+    to: "",
+  });
 
   const handleFormChange = (event) => {
     const { name, value } = event.target;
@@ -77,19 +81,23 @@ const EditProjectForm = (props) => {
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
+        props.showSnackbar("success", "Project details updated!", 6000);
 
         editedPersonsList.length &&
           axios
             .patch(api_links.UPDATE_PROJECT_MEMBERS(props.projectID), {
               members: editedPersonsList,
             })
-            .then((res) => {
-              console.log(res);
-            })
+            .then((res) => {})
             .catch((err) => {
               console.log(err);
               let audio = new Audio("../sounds/alert_error-03.wav");
               audio.play();
+              props.showSnackbar(
+                "error",
+                "Couldn't update project members. Try again later.",
+                6000
+              );
             });
 
         status != oldStatus &&
@@ -97,13 +105,16 @@ const EditProjectForm = (props) => {
             .patch(api_links.UPDATE_PROJECT_STATUS(props.projectID), {
               status: status,
             })
-            .then((res) => {
-              console.log(res);
-            })
+            .then((res) => {})
             .catch((err) => {
               console.log(err);
               let audio = new Audio("../sounds/alert_error-03.wav");
               audio.play();
+              props.showSnackbar(
+                "error",
+                "Couldn't update project status. Try again later.",
+                6000
+              );
             });
 
         if (
@@ -124,35 +135,48 @@ const EditProjectForm = (props) => {
                 api_links.API_ROOT + `projecticons/${res.data.icon_id}/`,
                 data
               )
-              .then((res) => {
-                console.log(res);
-              })
+              .then((res) => {})
               .catch((err) => {
                 console.log(err);
                 let audio = new Audio("../sounds/alert_error-03.wav");
                 audio.play();
+                props.showSnackbar(
+                  "error",
+                  "Couldn't update project icon. Try again later.",
+                  6000
+                );
               });
           } else {
             axios
               .post(api_links.API_ROOT + `projecticons/`, data)
-              .then((res) => {
-                console.log(res);
-              })
+              .then((res) => {})
               .catch((err) => {
                 console.log(err);
                 let audio = new Audio("../sounds/alert_error-03.wav");
                 audio.play();
+                props.showSnackbar(
+                  "error",
+                  "Couldn't add project icon. Try again later.",
+                  6000
+                );
               });
           }
         }
-        setTimeout(() => {
-          window.location.href = "/projects";
-        }, 1000);
+        setRefresh({
+          refresh: true,
+          to: `/projects/${res.data.projectslug}`,
+        });
+        props.fetchData();
       })
       .catch((err) => {
         console.log(err);
         let audio = new Audio("../sounds/alert_error-03.wav");
         audio.play();
+        props.showSnackbar(
+          "error",
+          "Couldn't update project details. Try again later.",
+          6000
+        );
       });
   };
 
@@ -203,7 +227,7 @@ const EditProjectForm = (props) => {
       <div style={{ margin: "20px 5px" }}>
         <form noValidate onSubmit={handleFormSubmit}>
           <Grid container spacing={2}>
-            <Typography className="form-label">Project Name</Typography>
+            <Typography className="form-label">Project Name*</Typography>
             <Grid
               item
               xs={12}
@@ -243,10 +267,10 @@ const EditProjectForm = (props) => {
                     plugins: [
                       "advlist autolink lists link image charmap print preview anchor",
                       "searchreplace visualblocks code fullscreen",
-                      "insertdatetime media table paste code help wordcount table",
+                      "insertdatetime media table paste code help wordcount table codesample",
                     ],
                     toolbar: [
-                      "undo redo | formatselect | bold italic backcolor | \
+                      "undo redo | formatselect | bold italic backcolor | codesample \
                       alignleft aligncenter alignright alignjustify | \
                       bullist numlist outdent indent | removeformat | table | code | help",
                     ],
@@ -395,6 +419,8 @@ const EditProjectForm = (props) => {
           </Grid>
         </form>
       </div>
+
+      {refresh && refresh.refresh && <Redirect to={refresh.to} />}
     </Container>
   );
 };
@@ -417,4 +443,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, null)(EditProjectForm));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showSnackbar: (style, text, duration) =>
+      dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(EditProjectForm)
+);

@@ -3,15 +3,16 @@ import {
   MenuItem,
   Typography,
   Button,
-  Input,
   Menu,
   useMediaQuery,
+  Card,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import DefaultTooltip from "@material-ui/core/Tooltip";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import SendRoundedIcon from "@material-ui/icons/SendRounded";
+import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
 import ArrowDownwardRoundedIcon from "@material-ui/icons/ArrowDownwardRounded";
 import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
 import { connect } from "react-redux";
@@ -22,8 +23,10 @@ import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as api_links from "../APILinks";
+import * as snackbarActions from "../store/actions/snackbar";
 import WebSocketInstance from "../websocket";
-
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
 import axios from "axios";
 
 const Issue = (props) => {
@@ -67,12 +70,14 @@ const Issue = (props) => {
 
   const scrollFunc = function () {
     var y = document.getElementById("main-main").scrollTop;
-    if (y > 500) {
+    if (y > 300) {
       showHoverButtons(true);
     } else {
       showHoverButtons(false);
     }
   };
+
+  Prism.highlightAll();
 
   React.useEffect(() => {
     document.getElementById("main-main").addEventListener("scroll", scrollFunc);
@@ -80,19 +85,6 @@ const Issue = (props) => {
     const issueId = props.match.params.issueId;
     const projectSlug = props.match.params.projectslug;
     console.log(props.match.params);
-    // projectSlug &&
-    //   axios
-    //     .get(api_links.API_ROOT + "projectnameslug/")
-    //     .then((res) => {
-    //       const requiredProject = res.data.filter(
-    //         (project) => project.projectslug == projectSlug
-    //       )[0];
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       window.location.href = "/404";
-    //     });
-
     axios
       .get(api_links.API_ROOT + `issues/${issueId}/`)
       .then((res) => {
@@ -208,12 +200,18 @@ const Issue = (props) => {
             display_picture: data.display_picture,
             enrollment_number: data.enrollment_number,
           });
+          props.showSnackbar("success", "Issue assigned successfully!", 6000);
         }, 1000);
       })
       .catch((err) => {
         console.log(err);
         let audio = new Audio("../sounds/alert_error-03.wav");
         audio.play();
+        props.showSnackbar(
+          "error",
+          "Couldn't assign issue. Try again later.",
+          6000
+        );
       });
   };
 
@@ -239,7 +237,6 @@ const Issue = (props) => {
         commentor: props.currentUser.id,
       };
       WebSocketInstance.newChatComment(commentObject);
-      WebSocketInstance.fetchComments(issue.id);
       setNewComment((prev) => ({
         ...prev,
         text: "",
@@ -268,6 +265,7 @@ const Issue = (props) => {
 
   const handleCommentDelete = (commentID) => {
     WebSocketInstance.deleteComment(commentID);
+    props.showSnackbar("success", "Comment deleted.", 6000);
   };
 
   const handleIssueDelete = () => {
@@ -343,12 +341,18 @@ const Issue = (props) => {
             type: data.type,
             id: data.id,
           });
+          props.showSnackbar("success", "Issue status updated!", 6000);
         }, 1000);
       })
       .catch((err) => {
         console.log(err);
         let audio = new Audio("../sounds/alert_error-03.wav");
         audio.play();
+        props.showSnackbar(
+          "error",
+          "Couldn't update issue status. Try again later.",
+          6000
+        );
       });
   };
 
@@ -390,8 +394,8 @@ const Issue = (props) => {
         };
       case "solarizedLight":
         return {
-          sent: "#234b5a4a",
-          sentColor: "#234b5a4a",
+          sent: "#ccc7b8a6",
+          sentColor: "#ccc7b8a6",
           recieved: "#ccc7b8a6",
           recievedColor: "#ccc7b8a6",
           after: "#eee8d5",
@@ -430,6 +434,35 @@ const Issue = (props) => {
     "Dec",
   ];
 
+  const getDate = (timestamp) => {
+    let date;
+    if (new Date(timestamp).getMinutes() > 9) {
+      date =
+        new Date(timestamp).getHours() +
+        ":" +
+        new Date(timestamp).getMinutes() +
+        " • " +
+        monthList[new Date(timestamp).getMonth()] +
+        " " +
+        new Date(timestamp).getDate() +
+        ", " +
+        new Date(timestamp).getFullYear();
+    } else {
+      date =
+        new Date(timestamp).getHours() +
+        ":" +
+        "0" +
+        new Date(timestamp).getMinutes() +
+        " • " +
+        monthList[new Date(timestamp).getMonth()] +
+        " " +
+        new Date(timestamp).getDate() +
+        ", " +
+        new Date(timestamp).getFullYear();
+    }
+    return date;
+  };
+
   return (
     <>
       <div ref={topRef} style={{ display: "none" }}></div>
@@ -441,6 +474,87 @@ const Issue = (props) => {
       />
       {issue.reporter_details && (
         <>
+          <Card
+            className="issue-scroll-header"
+            style={{
+              display: !hoverButtons && "none",
+              top: !isMobile ? "65px" : "57px",
+              width: !isMobile ? "calc(100% - 340px)" : "100%",
+            }}
+          >
+            <div className="issue-scroll-left">
+              <div className="issue-scroll-status">
+                <Button
+                  variant="outlined"
+                  className="project-issue-status-button"
+                  style={{
+                    backgroundColor: status && status.color,
+                  }}
+                >
+                  {status && status.text}
+                </Button>
+              </div>
+              <div className="issue-scroll-details">
+                <div className="issue-scroll-details-heading">
+                  <div className="issue-scroll-title">{issue.title}</div>
+                  <div>•</div>
+                  <div className="issue-scroll-project">
+                    {issue.project_details.name}
+                  </div>
+                  <div>•</div>
+                  <div className="issue-scroll-comments">
+                    <CommentIcon
+                      style={{ marginRight: "5px", fontSize: "15px" }}
+                    />
+                    <div>{issue.comments.length}</div>
+                  </div>
+                </div>
+
+                <div className="issue-scroll-meta">
+                  <div className="issue-scroll-reporter">
+                    {issue.reporter_details.name}
+                  </div>
+                  <div style={{ margin: "0 4px" }}>added this issue on</div>
+                  <div className="issue-scroll-date">
+                    {getDate(issue.timestamp)}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="issue-scroll-right">
+              {issue.tags &&
+                issue.tags.length != 0 &&
+                issue.tags.map((tag) => (
+                  <Button
+                    className="project-issue-tag issue-button-filled-outline"
+                    variant="outlined"
+                    style={{
+                      borderRadius: "10px",
+                      textTransform: "none",
+                      marginRight: "5px",
+                      fontWeight: "500",
+                      marginBottom: "5px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor:
+                          tagNameColorList &&
+                          tagNameColorList[tag] &&
+                          tagNameColorList[tag].tagColor,
+                      }}
+                      className="tag-color"
+                    ></div>
+                    <span>
+                      {tagNameColorList && tagNameColorList[tag].tagText}
+                    </span>
+                  </Button>
+                ))}
+            </div>
+          </Card>
           <div className="issue-header">
             <div>
               <Link
@@ -493,7 +607,8 @@ const Issue = (props) => {
                 }}
                 size="small"
               >
-                <DeleteOutlineOutlinedIcon color="error" />
+                <DeleteOutlineOutlinedIcon color="error" />{" "}
+                {!isMobile && "Delete"}
               </Button>
             )}
           </div>
@@ -507,18 +622,13 @@ const Issue = (props) => {
                 <div className="issue-meta">
                   <div>
                     <Typography component="span" className="issue-button-label">
-                      Status:{" "}
+                      {"Status: "}
                     </Typography>
                     <Button
                       variant="outlined"
-                      className="project-reporter issue-button-filled-bg-transparent"
+                      className="project-issue-status-button"
                       style={{
-                        borderRadius: "10px",
-                        textTransform: "none",
-                        width: "fit-content",
-                        alignSelf: "flex-start",
-                        color: status && status.color,
-                        fontWeight: "700",
+                        backgroundColor: status && status.color,
                       }}
                       onClick={
                         (issue.reporter_details.id == props.currentUser.id ||
@@ -588,9 +698,9 @@ const Issue = (props) => {
                     >
                       <Button
                         variant="outlined"
-                        className="project-issue-reporter issue-button-filled-bg-transparent"
+                        className="project-issue-reporter issue-button-filled-outline"
                         style={{
-                          borderRadius: "10px",
+                          borderRadius: "100px",
                           textTransform: "none",
                           whiteSpace: "nowrap",
                         }}
@@ -605,10 +715,8 @@ const Issue = (props) => {
                             alt="Issue Reporter"
                           />
                         </div>
-                        &nbsp;
                         {issue.reporter_details.name}
                       </Button>
-                      &nbsp;&nbsp;
                     </Link>
                   </div>
                   <div
@@ -616,31 +724,39 @@ const Issue = (props) => {
                     style={{ alignItems: "flex-start" }}
                   >
                     <Typography component="span" className="issue-button-label">
-                      Tags:{" "}
+                      {"Tags: "}
                     </Typography>
 
                     <div className="project-issue-tags issue-tag-text">
                       {issue.tags && issue.tags.length != 0 ? (
                         issue.tags.map((tag) => (
                           <Button
-                            className="project-issue-tag issue-button-filled-bg-transparent"
+                            className="project-issue-tag issue-button-filled-outline"
                             variant="outlined"
                             style={{
                               borderRadius: "10px",
                               textTransform: "none",
                               marginRight: "5px",
-                              color:
-                                tagNameColorList &&
-                                tagNameColorList[tag].tagColor,
-                              fontWeight: "900",
+                              fontWeight: "500",
                               marginBottom: "5px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
                             }}
                           >
-                            <div>
-                              #
+                            <div
+                              style={{
+                                backgroundColor:
+                                  tagNameColorList &&
+                                  tagNameColorList[tag] &&
+                                  tagNameColorList[tag].tagColor,
+                              }}
+                              className="tag-color"
+                            ></div>
+                            <span>
                               {tagNameColorList &&
                                 tagNameColorList[tag].tagText}
-                            </div>
+                            </span>
                           </Button>
                         ))
                       ) : (
@@ -650,26 +766,22 @@ const Issue = (props) => {
                   </div>
 
                   <div className="issue-assigned-to">
-                    <Typography
-                      className="issue-button-label"
-                      style={{
-                        marginBottom: "5px",
-                      }}
-                    >
+                    <Typography className="issue-button-label">
                       Assigned to:
                     </Typography>
                     {
-                      <div className="project-issue-tags issue-tag-text">
+                      <>
                         {assignee ? (
-                          <Link to={"/users/" + assignee.enrollment_number}>
+                          <Link
+                            to={"/users/" + assignee.enrollment_number}
+                            style={{ marginRight: "5px" }}
+                          >
                             <Button
                               onClick="event.stopPropagation()"
                               variant="outlined"
-                              className="project-issue-reporter issue-button-filled-bg-transparent"
+                              className="project-issue-reporter issue-button-filled-outline"
                               style={{
-                                borderRadius: "10px",
                                 textTransform: "none",
-                                marginBottom: "5px",
                               }}
                             >
                               <div className="project-issue-reported-by-image">
@@ -696,14 +808,13 @@ const Issue = (props) => {
                           <>
                             <Button
                               variant="outlined"
-                              className="project-reporter issue-button-filled-bg-transparent"
+                              className="project-reporter issue-button-filled-outline"
                               style={{
                                 textTransform: "none",
                                 borderRadius: "10px",
                                 width: "fit-content",
                                 alignSelf: "flex-start",
-                                fontWeight: "700",
-                                marginBottom: "5px",
+                                fontWeight: "500",
                               }}
                               onClick={
                                 (issue.reporter_details.id ==
@@ -717,9 +828,9 @@ const Issue = (props) => {
                             >
                               <AssignmentIndIcon
                                 fontSize="small"
-                                style={{ marginRight: "5px" }}
+                                style={{ marginRight: !isMobile && "4px" }}
                               />
-                              Change
+                              {!isMobile && "Change"}
                             </Button>
                             <Menu
                               anchorEl={anchorElUsers}
@@ -823,20 +934,16 @@ const Issue = (props) => {
                             </Menu>
                           </>
                         )}
-                      </div>
+                      </>
                     }
                   </div>
 
                   <div className="issue-date">
                     <Typography className="issue-button-label">
-                      Date:
+                      Timestamp:
                     </Typography>
 
-                    {monthList[new Date(issue.timestamp).getMonth()] +
-                      " " +
-                      new Date(issue.timestamp).getDate() +
-                      ", " +
-                      new Date(issue.timestamp).getFullYear()}
+                    {getDate(issue.timestamp)}
                   </div>
                 </div>
 
@@ -860,7 +967,7 @@ const Issue = (props) => {
             <div
               style={{
                 position: "absolute",
-                top: "70px",
+                top: "140px",
                 right: "10px",
                 display: "flex",
                 flexDirection: "column",
@@ -905,39 +1012,16 @@ const Issue = (props) => {
               </Button>
             </div>
 
-            <hr className="divider2" style={{ marginBottom: "10px" }} />
+            <div className="comments-header">
+              <div>{`${issue.comments.length} Comments`}</div>
+            </div>
+
+            <hr className="divider2" style={{ marginBottom: "0" }} />
+            <div className="comment-between"></div>
             <div className="comments-section">
-              {/* <div className="comments-header">
-                <div>Comments</div>
-              </div> */}
               <div className="comments-container">
                 {comments &&
                   comments.map((comment) => {
-                    let date;
-                    if (new Date(comment.timestamp).getMinutes() > 9) {
-                      date =
-                        new Date(comment.timestamp).getHours() +
-                        ":" +
-                        new Date(comment.timestamp).getMinutes() +
-                        " • " +
-                        monthList[new Date(comment.timestamp).getMonth()] +
-                        " " +
-                        new Date(comment.timestamp).getDate() +
-                        ", " +
-                        new Date(comment.timestamp).getFullYear();
-                    } else {
-                      date =
-                        new Date(comment.timestamp).getHours() +
-                        ":" +
-                        "0" +
-                        new Date(comment.timestamp).getMinutes() +
-                        " • " +
-                        monthList[new Date(comment.timestamp).getMonth()] +
-                        " " +
-                        new Date(comment.timestamp).getDate() +
-                        ", " +
-                        new Date(comment.timestamp).getFullYear();
-                    }
                     let isSentByCurrentUser =
                       comment.commentor_details.id == props.currentUser.id;
                     let commentClass = isSentByCurrentUser
@@ -985,6 +1069,19 @@ const Issue = (props) => {
                                     ? comment.commentor_details.name
                                     : "You"}
                                 </Link>
+                                <div className="commentor-role">
+                                  {comment.commentor_details.id ==
+                                  issue.reporter
+                                    ? "(reporter)"
+                                    : issue.assigned_to ==
+                                      comment.commentor_details.id
+                                    ? "(assignee)"
+                                    : projectMembersIdList.includes(
+                                        comment.commentor_details.id
+                                      )
+                                    ? "(project member)"
+                                    : ""}
+                                </div>
                               </Typography>
                             </div>
                             {isSentByCurrentUser && (
@@ -1012,9 +1109,9 @@ const Issue = (props) => {
                           <div
                             className="comment-content"
                             dangerouslySetInnerHTML={{ __html: comment.text }}
-                          />
+                          ></div>
                           <div className="comment-bottom">
-                            <div>{date}</div>
+                            <div>{getDate(comment.timestamp)}</div>
                           </div>
                         </div>
                         <div className="comment-between"></div>
@@ -1038,12 +1135,8 @@ const Issue = (props) => {
                     <Editor
                       value={newComment.text}
                       init={{
-                        skin: !props.darkTheme
-                          ? "material-classic"
-                          : "oxide-dark",
-                        content_css: !props.darkTheme
-                          ? "material-classic"
-                          : "dark",
+                        skin: "material-classic",
+                        content_css: "material-classic",
                         placeholder: "Type a comment...",
                         icons: "thin",
                         height: 250,
@@ -1058,6 +1151,7 @@ const Issue = (props) => {
                             alignleft aligncenter alignright alignjustify | \
                             bullist numlist outdent indent | removeformat | table | code | help",
                         ],
+                        codesample_global_prismjs: true,
                       }}
                       onEditorChange={handleNewComment}
                     />
@@ -1133,4 +1227,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, null)(Issue));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showSnackbar: (style, text, duration) =>
+      dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Issue));

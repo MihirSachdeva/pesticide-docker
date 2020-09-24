@@ -139,6 +139,12 @@ const ProjectPage = (props) => {
   const [alert, setAlert] = React.useState({
     open: false,
   });
+  const [projectIssueStatus, setProjectIssueStatus] = React.useState({
+    total: 0,
+    pending: 0,
+    closed: 0,
+    resolved: 0,
+  });
 
   const openAlert = (action, title, description, cancel, confirm, data) => {
     setAlert({
@@ -214,10 +220,41 @@ const ProjectPage = (props) => {
       .catch((err) => console.log(err));
   }
 
+  async function fetchProjectIssueStatusTally(project) {
+    axios
+      .get(api_links.API_ROOT + `project_issue_status/${project}/`)
+      .then((res) => {
+        let resolved = 0,
+          pending = 0,
+          closed = 0;
+        res.data.issue_status_list.forEach((status) => {
+          switch (status.type) {
+            case "Pending":
+              pending += status.number_of_issues;
+              break;
+            case "Resolved":
+              resolved += status.number_of_issues;
+              break;
+            case "Closed":
+              closed += status.number_of_issues;
+              break;
+          }
+          let total = pending + resolved + closed;
+          let issuesData = {
+            total: total,
+            pending: pending,
+            resolved: resolved,
+            closed: closed,
+          };
+          setProjectIssueStatus(issuesData);
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
   React.useEffect(() => {
     document.getElementById("main-main").scrollTo(0, 0);
     fetchCurrentUserInfo();
-
     setAlert({
       open: false,
     });
@@ -271,6 +308,8 @@ const ProjectPage = (props) => {
             setTagNameColorList(tagNameColorList);
           })
           .catch((err) => console.log(err));
+
+        fetchProjectIssueStatusTally(requiredProject.id);
       })
       .catch((err) => {
         console.log(err);
@@ -310,9 +349,8 @@ const ProjectPage = (props) => {
     };
     var url = "issues/";
     if (tags.length != 0) {
-      tags.forEach((tag, index) =>
-        index != 0 ? (url += `&tags=${tag}`) : (url += `?tags=${tag}`)
-      );
+      let csTags = tags.join(",");
+      url += `?tags=${csTags}`;
       searchQuery && (url += `&search=${searchQuery}`);
       statusType != "All" && (url += `&status__type=${statusType}`);
     } else {
@@ -390,7 +428,7 @@ const ProjectPage = (props) => {
         >
           <Tab
             style={{ textTransform: "none" }}
-            label="All"
+            label={`All (${projectIssueStatus["total"]})`}
             onClick={() => {
               handleStatusTypeQuery("All");
             }}
@@ -398,7 +436,7 @@ const ProjectPage = (props) => {
           />
           <Tab
             style={{ textTransform: "none" }}
-            label="Open"
+            label={`Pending (${projectIssueStatus["pending"]})`}
             onClick={() => {
               handleStatusTypeQuery("Pending");
             }}
@@ -406,7 +444,7 @@ const ProjectPage = (props) => {
           />
           <Tab
             style={{ textTransform: "none" }}
-            label="Fixed"
+            label={`Resolved (${projectIssueStatus["resolved"]})`}
             onClick={() => {
               handleStatusTypeQuery("Resolved");
             }}
@@ -414,7 +452,7 @@ const ProjectPage = (props) => {
           />
           <Tab
             style={{ textTransform: "none" }}
-            label="Closed"
+            label={`Closed (${projectIssueStatus["closed"]})`}
             onClick={() => {
               handleStatusTypeQuery("Closed");
             }}
@@ -487,18 +525,19 @@ const ProjectPage = (props) => {
                           <Chip
                             className="issue-filter-tag-chip"
                             label={
-                              <div
-                                style={{
-                                  color:
-                                    tagNameColorList[tag] &&
-                                    tagNameColorList[tag].tagColor,
-                                  fontWeight: "900",
-                                }}
-                              >
-                                #
+                              <div className="issue-filter-tag-chip-item">
+                                <div
+                                  style={{
+                                    backgroundColor:
+                                      tagNameColorList &&
+                                      tagNameColorList[tag] &&
+                                      tagNameColorList[tag].tagColor,
+                                    marginRight: "7px",
+                                  }}
+                                  className="tag-color"
+                                ></div>
                                 <span className="issue-tag-text">
-                                  {tagNameColorList[tag] &&
-                                    tagNameColorList[tag].tagText}
+                                  {tagNameColorList[tag].tagText}
                                 </span>
                               </div>
                             }
@@ -544,14 +583,12 @@ const ProjectPage = (props) => {
                       >
                         <div
                           style={{
-                            color: tag.color,
-                            fontWeight: "900",
+                            backgroundColor: tag.color,
+                            marginRight: "10px",
                           }}
-                        >
-                          <span className="issue-tag-text">
-                            {"#" + tag.tag_text}
-                          </span>
-                        </div>
+                          className="tag-color"
+                        ></div>
+                        <span className="issue-tag-text">{tag.tag_text}</span>
                       </MenuItem>
                     ))}
                 </Menu>
@@ -581,17 +618,19 @@ const ProjectPage = (props) => {
                 <Chip
                   className="issue-filter-tag-chip"
                   label={
-                    <div
-                      style={{
-                        color:
-                          tagNameColorList[tag] &&
-                          tagNameColorList[tag].tagColor,
-                        fontWeight: "900",
-                      }}
-                    >
-                      #
+                    <div className="issue-filter-tag-chip-item">
+                      <div
+                        style={{
+                          backgroundColor:
+                            tagNameColorList &&
+                            tagNameColorList[tag] &&
+                            tagNameColorList[tag].tagColor,
+                          marginRight: "7px",
+                        }}
+                        className="tag-color"
+                      ></div>
                       <span className="issue-tag-text">
-                        {tagNameColorList[tag] && tagNameColorList[tag].tagText}
+                        {tagNameColorList[tag].tagText}
                       </span>
                     </div>
                   }
@@ -630,11 +669,12 @@ const ProjectPage = (props) => {
                 assigneeDetails={issue.assignee_details}
                 currentUser={currentUser}
                 projectSlug={props.match.params.projectslug}
+                commentsLength={issue.comments.length}
               />
             ))
           ) : issues.length == 0 ? (
             <center>
-              <Typography>No issue has been reported yet.</Typography>
+              <Typography>No issue to show.</Typography>
             </center>
           ) : (
             <>

@@ -14,6 +14,7 @@ import { withRouter } from "react-router-dom";
 
 import axios from "axios";
 import * as api_links from "../APILinks";
+import * as snackbarActions from "../store/actions/snackbar";
 
 const NewIssueForm = (props) => {
   const [tags, setTags] = React.useState([]);
@@ -51,44 +52,35 @@ const NewIssueForm = (props) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    let data = {
-      title: formData.title,
-      description: issueDescription,
-      timestamp: new Date(),
-      project: props.project,
-      tags: tagsID,
-    };
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("description", issueDescription);
+    data.append("project", props.project);
+    data.append("tags", tagsID);
+    issueImage && data.append("image", issueImage, issueImage.name);
 
     axios
-      .post(api_links.API_ROOT + "issues/", data)
+      .post(api_links.API_ROOT + "issues/", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
       .then((res) => {
         let audio = new Audio(
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
-        setTimeout(() => {
-          if (issueImage !== null && res.status == 201) {
-            let issue_id = res.data.id;
-            data = new FormData();
-            data.append("issue", issue_id);
-            data.append("image", issueImage, issueImage.name);
-            axios
-              .post(api_links.API_ROOT + "issueimages/", data)
-              .then((res) => console.log(res))
-              .catch((err) => {
-                console.log(err);
-                let audio = new Audio("../sounds/alert_error-03.wav");
-                audio.play();
-              });
-          }
-          props.getIssues();
-          props.handleClose();
-        }, 1000);
+        props.getIssues();
+        props.handleClose();
+        props.showSnackbar("success", "New issue added!", 6000);
       })
       .catch((err) => {
         console.log(err);
         let audio = new Audio("../sounds/alert_error-03.wav");
         audio.play();
+        props.showSnackbar(
+          "error",
+          "Couldn't add new issue. Try again later.",
+          6000
+        );
       });
   };
 
@@ -106,7 +98,7 @@ const NewIssueForm = (props) => {
         <div style={{ margin: "20px 5px" }}>
           <form noValidate onSubmit={handleFormSubmit}>
             <Grid container spacing={2}>
-              <Typography className="form-label">Title</Typography>
+              <Typography className="form-label">Title*</Typography>
               <Grid
                 item
                 xs={12}
@@ -138,16 +130,17 @@ const NewIssueForm = (props) => {
                     init={{
                       skin: "material-classic",
                       content_css: "material-classic",
+                      placeholder: "Type issue description...",
                       icons: "thin",
                       height: 250,
                       menubar: false,
                       plugins: [
                         "advlist autolink lists link image charmap print preview anchor",
                         "searchreplace visualblocks code fullscreen",
-                        "insertdatetime media table paste code help wordcount table",
+                        "insertdatetime media table code help wordcount table codesample",
                       ],
                       toolbar: [
-                        "undo redo | formatselect | bold italic backcolor | \
+                        "undo redo | formatselect | bold italic backcolor | codesample \
                             alignleft aligncenter alignright alignjustify | \
                             bullist numlist outdent indent | removeformat | table | code | help",
                       ],
@@ -166,10 +159,10 @@ const NewIssueForm = (props) => {
                       plugins: [
                         "advlist autolink lists link image charmap print preview anchor",
                         "searchreplace visualblocks code fullscreen",
-                        "insertdatetime media table paste code help wordcount table",
+                        "insertdatetime media table code help wordcount table codesample",
                       ],
                       toolbar: [
-                        "undo redo | formatselect | bold italic backcolor | \
+                        "undo redo | formatselect | bold italic backcolor | codesample \
                             alignleft aligncenter alignright alignjustify | \
                             bullist numlist outdent indent | removeformat | table | code | help",
                       ],
@@ -228,14 +221,11 @@ const NewIssueForm = (props) => {
                     <MenuItem key={tag.tag_text} value={tag.id}>
                       <div
                         style={{
-                          color: tag.color,
-                          fontWeight: "900",
+                          backgroundColor: tag.color,
                         }}
-                      >
-                        <span className="issue-tag-text">
-                          {"#" + tag.tag_text}
-                        </span>
-                      </div>
+                        className="tag-color"
+                      ></div>
+                      <span className="issue-tag-text">{tag.tag_text}</span>
                     </MenuItem>
                   ))}
                 </Select>
@@ -275,4 +265,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, null)(NewIssueForm));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showSnackbar: (style, text, duration) =>
+      dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NewIssueForm)
+);

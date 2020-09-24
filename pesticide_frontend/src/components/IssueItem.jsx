@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Typography } from "@material-ui/core";
+import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
 import { Link } from "react-router-dom";
 import SkeletonIssue from "./SkeletonIssue";
 import { connect } from "react-redux";
@@ -65,6 +66,8 @@ const IssueItem = (props) => {
             ...props.bgClass,
             ...projectDetails,
             textTransform: "none",
+            overflow: "auto",
+            margin: isMobile ? "0 2px" : "0 5px",
           }}
         >
           <div
@@ -78,13 +81,9 @@ const IssueItem = (props) => {
               <Button
                 variant="outlined"
                 style={{
-                  borderRadius: "10px",
-                  textTransform: "none",
-                  marginRight: "5px",
-                  color: status && status.color,
-                  fontWeight: "700",
+                  backgroundColor: status && status.color,
                 }}
-                className="issue-button-filled-outline"
+                className="project-issue-status-button"
               >
                 {status &&
                   (!fullScreen
@@ -134,63 +133,78 @@ const IssueItem = (props) => {
             className="project-issue-details-right"
             style={!isMobile ? projectDetailsLeftRight : null}
           >
-            <div className="project-issue-tags">
+            <div
+              className="project-issue-tags"
+              style={{ justifyContent: !isMobile && "flex-end" }}
+            >
               {props.tags.map((tag) => (
                 <Button
                   onClick="event.stopPropagation()"
                   className="project-issue-tag issue-button-filled-outline"
-                  variant="outlined"
                   style={{
                     borderRadius: "10px",
                     textTransform: "none",
-                    marginRight: "5px",
-                    color:
-                      props.tagNameColorList &&
-                      props.tagNameColorList[tag] &&
-                      props.tagNameColorList[tag].tagColor,
-                    fontWeight: "900",
-                    marginBottom: "5px",
+                    margin: "2px 5px 2px 0",
+                    fontWeight: "500",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <div>
-                    #
-                    <span className="issue-tag-text">
-                      {props.tagNameColorList &&
+                  <div
+                    style={{
+                      backgroundColor:
+                        props.tagNameColorList &&
                         props.tagNameColorList[tag] &&
-                        props.tagNameColorList[tag].tagText}
-                    </span>
-                  </div>
+                        props.tagNameColorList[tag].tagColor,
+                    }}
+                    className="tag-color"
+                  ></div>
+                  <span className="issue-tag-text">
+                    {props.tagNameColorList &&
+                      props.tagNameColorList[tag] &&
+                      props.tagNameColorList[tag].tagText}
+                  </span>
                 </Button>
               ))}
             </div>
-            <div className="project-issue-tags">
-              {
-                <Link to={"/users/" + props.reporterDetails.enrollment_number}>
-                  <Button
-                    onClick="event.stopPropagation()"
-                    variant="outlined"
-                    className="project-issue-reporter issue-button-filled-outline"
-                    style={{
-                      borderRadius: "10px",
-                      textTransform: "none",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <div className="project-issue-reported-by-image">
-                      <img
-                        src={
-                          props.reporterDetails.display_picture
-                            ? props.reporterDetails.display_picture
-                            : "../sunglasses.svg"
-                        }
-                        alt="Issue Reporter"
-                      />
-                    </div>
-                    {props.reporterDetails.name != undefined &&
-                      props.reporterDetails.name}
-                  </Button>
-                </Link>
-              }
+            <div
+              className="project-issue-tags"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <Link to={"/users/" + props.reporterDetails.enrollment_number}>
+                <Button
+                  onClick="event.stopPropagation()"
+                  variant="outlined"
+                  className="project-issue-reporter issue-button-filled-outline"
+                  style={{
+                    borderRadius: "10px",
+                    textTransform: "none",
+                    whiteSpace: "nowrap",
+                    marginTop: isMobile && "5px",
+                  }}
+                >
+                  <div className="project-issue-reported-by-image">
+                    <img
+                      src={
+                        props.reporterDetails.display_picture
+                          ? props.reporterDetails.display_picture
+                          : "/sunglasses.svg"
+                      }
+                      alt="Issue Reporter"
+                    />
+                  </div>
+                  {props.reporterDetails.name != undefined &&
+                    props.reporterDetails.name}
+                </Button>
+              </Link>
+            </div>
+            <div
+              className="issue-item-comments"
+              style={{ margin: isMobile ? "10px 5px 0" : "0 6px" }}
+            >
+              <CommentIcon style={{ marginRight: "5px" }} />
+              <div>{props.commentsLength}</div>
             </div>
           </div>
         </div>

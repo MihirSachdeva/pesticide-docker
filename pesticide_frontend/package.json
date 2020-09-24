@@ -13,6 +13,7 @@
     "@tinymce/tinymce-react": "^3.6.0",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
+    "prismjs": "^1.21.0",
     "query-string": "^6.12.1",
     "react": "^16.13.1",
     "react-chartkick": "^0.4.0",

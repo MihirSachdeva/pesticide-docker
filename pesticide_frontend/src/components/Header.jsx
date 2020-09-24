@@ -330,7 +330,7 @@ const Header = (props) => {
                   className="header-user-button"
                 >
                   <img
-                    src={(user && user.display_picture) || "../sunglasses.svg"}
+                    src={(user && user.display_picture) || "/sunglasses.svg"}
                     className="header-user-image"
                   />
                   {!isMobile && (

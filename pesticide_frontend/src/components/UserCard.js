@@ -29,7 +29,7 @@ export default function UserCard(props) {
                 padding: "4px",
                 backgroundImage: props.display_photo
                   ? `url(${props.display_photo})`
-                  : "url(../sunglasses.svg)",
+                  : "url(/sunglasses.svg)",
               }}
               className="image-shadow"
             ></div>

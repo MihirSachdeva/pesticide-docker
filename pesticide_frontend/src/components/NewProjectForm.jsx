@@ -50,52 +50,80 @@ const NewProjectForm = (props) => {
     setProjectImage(event.target.files[0]);
   };
 
+  // const handleFormSubmit = (event) => {
+  //   event.preventDefault();
+  //   let data = {
+  //     name: formData.name,
+  //     wiki: wiki,
+  //     timestamp: new Date(),
+  //     link: formData.link,
+  //     status: formData.status,
+  //     members: personsID,
+  //   };
+  //   const token = localStorage.getItem("token");
+  //   axios.defaults.headers = {
+  //     "Content-Type": "application/json",
+  //     Authorization: "Token  " + token,
+  //   };
+  //   axios
+  //     .post(api_links.API_ROOT + "projects/", data)
+  //     .then((res) => {
+  //       let audio = new Audio(
+  //         "../sounds/navigation_selection-complete-celebration.wav"
+  //       );
+  //       audio.play();
+  //       if (projectImage !== null && res.status == 201) {
+  //         let project_id = res.data.id;
+  //         data = new FormData();
+  //         data.append("project", project_id);
+  //         data.append("image", projectImage, projectImage.name);
+  //         axios.defaults.headers = {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: "Token  " + token,
+  //         };
+  //         axios
+  //           .post(api_links.API_ROOT + "projecticons/", data)
+  //           .then((res) => {
+  //             console.log(res);
+  //             window.location.reload();
+  //           })
+  //           .catch((err) => {
+  //             console.log(err);
+  //             let audio = new Audio("../sounds/alert_error-03.wav");
+  //             audio.play();
+  //           });
+  //       }
+  //       setTimeout(() => {
+  //         window.location.href = "/projects";
+  //       }, 1000);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       let audio = new Audio("../sounds/alert_error-03.wav");
+  //       audio.play();
+  //     });
+  // };
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    let data = {
-      name: formData.name,
-      wiki: wiki,
-      timestamp: new Date(),
-      link: formData.link,
-      status: formData.status,
-      members: personsID,
-    };
-    const token = localStorage.getItem("token");
-    axios.defaults.headers = {
-      "Content-Type": "application/json",
-      Authorization: "Token  " + token,
-    };
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("wiki", wiki);
+    data.append("link", formData.link);
+    data.append("status", formData.status);
+    data.append("members", personsID);
+    projectImage && data.append("image", projectImage, projectImage.name);
     axios
-      .post(api_links.API_ROOT + "projects/", data)
+      .post(api_links.API_ROOT + "projects/", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
       .then((res) => {
         let audio = new Audio(
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
-        if (projectImage !== null && res.status == 201) {
-          let project_id = res.data.id;
-          data = new FormData();
-          data.append("project", project_id);
-          data.append("image", projectImage, projectImage.name);
-          axios.defaults.headers = {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Token  " + token,
-          };
-          axios
-            .post(api_links.API_ROOT + "projecticons/", data)
-            .then((res) => {
-              console.log(res);
-              window.location.reload();
-            })
-            .catch((err) => {
-              console.log(err);
-              let audio = new Audio("../sounds/alert_error-03.wav");
-              audio.play();
-            });
-        }
-        setTimeout(() => {
-          window.location.href = "/projects";
-        }, 1000);
+        console.log(res);
+        window.location.href = "/projects/";
       })
       .catch((err) => {
         console.log(err);
@@ -126,7 +154,7 @@ const NewProjectForm = (props) => {
       <div style={{ margin: "20px 5px" }}>
         <form noValidate onSubmit={handleFormSubmit}>
           <Grid container spacing={2}>
-            <Typography className="form-label">Project Name</Typography>
+            <Typography className="form-label">Project Name*</Typography>
             <Grid
               item
               xs={12}
@@ -165,12 +193,12 @@ const NewProjectForm = (props) => {
                     plugins: [
                       "advlist autolink lists link image charmap print preview anchor",
                       "searchreplace visualblocks code fullscreen",
-                      "insertdatetime media table paste code help wordcount table",
+                      "insertdatetime media table paste code help wordcount table codesample",
                     ],
                     toolbar: [
                       "undo redo | formatselect | bold italic backcolor | \
                       alignleft aligncenter alignright alignjustify | \
-                      bullist numlist outdent indent | removeformat | table | code | help",
+                      bullist numlist outdent indent | removeformat | table | code | help codesample",
                     ],
                   }}
                   onEditorChange={handleEditorChange}

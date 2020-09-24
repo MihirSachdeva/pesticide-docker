@@ -23,7 +23,7 @@ function MemberButton(props) {
       variant="outlined" 
       className="project-member-button">
         <div className="project-issue-reported-by-image">
-          <img src={userInfo.display_picture || "../sunglasses.svg"} alt="Member" />
+          <img src={userInfo.display_picture || "/sunglasses.svg"} alt="Member" />
         </div>
         &nbsp;
         <span style={{whiteSpace: 'nowrap'}}>{userInfo.name}</span>
