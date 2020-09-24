@@ -1,5 +1,6 @@
 import os
 import threading
+from datetime import datetime
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,9 +10,10 @@ from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from pesticide_app.api.serializers import ProjectSerializer
 from pesticide_app.permissions import ProjectCreatorMembersPermissions, AdminOrReadOnlyPermisions
-from pesticide_app.models import Project, User
+from pesticide_app.models import Project, User, ProjectIcon
 from pesticide_app.mailing import add_project_member, project_status_update, new_project_added
 from slugify import slugify
+from pesticide.settings import FRONTEND_URL
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -25,42 +27,60 @@ class ProjectViewSet(viewsets.ModelViewSet):
     search_fields = ['name']
 
     def create(self, request, *args, **kwargs):
-        project = request.data
-        project['creator'] = request.user.id
-        serializer = ProjectSerializer(data=project)
-        if serializer.is_valid():
-            project_slug = slugify(project['name'])
+        post_data = request.POST
+        name = post_data.get('name')
+        if ((name is not None) & (len(name) != 0)):
+            project_slug = slugify(name)
             slugs = []
             for p in Project.objects.all():
                 slugs.append(slugify(p.name))
             if project_slug in slugs:
                 return Response(
-                    {"message": "Project names should be strictly unique."},
+                    {"message": "Project name should be strictly unique."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            else:
-                self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_create(self, serializer):
-        project = serializer.save()
-        projectPageLink = "http://127.0.0.1:3000/projects/" + \
-            slugify(project.name)
-        email_notification = threading.Thread(
-            target=new_project_added,
-            args=(
-                project.name,
-                project.link,
-                projectPageLink,
-                project.creator,
-                project.members.all(),
-                project.status,
-                User.objects.all()
+            project_icon = request.FILES.get('image')
+            wiki = post_data.get('wiki')
+            project_status = post_data.get('status', 'Testing')
+            link = post_data.get('link')
+            project = Project.objects.create(
+                name=name,
+                wiki=wiki,
+                status=project_status,
+                link=link,
+                timestamp=datetime.now(),
+                creator=request.user,
             )
-        )
-        email_notification.start()
+            members = post_data.get('members')
+            if ((members is not None) & (len(members) != 0)):
+                members_id_list = members.split(',')
+                members_list = list(
+                    User.objects.filter(id__in=members_id_list)
+                )
+                project.members.set(members_list)
+            if project_icon is not None:
+                ProjectIcon.objects.create(project=project, image=project_icon)
+
+            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(project.name)}"
+            email_notification = threading.Thread(
+                target=new_project_added,
+                args=(
+                    project.name,
+                    project.link,
+                    projectPageLink,
+                    project.creator,
+                    project.members.all(),
+                    project.status,
+                    User.objects.all()
+                )
+            )
+            email_notification.start()
+
+            return Response(
+                {"message": 'Project created.'},
+                status=status.HTTP_201_CREATED
+            )
+        return Response('Name of project cannot be empty.', status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         methods=['patch', ],
@@ -87,8 +107,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 project.status = new_status
                 project.save()
                 status_updated_by = user
-                projectPageLink = "http://127.0.0.1:3000/projects/" + \
-                    slugify(project.name)
+                projectPageLink = f"{FRONTEND_URL}/projects/{slugify(project.name)}"
                 email_notification = threading.Thread(
                     target=project_status_update,
                     args=(
@@ -147,8 +166,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 # members_to_be_removed = list(set(old_member_list).difference(set(new_member_list)))
                 project.members.set(new_member_list)
                 project.save()
-                projectPageLink = "http://127.0.0.1:3000/projects/" + \
-                    slugify(project.name)
+                projectPageLink = f"{FRONTEND_URL}/projects/{slugify(project.name)}"
                 # can also send email to those who have been removed from the project (members_to_be_removed)
                 # but not implementing this for now.
                 email_notification = threading.Thread(

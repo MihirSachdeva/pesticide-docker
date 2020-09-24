@@ -9,6 +9,7 @@ from pesticide_app.permissions import CommentorPermissions, AdminOrReadOnlyPermi
 from pesticide_app.models import Comment
 from pesticide_app.mailing import new_comment
 from slugify import slugify
+from pesticide.settings import FRONTEND_URL
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -32,8 +33,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         comment = serializer.save()
-        projectPageLink = "http://127.0.0.1:3000/projects/" + \
-            slugify(comment.issue.project.name)
+        projectPageLink = f"{FRONTEND_URL}/projects/{slugify(comment.issue.project.name)}/{comment.issue.id}"
         email_notification = threading.Thread(
             target=new_comment,
             args=(

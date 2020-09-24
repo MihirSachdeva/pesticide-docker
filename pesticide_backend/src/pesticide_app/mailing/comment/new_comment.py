@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from ...mailing.mail_templates.new_comment import NewCommentTemplate
+from pesticide.settings import FRONTEND_URL
 
 
 def new_comment(project_name, project_page_link, issue_title, issue_reporter_name, comment, commentor_name, issue_reporter, issue_assignee, project_members=[]):
@@ -19,7 +20,7 @@ def new_comment(project_name, project_page_link, issue_title, issue_reporter_nam
                 comment,
                 commentor_name,
                 person_name=member.name,
-                app_link="http://127.0.0.1:3000"
+                app_link=FRONTEND_URL
             )
 
             name = member.name
@@ -58,7 +59,7 @@ def new_comment(project_name, project_page_link, issue_title, issue_reporter_nam
             comment,
             commentor_name,
             person_name=name,
-            app_link="http://127.0.0.1:3000"
+            app_link=FRONTEND_URL
         )
 
         text = f"""
@@ -96,7 +97,7 @@ def new_comment(project_name, project_page_link, issue_title, issue_reporter_nam
                 comment,
                 commentor_name,
                 person_name=name,
-                app_link="http://127.0.0.1:3000"
+                app_link=FRONTEND_URL
             )
 
             text = f"""
@@ -119,5 +120,5 @@ def new_comment(project_name, project_page_link, issue_title, issue_reporter_nam
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[issue_assignee.email, ],
                 html_message=html,
-                fail_silently=False
+                fail_silently=True
             )

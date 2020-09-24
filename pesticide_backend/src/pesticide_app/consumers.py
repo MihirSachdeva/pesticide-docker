@@ -7,6 +7,8 @@ from slugify import slugify
 
 from pesticide_app.models import Comment, User, Issue
 from pesticide_app.mailing import new_comment
+from pesticide.settings import FRONTEND_URL
+
 
 class CommentsConsumer(WebsocketConsumer):
 
@@ -22,17 +24,17 @@ class CommentsConsumer(WebsocketConsumer):
         commentor = User.objects.filter(id=data['commentor'])[0]
         issue = Issue.objects.filter(id=data['issue'])[0]
         comment = Comment.objects.create(
-            commentor = commentor,
-            issue = issue,
-            text = data['text'],
+            commentor=commentor,
+            issue=issue,
+            text=data['text'],
         )
-        
-        projectPageLink = "http://127.0.0.1:3000/projects/" + slugify(comment.issue.project.name) 
+
+        projectPageLink = f"{FRONTEND_URL}/projects/{slugify(comment.issue.project.name)}/{comment.issue.id}"
         email_notification = threading.Thread(
             target=new_comment,
             args=(
-                comment.issue.project.name, 
-                projectPageLink, 
+                comment.issue.project.name,
+                projectPageLink,
                 comment.issue.title,
                 comment.issue.reporter.name,
                 comment,
@@ -64,7 +66,7 @@ class CommentsConsumer(WebsocketConsumer):
             result.append(self.comment_to_json(comment))
         return result
 
-    def comment_to_json(self, comment): 
+    def comment_to_json(self, comment):
         return {
             'id': comment.id,
             'commentor': comment.commentor.username,
@@ -83,7 +85,6 @@ class CommentsConsumer(WebsocketConsumer):
         'new_comment': new_comment,
         'delete_comment': delete_comment
     }
-
 
     def connect(self):
         # self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -108,7 +109,6 @@ class CommentsConsumer(WebsocketConsumer):
     def receive(self, text_data):
         data = json.loads(text_data)
         self.commands[data['command']](self, data)
-
 
     def send_chat_comment(self, comment):
         # Send message to room group

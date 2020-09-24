@@ -7,10 +7,10 @@ class IssueStatus(models.Model):
         CLOSED = 'Closed', "Closed"
         RESOLVED = 'Resolved', "Resolved"
 
-    status_text = models.CharField(max_length=30)
-    color = models.CharField(max_length=10, default="#217bf3", blank=True)
+    status_text = models.CharField(max_length=30, unique=True)
+    color = models.CharField(max_length=10, default="#217bf3")
     type = models.CharField(max_length=30, choices=IssueStatusType.choices,
-                            default=IssueStatusType.PENDING, blank=True, null=True)
+                            default=IssueStatusType.PENDING)
 
     def __str__(self):
         return self.status_text

@@ -1,5 +1,6 @@
 import os
 import threading
+from datetime import datetime
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,9 +13,10 @@ from rest_framework.pagination import PageNumberPagination
 from pesticide_app.pagination import StandardResultsSetPagination
 from pesticide_app.api.serializers import IssueSerializer
 from pesticide_app.permissions import IssueCreatorPermissions, IssueProjectCreatorOrMembers, AdminOrReadOnlyPermisions
-from pesticide_app.models import Issue, IssueStatus, User
+from pesticide_app.models import Issue, IssueStatus, User, Tag, IssueImage, Project
 from pesticide_app.mailing import new_issue_reported, issue_status_update, issue_assigned
 from slugify import slugify
+from pesticide.settings import FRONTEND_URL
 
 
 class IssueViewSet(viewsets.ModelViewSet):
@@ -26,34 +28,68 @@ class IssueViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['title']
-    filterset_fields = ['project', 'reporter', 'assigned_to', 'tags', 'status__type']
+    filterset_fields = ['project', 'reporter',
+                        'assigned_to', 'status__type']
+
+    def get_queryset(self):
+        issues = self.queryset
+        query_tag_ids = self.request.GET.get('tags', '')
+        if len(query_tag_ids):
+            query_tag_ids_list = query_tag_ids.split(',')
+            query_tags_set = set(Tag.objects.filter(id__in=query_tag_ids_list))
+            filtered_issues = []
+            for issue in issues:
+                tags = issue.tags.all()
+                if query_tags_set.issubset(set(tags)):
+                    filtered_issues.append(issue.id)
+            return issues.filter(id__in=filtered_issues)
+        return issues
 
     def create(self, request, *args, **kwargs):
-        issue = request.data
-        issue['reporter'] = request.user.id
-        serializer = IssueSerializer(data=issue)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def perform_create(self, serializer):
-        issue = serializer.save()
-        projectPageLink = "http://127.0.0.1:3000/projects/" + \
-            slugify(issue.project.name)
-        email_notification = threading.Thread(
-            target=new_issue_reported,
-            args=(
-                issue.project.name,
-                projectPageLink,
-                issue.reporter.name,
-                issue.title,
-                issue.tags.all(),
-                issue.project.members.all()
+        post_data = request.POST
+        title = post_data.get('title')
+        if ((title is not None) & (len(title) != 0)):
+            issue_image = request.FILES.get('image')
+            project_id = post_data.get('project')
+            description = post_data.get('description')
+            post_data_copy = post_data.copy()
+            post_data_copy.pop('project')
+            post_data_copy.pop('tags')
+            post_data_copy.pop('title')
+            post_data_copy.pop('description')
+            project = Project.objects.get(pk=project_id)
+            issue = Issue.objects.create(
+                project=project,
+                title=title,
+                description=description,
+                timestamp=datetime.now(),
+                reporter=request.user,
+                **post_data_copy,
             )
-        )
-        email_notification.start()
+            tags = post_data.get('tags')
+            if ((tags is not None) & (len(tags) != 0)):
+                tags_id_list = tags.split(',')
+                tags_list = list(Tag.objects.filter(id__in=tags_id_list))
+                issue.tags.set(tags_list)
+            if issue_image is not None:
+                IssueImage.objects.create(issue=issue, image=issue_image)
+
+            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/{issue.id}"
+            email_notification = threading.Thread(
+                target=new_issue_reported,
+                args=(
+                    issue.project.name,
+                    projectPageLink,
+                    issue.reporter.name,
+                    issue.title,
+                    issue.tags.all(),
+                    issue.project.members.all()
+                )
+            )
+            email_notification.start()
+
+            return Response('Issue created.', status=status.HTTP_201_CREATED)
+        return Response('Title of issue cannot be empty.', status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         methods=['patch', ],
@@ -84,16 +120,13 @@ class IssueViewSet(viewsets.ModelViewSet):
                 issue.status = new_status
                 issue.save()
                 status_updated_by = user
-                projectPageLink = "http://127.0.0.1:3000/projects/" + \
-                    slugify(issue.project.name)
+                projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/{issue.id}"
                 email_notification = threading.Thread(
                     target=issue_status_update,
                     args=(
                         issue.project.name,
                         projectPageLink,
                         issue.title,
-                        # old_status temporarily set as IssueStatus of id = 1...
-                        IssueStatus.objects.get(id=1),
                         new_status,
                         status_updated_by,
                         issue.reporter,
@@ -141,8 +174,7 @@ class IssueViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             assigned_by = request.user
-            projectPageLink = "http://127.0.0.1:3000/projects/" + \
-                slugify(issue.project.name)
+            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/{issue.id}"
             if assigned_to and assigned_to != previous_assignee:
                 issue.assigned_to = assigned_to
                 issue.save()

@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from ..mail_templates.new_project import NewProjectTemplate
-
+from pesticide.settings import FRONTEND_URL
 
 def new_project_added(project_name, project_link, project_page_link, project_creator, project_members, project_status, users=[]):
     """
@@ -21,7 +21,7 @@ def new_project_added(project_name, project_link, project_page_link, project_cre
                 project_members,
                 project_status,
                 person_name=name,
-                app_link="http://127.0.0.1:3000"
+                app_link=FRONTEND_URL
             )
 
             text = f"""
@@ -38,5 +38,6 @@ def new_project_added(project_name, project_link, project_page_link, project_cre
                 message=text,
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[email, ],
-                html_message=html
+                html_message=html,
+                fail_silently=True
             )

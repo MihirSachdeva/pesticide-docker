@@ -3,11 +3,10 @@ class IssueStatusUpdateTemplate():
     Used to create HTML message to send in email to issue reporter and project members.
     """
 
-    def __init__(self, project_name, project_page_link, issue_title, old_status, new_status, status_updated_by, person_name, app_link):
+    def __init__(self, project_name, project_page_link, issue_title, new_status, status_updated_by, person_name, app_link):
         self.project_name = project_name
         self.project_page_link = project_page_link
         self.issue_title = issue_title
-        self.old_status = old_status  
         self.new_status = new_status
         self.status_updated_by = status_updated_by
         self.person_name = person_name

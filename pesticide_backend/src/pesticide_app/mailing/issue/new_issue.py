@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from ..mail_templates.new_issue import NewIssueTemplate
+from pesticide.settings import FRONTEND_URL
 
 
 def new_issue_reported(project_name, project_page_link, reported_by, issue_title, issue_tags, project_members=[]):
@@ -21,7 +22,7 @@ def new_issue_reported(project_name, project_page_link, reported_by, issue_title
                 issue_title=issue_title,
                 issue_tags=issue_tags,
                 person_name=name,
-                app_link='http://127.0.0.1:3000'
+                app_link=FRONTEND_URL
             )
 
             text = f"""
@@ -41,5 +42,5 @@ def new_issue_reported(project_name, project_page_link, reported_by, issue_title
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[email, ],
                 html_message=html,
-                fail_silently=False
+                fail_silently=True
             )

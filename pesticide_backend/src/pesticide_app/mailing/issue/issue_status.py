@@ -1,12 +1,14 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from ..mail_templates.issue_status import IssueStatusUpdateTemplate
+from pesticide.settings import FRONTEND_URL
 
-def issue_status_update(project_name, project_page_link, issue_title, old_status, new_status, status_updated_by, reporter, project_members=[]):
+
+def issue_status_update(project_name, project_page_link, issue_title, new_status, status_updated_by, reporter, project_members=[]):
     """
     Send email to notify members of a project and reporter of an issue that the status of the concerning 
     issue has been changed. \n
-    Takes args(project_name, project_page_link, issue_title, old_status, new_status, status_updated_by, reporter, project_members=[])
+    Takes args(project_name, project_page_link, issue_title, new_status, status_updated_by, reporter, project_members=[])
     """
 
     for member in project_members:
@@ -16,14 +18,13 @@ def issue_status_update(project_name, project_page_link, issue_title, old_status
             email = member.email
 
             mail_template = IssueStatusUpdateTemplate(
-                project_name, 
-                project_page_link, 
-                issue_title, 
-                old_status, 
-                new_status, 
-                status_updated_by, 
+                project_name,
+                project_page_link,
+                issue_title,
+                new_status,
+                status_updated_by,
                 person_name=name,
-                app_link = "http://127.0.0.1:3000"
+                app_link=FRONTEND_URL
             )
 
             text = f"""
@@ -50,14 +51,14 @@ def issue_status_update(project_name, project_page_link, issue_title, old_status
         email = reporter.email
 
         mail_template = IssueStatusUpdateTemplate(
-            project_name, 
-            project_page_link, 
-            issue_title, 
-            old_status, 
-            new_status, 
-            status_updated_by, 
+            project_name,
+            project_page_link,
+            issue_title,
+            old_status,
+            new_status,
+            status_updated_by,
             person_name=name,
-            app_link = "http://127.0.0.1:3000"
+            app_link=FRONTEND_URL
         )
 
         text = f"""
@@ -70,41 +71,11 @@ def issue_status_update(project_name, project_page_link, issue_title, old_status
 
         html = mail_template.for_issue_reporter()
 
-        # html = f"""
-        #             <html>
-        #                 <head></head>
-        #                 <body style="max-width:350px;">
-        #                         <h3>Hi, {name}!</h3>
-        #                         <div>
-        #                             The following issue you reported in the project <b>{project_name}</b> has been changed from 
-        #                             <b style="color: {old_status.color};">{old_status.status_text}</b> to <b style="color: {new_status.color};">{new_status.status_text}</b> 
-        #                             by {status_updated_by.name}:
-        #                         <div>
-        #                         <br>
-                                
-        #                         <b>{issue_title}</b>
-        #                         <br>
-        #                         <center>
-        #                             <div style="margin-top:30px; border-radius:5px; border-width:0px; text-align:center; background:#5390d9; width:50%; height:fit-content; padding:13px; display: table;">
-        #                                 <center>
-        #                                     <div style="display:table-cell; vertical-align:middle;"> 
-        #                                         <a style="color:white; font-size:16px;" href="{project_page_link}">Go to Project</a>
-        #                                     </div>
-        #                                 </center>
-        #                             </div>
-        #                         </center>
-        #                         <br>
-        #                         <br>
-        #                         Pesticide<br>
-        #                 </body>
-        #             </html>
-        #         """
-
         send_mail(
             subject=f"[PESTICIDE] Status change on an issue you reported in {project_name}",
             message=text,
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[email, ],
             html_message=html,
-            fail_silently=False
+            fail_silently=True
         )

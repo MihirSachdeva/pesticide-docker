@@ -1,0 +1,30 @@
+i18n:
+  language_code: ""
+  timezone: ""
+keys:
+  secret_key: ""
+  client_id: ""
+  client_secret: ""
+  redirect_uri: ""
+  desired_state: ""
+services:
+  email:
+    email_host: ""
+    email_port:
+    email_host_user: ""
+    email_host_password: ""
+    email_use_tls:
+  database:
+    host: ""
+    port: ""
+    user: ""
+    password: ""
+    name: ""
+pagination:
+  page_size:
+dev:
+  allow_all: True # To allow anyone (outside of IMG) to use the app
+  allow_any_master: True # To make everyone master of the app (admin)
+frontend:
+  url: "" # Frontend app url, eg. https://www.example.com or http://localhost:3000
+  

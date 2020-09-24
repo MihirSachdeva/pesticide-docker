@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from ..mail_templates.issue_assigned import IssueAssignTemplate
+from pesticide.settings import FRONTEND_URL
 
 
 def issue_assigned(project_name, project_page_link, issue_title, issue_tags, assigned_to, assigned_by):
@@ -17,7 +18,7 @@ def issue_assigned(project_name, project_page_link, issue_title, issue_tags, ass
             issue_tags,
             assigned_by,
             person_name=assigned_to.name,
-            app_link="http://127.0.0.1:3000"
+            app_link=FRONTEND_URL
         )
 
         text = f"""
@@ -36,5 +37,6 @@ def issue_assigned(project_name, project_page_link, issue_title, issue_tags, ass
             message=text,
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[assigned_to.email, ],
-            html_message=html
+            html_message=html,
+            fail_silently=True
         )

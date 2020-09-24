@@ -1,10 +1,17 @@
 import os
-from decouple import config
+import yaml
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG")
+BASE_CONFIG_FILE = open(os.path.join(
+    BASE_DIR,
+    'config/base.yml'
+))
+BASE_CONFIGURATION = yaml.load(BASE_CONFIG_FILE, Loader=yaml.FullLoader)
+SECRET_KEY = BASE_CONFIGURATION["keys"]["secret_key"]
+DEBUG = True
 ALLOWED_HOSTS = ['*']
+PAGE_SIZE = BASE_CONFIGURATION["pagination"]["page_size"]
+FRONTEND_URL = BASE_CONFIGURATION["frontend"]["url"]
 
 # Application definition
 
@@ -64,11 +71,15 @@ WSGI_APPLICATION = 'pesticide.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config("NAME"),
-        'USER': config("USER"),
-        'PASSWORD': config("PASSWORD"),
-        'HOST': config("HOST"),
-        'PORT': config("PORT"),
+        'NAME': BASE_CONFIGURATION["services"]["database"]["name"],
+        'USER': BASE_CONFIGURATION["services"]["database"]["user"],
+        'PASSWORD': BASE_CONFIGURATION["services"]["database"]["password"],
+        'HOST': BASE_CONFIGURATION["services"]["database"]["host"],
+        'PORT': BASE_CONFIGURATION["services"]["database"]["port"],
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+
     }
 }
 
@@ -93,8 +104,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = config("LANGUAGE_CODE")
-TIME_ZONE = config("TIMEZONE")
+LANGUAGE_CODE = BASE_CONFIGURATION["i18n"]["language_code"]
+TIME_ZONE = BASE_CONFIGURATION["i18n"]["timezone"]
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -111,18 +122,18 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(config("REDIS_HOST"), config("REDIS_PORT", cast=int))],
+            "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
 
 # Email service
 
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-EMAIL_PORT = config("EMAIL_PORT")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = BASE_CONFIGURATION["services"]["email"]["email_host"]
+EMAIL_USE_TLS = BASE_CONFIGURATION["services"]["email"]["email_use_tls"]
+EMAIL_PORT = BASE_CONFIGURATION["services"]["email"]["email_port"]
+EMAIL_HOST_USER = BASE_CONFIGURATION["services"]["email"]["email_host_user"]
+EMAIL_HOST_PASSWORD = BASE_CONFIGURATION["services"]["email"]["email_host_password"]
 
 REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'pesticide_app.api.serializers.TokenSerializer',
@@ -143,10 +154,7 @@ OAUTH2_PROVIDER = {
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost:8000',
-    "http://127.0.0.1:3000",
-    "http://0.0.0.0:3000"
+    FRONTEND_URL,
 )
 SITE_ID = 1
 

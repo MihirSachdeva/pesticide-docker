@@ -10,6 +10,7 @@ from .project.project_name_slug import ProjectNameSlugViewSet
 from .project.project_icon import ProjectIconViewSet
 from .project.project import ProjectViewSet
 from .project.project_members import ProjectMembers
+from .project.project_issue_status import ProjectIssueStatusViewSet
 from .issue.issue import IssueViewSet
 from .issue.issue_image import IssueImageViewSet
 from .issue.issue_status import IssueStatusViewSet
@@ -19,3 +20,4 @@ from .issue.issue_search import IssueSearchViewSet
 from .tag.tag import TagViewSet
 from .tag.tag_colors import TagColorsView
 from .comment.comment import CommentViewSet
+from .search.unity_search import SearchView

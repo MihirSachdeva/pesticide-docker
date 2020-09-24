@@ -14,7 +14,7 @@ from pesticide_app.api.serializers import UserSerializer
 from pesticide_app.models import User, EmailSubscription
 from pesticide_app.permissions import AdminOrReadOnlyPermisions, ReadOnlyPermissions
 from pesticide_app.auth import CsrfExemptSessionAuthentication
-from decouple import config
+from pesticide.settings import BASE_CONFIGURATION
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -35,10 +35,10 @@ class UserViewSet(viewsets.ModelViewSet):
             CsrfExemptSessionAuthentication, BasicAuthentication)
     )
     def on_login(self, request):
-        client_id = config("CLIENT_ID")
-        client_secret = config("CLIENT_SECRET")
-        desired_state = config("DESIRED_STATE")
-        redirect_uri = config("REDIRECT_URI")
+        client_id = BASE_CONFIGURATION["keys"]["client_id"]
+        client_secret = BASE_CONFIGURATION["keys"]["client_secret"]
+        desired_state = BASE_CONFIGURATION["keys"]["desired_state"]
+        redirect_uri = BASE_CONFIGURATION["keys"]["redirect_uri"]
         try:
             authorization_code = self.request.data['code']
         except KeyError:
@@ -117,17 +117,18 @@ class UserViewSet(viewsets.ModelViewSet):
 
         try:
             existingUser = User.objects.get(
-                enrollment_number=user_data['student']['enrolmentNumber']
+                enrollment_number=user_data.get(
+                    'student', {}).get('enrolmentNumber')
             )
 
         except User.DoesNotExist:
             is_imgian = False
-            for role in user_data['person']['roles']:
+            for role in user_data.get('person', {}).get('roles'):
                 if 'Maintainer' in role.values():
                     is_imgian = True
 
-            # Remove this line to allow only members of IMG to use the app.
-            is_imgian = True
+            # Remove the following line to allow only members of IMG to use the app.
+            is_imgian = BASE_CONFIGURATION["dev"]["allow_all"]
 
             if not is_imgian:
                 return Response(
@@ -135,79 +136,79 @@ class UserViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_401_UNAUTHORIZED
                 )
 
+            is_master = False
+            if user_data.get('student', {}).get('currentYear') == 4:
+                is_master = True
+
+            # Remove the following line to allow only coordinators to become masters of the app.
+            is_master = BASE_CONFIGURATION["dev"]["allow_any_master"]
+
+            enrollment_number = user_data.get('student', {}).get('enrolmentNumber')
+            email = user_data.get('contactInformation', {}).get('instituteWebmailAddress')
+            full_name = user_data.get('person', {}).get('fullName')
+            first_name = full_name.split()[0]
+            current_year = user_data.get('student', {}).get('currentYear')
+            branch_name = user_data.get('student', {}).get('branch name')
+            degree_name = user_data.get('student', {}).get('branch degree name')
+            if user_data.get('person', {}).get('displayPicture') != None:
+                display_picture = 'http://internet.channeli.in' + \
+                    user_data.get('person', {}).get('displayPicture')
             else:
-                is_master = False
-                if user_data['student']['currentYear'] > 3:
-                    is_master = True
+                display_picture = ''
 
-                enrollment_number = user_data['student']['enrolmentNumber']
-                email = user_data['contactInformation']['instituteWebmailAddress']
-                full_name = user_data['person']['fullName']
-                first_name = full_name.split()[0]
-                current_year = user_data['student']['currentYear']
-                branch_name = user_data['student']['branch name']
-                degree_name = user_data['student']['branch degree name']
-                if user_data['person']['displayPicture'] != None:
-                    display_picture = 'http://internet.channeli.in' + \
-                        user_data['person']['displayPicture']
-                else:
-                    display_picture = ''
-                is_master = False
-                if user_data['student']['currentYear'] > 3:
-                    is_master = True
+            new_user = User(
+                username=enrollment_number,
+                enrollment_number=enrollment_number,
+                email=email,
+                name=full_name,
+                first_name=first_name,
+                is_master=is_master,
+                access_token=access_token,
+                refresh_token=refresh_token,
+                current_year=current_year,
+                branch=branch_name,
+                degree=degree_name,
+                is_active=True,
+                display_picture=display_picture,
+                password=make_password(access_token)
+            )
 
-                new_user = User(
-                    username=enrollment_number,
-                    enrollment_number=enrollment_number,
-                    email=email,
-                    name=full_name,
-                    first_name=first_name,
-                    is_master=is_master,
-                    access_token=access_token,
-                    refresh_token=refresh_token,
-                    current_year=current_year,
-                    branch=branch_name,
-                    degree=degree_name,
-                    is_active=True,
-                    display_picture=display_picture,
-                    password=make_password(access_token)
-                )
+            new_user.is_staff = True
+            new_user.is_admin = True
+            new_user.save()
 
-                new_user.is_staff = True
-                new_user.is_admin = True
-                new_user.save()
+            email_subscriptions = EmailSubscription(
+                user=new_user
+            )
+            email_subscriptions.save()
 
-                email_subscriptions = EmailSubscription(
-                    user=new_user
-                )
-                email_subscriptions.save()
+            login(request=request, user=new_user)
+            return Response(
+                {'status': 'Acount created successfully. Welcome to Pesticide.',
+                    'username': enrollment_number, 'access_token': access_token},
+                status=status.HTTP_202_ACCEPTED
+            )
 
-                login(request=request, user=new_user)
-                return Response(
-                    {'status': 'Acount created successfully. Welcome to Pesticide.',
-                        'username': enrollment_number, 'access_token': access_token},
-                    status=status.HTTP_202_ACCEPTED
-                )
-
-        current_year = user_data['student']['currentYear']
-        branch_name = user_data['student']['branch name']
-        degree_name = user_data['student']['branch degree name']
-        if user_data['person']['displayPicture'] != None:
+        current_year = user_data.get('student', {}).get('currentYear')
+        branch_name = user_data.get('student', {}).get('branch name')
+        degree_name = user_data.get('student', {}).get('branch degree name')
+        if user_data.get('person', {}).get('displayPicture') != None:
             display_picture = 'http://internet.channeli.in' + \
-                user_data['person']['displayPicture']
+                user_data.get('person', {}).get('displayPicture')
         else:
             display_picture = ''
 
-        # Include the following if a user must be checked for is_master (admin status, current_year > 3) upon every sign in.
-        # is_master = False
-        # if user_data['student']['currentYear'] > 3:
-        #     is_master = True
+        if existingUser.current_year != current_year:
+            existingUser.current_year = current_year
 
-        # existingUser.is_master = is_master
-        existingUser.current_year = current_year
-        existingUser.branch = branch_name
-        existingUser.degree = degree_name
-        existingUser.display_picture = display_picture
+        if existingUser.branch != branch_name:
+            existingUser.branch = branch_name
+
+        if existingUser.degree != degree_name:
+            existingUser.degree = degree_name
+
+        if existingUser.display_picture != display_picture:
+            existingUser.display_picture = display_picture
 
         if existingUser.access_token != access_token:
             existingUser.access_token = access_token
