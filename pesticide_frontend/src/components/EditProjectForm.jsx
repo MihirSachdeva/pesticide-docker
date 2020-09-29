@@ -66,11 +66,6 @@ const EditProjectForm = (props) => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    const token = props.token;
-    axios.defaults.headers = {
-      "Content-Type": "application/json",
-      Authorization: "Token  " + token,
-    };
     axios
       .patch(api_links.API_ROOT + `projects/${props.projectID}/`, {
         ...editedFormData,
@@ -125,10 +120,6 @@ const EditProjectForm = (props) => {
           let data = new FormData();
           data.append("project", project_id);
           data.append("image", projectImage, projectImage.name);
-          axios.defaults.headers = {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Token  " + token,
-          };
           if (res.data.icon) {
             axios
               .patch(

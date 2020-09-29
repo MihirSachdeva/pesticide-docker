@@ -219,9 +219,8 @@ const Issues = (props) => {
   };
 
   const getFilteredIssues = (pageNumber = 1, tags, searchQuery, statusType) => {
-    const token = props.token;
     let config = {
-      headers: { Authorization: "Token " + token },
+      // headers: { Authorization: "Token " + token },
       params: {
         page: pageNumber,
       },
