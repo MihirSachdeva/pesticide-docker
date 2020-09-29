@@ -2,7 +2,7 @@ from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from pesticide_app.models import Issue, Project, User
 from pesticide_app.api.serializers import ProjectSerializer, IssueSerializer, UserSerializer
 
@@ -12,7 +12,7 @@ class SearchView(APIView):
     Search for issues, projects and users.
     """
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication, ]
+    authentication_classes = [SessionAuthentication, ]
 
     def get(self, request):
         query = self.request.query_params.get('q', None)

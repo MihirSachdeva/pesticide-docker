@@ -15,11 +15,6 @@ const UtilityComponent = (props) => {
     const docTitle =
       props.title == "Pesticide" ? "Pesticide" : props.title + " - Pesticide";
     document.title = docTitle;
-    let token = localStorage.getItem("token") || "";
-    axios.defaults.headers = {
-      "Content-Type": "application/json",
-      Authorization: "Token " + token,
-    };
     !props.error404 &&
       axios
         .get(API_ROOT + "user_logged_in/")

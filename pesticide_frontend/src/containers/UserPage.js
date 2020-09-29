@@ -86,9 +86,8 @@ export default function UserPage(props) {
   };
 
   const getDemReportedIssues = (userId, pageNumber = 1) => {
-    const token = localStorage.getItem("token");
     let config1 = {
-      headers: { Authorization: "Token " + token },
+      // headers: { Authorization: "Token " + token },
       params: {
         page: pageNumber,
         reporter: userId,
@@ -110,9 +109,8 @@ export default function UserPage(props) {
   };
 
   const getDemAssignedIssues = (userId, pageNumber = 1) => {
-    const token = localStorage.getItem("token");
     let config2 = {
-      headers: { Authorization: "Token " + token },
+      // headers: { Authorization: "Token " + token },
       params: {
         page: pageNumber,
         assigned_to: userId,
@@ -172,9 +170,8 @@ export default function UserPage(props) {
         getDemReportedIssues(res.data.id);
         getDemAssignedIssues(res.data.id);
 
-        const token = localStorage.getItem("token");
         let config = {
-          headers: { Authorization: "Token " + token },
+          // headers: { Authorization: "Token " + token },
           params: {
             members: res.data.id,
           },

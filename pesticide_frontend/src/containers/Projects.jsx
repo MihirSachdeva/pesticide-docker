@@ -103,7 +103,7 @@ const Projects = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     projects: state.projects.projects,
   };
 };

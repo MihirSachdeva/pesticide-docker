@@ -32,6 +32,7 @@ import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
 import * as api_links from "../APILinks";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const drawerWidth = 240;
 
@@ -187,19 +188,14 @@ const Header = (props) => {
   const [user, setUser] = React.useState();
 
   React.useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios.defaults.headers = {
-      "Content-Type": "application/json",
-      Authorization: "Token " + token,
-    };
-    token &&
+    props.isAuthenticated &&
       axios
         .get(api_links.API_ROOT + "projects/")
         .then((res) => {
           setProjects(res.data);
         })
         .catch((err) => console.log(err));
-    token &&
+    props.isAuthenticated &&
       axios
         .get(api_links.API_ROOT + "current_user/")
         .then((res) => {
@@ -605,7 +601,7 @@ const Header = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     currentTheme: state.theme.theme,
     headerTitle: state.header.title,
     drawerOpen: state.theme.drawerOpen,

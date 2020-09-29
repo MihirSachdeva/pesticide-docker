@@ -192,9 +192,8 @@ const ProjectPage = (props) => {
   };
 
   async function getDemIssues(projectId, pageNumber = 1) {
-    const token = localStorage.getItem("token");
     let config = {
-      headers: { Authorization: "Token " + token },
+      // headers: { Authorization: "Token " + token },
       params: {
         page: pageNumber,
         project: projectId,
@@ -339,9 +338,8 @@ const ProjectPage = (props) => {
     searchQuery,
     statusType
   ) {
-    const token = localStorage.getItem("token");
     let config = {
-      headers: { Authorization: "Token " + token },
+      // headers: { Authorization: "Token " + token },
       params: {
         page: pageNumber,
         project: pid,

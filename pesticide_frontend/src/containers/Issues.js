@@ -137,9 +137,8 @@ const Issues = (props) => {
   const [search, setSearch] = React.useState("");
 
   async function getDemIssues(pageNumber = 1) {
-    const token = localStorage.getItem("token");
     const config = {
-      headers: { Authorization: "Token " + token },
+      // headers: { Authorization: "Token " + token },
       params: {
         page: pageNumber,
       },
@@ -562,8 +561,7 @@ const Issues = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
-    token: state.auth.token,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
       state.theme.theme
     ),

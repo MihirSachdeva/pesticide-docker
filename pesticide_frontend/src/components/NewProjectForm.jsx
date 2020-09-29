@@ -50,60 +50,6 @@ const NewProjectForm = (props) => {
     setProjectImage(event.target.files[0]);
   };
 
-  // const handleFormSubmit = (event) => {
-  //   event.preventDefault();
-  //   let data = {
-  //     name: formData.name,
-  //     wiki: wiki,
-  //     timestamp: new Date(),
-  //     link: formData.link,
-  //     status: formData.status,
-  //     members: personsID,
-  //   };
-  //   const token = localStorage.getItem("token");
-  //   axios.defaults.headers = {
-  //     "Content-Type": "application/json",
-  //     Authorization: "Token  " + token,
-  //   };
-  //   axios
-  //     .post(api_links.API_ROOT + "projects/", data)
-  //     .then((res) => {
-  //       let audio = new Audio(
-  //         "../sounds/navigation_selection-complete-celebration.wav"
-  //       );
-  //       audio.play();
-  //       if (projectImage !== null && res.status == 201) {
-  //         let project_id = res.data.id;
-  //         data = new FormData();
-  //         data.append("project", project_id);
-  //         data.append("image", projectImage, projectImage.name);
-  //         axios.defaults.headers = {
-  //           "Content-Type": "multipart/form-data",
-  //           Authorization: "Token  " + token,
-  //         };
-  //         axios
-  //           .post(api_links.API_ROOT + "projecticons/", data)
-  //           .then((res) => {
-  //             console.log(res);
-  //             window.location.reload();
-  //           })
-  //           .catch((err) => {
-  //             console.log(err);
-  //             let audio = new Audio("../sounds/alert_error-03.wav");
-  //             audio.play();
-  //           });
-  //       }
-  //       setTimeout(() => {
-  //         window.location.href = "/projects";
-  //       }, 1000);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       let audio = new Audio("../sounds/alert_error-03.wav");
-  //       audio.play();
-  //     });
-  // };
-
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const data = new FormData();

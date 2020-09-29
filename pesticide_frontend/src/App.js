@@ -38,7 +38,7 @@ const App = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     currentTheme: state.theme.theme || "default",
   };
 };

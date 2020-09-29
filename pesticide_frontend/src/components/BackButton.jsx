@@ -37,7 +37,7 @@ const BackButton = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     currentTheme: state.theme.theme,
     headerTitle: state.header.title,
     drawerOpen: state.theme.drawerOpen,

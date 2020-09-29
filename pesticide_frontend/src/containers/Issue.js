@@ -280,11 +280,6 @@ const Issue = (props) => {
   };
 
   const handleIssueDelete = () => {
-    const token = localStorage.getItem("token");
-    axios.defaults.headers = {
-      "Content-Type": "application/json",
-      Authorization: "Token " + token,
-    };
     axios
       .delete(api_links.API_ROOT + `issues/${issue.id}/`)
       .then((res) => {
@@ -1230,7 +1225,6 @@ const Issue = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
     currentUser: state.auth.currentUser,
     theme: state.theme.theme,
     darkTheme: ["dark", "solarizedDark", "palpatine"].includes(

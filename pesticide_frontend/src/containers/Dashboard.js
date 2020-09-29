@@ -188,7 +188,7 @@ const Dashboard = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     theme: state.theme.theme || "default",
     bgImage: ((theme) => {
       switch (theme) {

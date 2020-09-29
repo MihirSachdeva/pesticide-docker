@@ -427,7 +427,7 @@ const EditProjectForm = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.auth.token,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
       state.theme.theme
     ),

@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.filters import SearchFilter
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import make_password
@@ -225,7 +225,28 @@ class UserViewSet(viewsets.ModelViewSet):
         login(request=request, user=existingUser)
 
         return Response(
-            {'messgae': 'Logged in! Welcome to Pesticide!',
-                'username': existingUser.enrollment_number, 'access_token': access_token},
+            {
+                'messgae': 'Logged in! Welcome to Pesticide!',
+                'username': existingUser.enrollment_number,
+                'id': existingUser.id,
+            },
             status=status.HTTP_202_ACCEPTED
+        )
+
+
+    @action(
+        methods=['POST', ],
+        detail=False,
+        url_name='onlogout',
+        url_path='onlogout',
+        permission_classes=[IsAuthenticated],
+        authentication_classes=(SessionAuthentication,)
+    )
+    def on_logout(self, request):
+        logout(request)
+        return Response(
+            {
+                'messgae': 'Logged out. Bye!',
+            },
+            status=status.HTTP_200_OK
         )

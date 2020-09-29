@@ -2,7 +2,6 @@ import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
 
 const initialState = {
-  token: null,
   error: null,
   currentUser: {
     id: null,
@@ -18,7 +17,6 @@ const authStart = (state, action) => {
 
 const authSuccess = (state, action) => {
   return updateObject(state, {
-    token: action.token,
     currentUser: {
       id: action.currentUser.id,
       is_master: action.currentUser.is_master,
@@ -34,9 +32,7 @@ const authFail = (state, action) => {
 };
 
 const authLogout = (state, action) => {
-  return updateObject(state, {
-    token: null,
-  });
+  return updateObject(state, {});
 };
 
 const reducer = (state = initialState, action) => {

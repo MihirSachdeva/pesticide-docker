@@ -105,9 +105,7 @@ const IssueItem = (props) => {
             </Typography>
             {props.showProjectNameOnCard ? (
               <>
-                <Typography style={{ margin: "0 5px", fontSize: "27px" }}>
-                  •
-                </Typography>
+                <Typography style={{ margin: "0 5px" }}>•</Typography>
                 <Typography className="project-issue">
                   {props.projectname}
                 </Typography>

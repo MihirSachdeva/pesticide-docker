@@ -53,7 +53,7 @@ const Page404 = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     currentTheme: state.theme.theme,
     image: ((theme) => {
       switch (theme) {

@@ -5,7 +5,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from pesticide_app.api.serializers import ProjectSerializer
@@ -21,7 +21,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     permission_classes = [IsAuthenticated & (
         ProjectCreatorMembersPermissions | AdminOrReadOnlyPermisions)]
-    authentication_classes = [TokenAuthentication, ]
+    authentication_classes = [SessionAuthentication, ]
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['members']
     search_fields = ['name']
@@ -89,7 +89,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         url_name='update-project-status',
         permission_classes=[IsAuthenticated & (
             ProjectCreatorMembersPermissions | AdminOrReadOnlyPermisions)],
-        authentication_classes=[TokenAuthentication]
+        authentication_classes=[SessionAuthentication]
     )
     def update_project_status(self, request, pk):
         project = Project.objects.get(pk=pk)
@@ -136,7 +136,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         url_name='update-project-members',
         permission_classes=[IsAuthenticated & (
             ProjectCreatorMembersPermissions | AdminOrReadOnlyPermisions)],
-        authentication_classes=[TokenAuthentication]
+        authentication_classes=[SessionAuthentication]
     )
     def update_project_members(self, request, pk):
         project = Project.objects.get(pk=pk)

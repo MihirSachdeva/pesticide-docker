@@ -4,7 +4,7 @@ import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
-import { NavLink, Redirect, Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
 import * as actions from "../store/actions/auth";
 import * as api_links from "../APILinks";
@@ -36,12 +36,12 @@ function Onlogin(props) {
       .then((res) => {
         if (res.status === 201 || res.status === 202) {
           res.data.username &&
-            res.data.access_token &&
             setState({
               user_found: true,
               got_response: true,
             });
-          props.onAuth(res.data.username, res.data.access_token);
+          props.onAuth(res.data.username, res.data.id);
+          window.location.href = "/";
         } else {
           console.log(
             "Couldn't log in. Either it's an internal error or you have been disabled."
@@ -73,14 +73,6 @@ function Onlogin(props) {
       {state.got_response ? (
         state.user_found ? (
           <div className="centered">
-            <div style={{ display: "none" }}>
-              {setTimeout(
-                () => (
-                  <Redirect to="/" />
-                ),
-                2000
-              )}
-            </div>
             <a href={api_links.RICKROLLED}>
               <img
                 src="./debuggingtime.png"
@@ -102,8 +94,8 @@ function Onlogin(props) {
             </a>
 
             <Typography>
-              Seems like something went wrong... Either its on us, or you've
-              been disabled by an admin.
+              {`Seems like something went wrong... Either it's a silly bug, which 
+              really sucks. Or you've been disabled by an admin, which also sucks. :(`}
             </Typography>
             <Link to="/signin">
               <Button
@@ -137,8 +129,7 @@ function Onlogin(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (username, password) =>
-      dispatch(actions.authLogin(username, password)),
+    onAuth: (username, id) => dispatch(actions.authLogin(username, id)),
   };
 };
 

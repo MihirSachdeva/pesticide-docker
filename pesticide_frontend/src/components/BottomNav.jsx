@@ -118,7 +118,7 @@ const BottomNav = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     is_master: state.auth.currentUser.is_master,
     currentTheme: state.theme.theme || "default",
     drawerOpen: state.theme.drawerOpen,

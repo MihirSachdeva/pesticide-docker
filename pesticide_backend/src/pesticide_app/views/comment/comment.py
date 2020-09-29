@@ -2,7 +2,7 @@ import threading
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.filters import SearchFilter
 from pesticide_app.api.serializers import CommentSerializer
 from pesticide_app.permissions import CommentorPermissions, AdminOrReadOnlyPermisions
@@ -18,7 +18,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated & (
         CommentorPermissions | AdminOrReadOnlyPermisions)]
     filter_backends = (SearchFilter, )
-    authentication_classes = [TokenAuthentication, ]
+    authentication_classes = [SessionAuthentication, ]
     search_fields = ['text']
 
     def create(self, request, *args, **kwargs):

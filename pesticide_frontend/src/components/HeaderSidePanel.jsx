@@ -12,7 +12,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-
+import Cookies from "js-cookie";
 import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
 import * as api_links from "../APILinks";
@@ -161,12 +161,7 @@ const HeaderSidePanel = (props) => {
   const [searchQuery, setSearchQuery] = React.useState("");
 
   React.useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios.defaults.headers = {
-      "Content-Type": "application/json",
-      Authorization: "Token " + token,
-    };
-    token && getDefaultData();
+    props.isAuthenticated && getDefaultData();
   }, [props.isAuthenticated]);
 
   async function getDefaultData() {
@@ -429,7 +424,7 @@ const HeaderSidePanel = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    isAuthenticated: state.auth.token !== null,
+    isAuthenticated: state.auth.currentUser.id != undefined,
     currentTheme: state.theme.theme,
     headerTitle: state.header.title,
     darkTheme:

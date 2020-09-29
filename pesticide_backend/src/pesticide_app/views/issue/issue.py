@@ -5,7 +5,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.filters import SearchFilter
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -24,7 +24,7 @@ class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
     permission_classes = [IsAuthenticated & (
         IssueCreatorPermissions | IssueProjectCreatorOrMembers | AdminOrReadOnlyPermisions)]
-    authentication_classes = [TokenAuthentication, ]
+    authentication_classes = [SessionAuthentication, ]
     pagination_class = StandardResultsSetPagination
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['title']
@@ -98,7 +98,7 @@ class IssueViewSet(viewsets.ModelViewSet):
         url_name='update-issue-status',
         permission_classes=[IsAuthenticated & (
             IssueProjectCreatorOrMembers | AdminOrReadOnlyPermisions)],
-        authentication_classes=[TokenAuthentication]
+        authentication_classes=[SessionAuthentication]
     )
     def update_issue_status(self, request, pk):
         """
@@ -149,7 +149,7 @@ class IssueViewSet(viewsets.ModelViewSet):
         url_name='issue-assign',
         permission_classes=[IsAuthenticated & (
             IssueProjectCreatorOrMembers | AdminOrReadOnlyPermisions)],
-        authentication_classes=[TokenAuthentication]
+        authentication_classes=[SessionAuthentication]
     )
     def issue_assign(self, request, pk):
         """

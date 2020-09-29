@@ -1,7 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
 import * as api_links from "../../APILinks";
-import Cookies from "js-cookie";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
 axios.defaults.xsrfCookieName = "csrftoken";
 
@@ -11,10 +10,9 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (token, id, is_master) => {
+export const authSuccess = (id, is_master) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    token: token,
     currentUser: {
       id: id,
       is_master: is_master,
@@ -30,28 +28,25 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("expirationDate");
-  localStorage.removeItem("id");
+  axios
+    .post(api_links.API_ROOT + "users/onlogout/", {})
+    .then((res) => {})
+    .catch((err) => console.log(err));
   return {
     type: actionTypes.AUTH_LOGOUT,
   };
 };
 
-export const authLogin = (username, password) => {
+export const authLogin = (username, id) => {
   return (dispatch) => {
     dispatch(authStart());
     axios
-      .post(api_links.REST_AUTH_LOGIN, {
-        username: username,
-        password: password,
-      })
+      .get(api_links.API_ROOT + "user_logged_in/")
       .then((res) => {
-        const userId = res.data.user.id;
-        const token = res.data.key;
-        localStorage.setItem("token", token);
-        localStorage.setItem("id", userId);
-        dispatch(authSuccess(token, userId));
+        const id = res.data.id;
+        const isMaster = res.data.is_master;
+        localStorage.setItem("id", id);
+        dispatch(authSuccess(id, isMaster));
       })
       .catch((err) => {
         dispatch(authFail(err));
@@ -61,30 +56,21 @@ export const authLogin = (username, password) => {
 
 export const authCheckState = () => {
   return (dispatch) => {
-    const token = localStorage.getItem("token");
     localStorage.setItem(
       "hint",
       "I wish the dark theme were... darker, maybe even as dark as palpatine :)"
     );
-    if (token === undefined) {
-      dispatch(logout());
-    } else {
-      axios.defaults.headers = {
-        "Content-Type": "application/json",
-        Authorization: "Token " + token,
-      };
-      axios
-        .get(api_links.API_ROOT + "current_user/")
-        .then((res) => {
-          const id = res.data[0].id;
-          const is_master = res.data[0].is_master;
-          localStorage.setItem("id", id);
-          dispatch(authSuccess(token, id, is_master));
-        })
-        .catch((err) => {
-          console.log(err);
-          dispatch(authFail(err));
-        });
-    }
+    axios
+      .get(api_links.API_ROOT + "current_user/")
+      .then((res) => {
+        const id = res.data[0].id;
+        const isMaster = res.data[0].is_master;
+        localStorage.setItem("id", id);
+        dispatch(authSuccess(id, isMaster));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(authFail(err));
+      });
   };
 };
