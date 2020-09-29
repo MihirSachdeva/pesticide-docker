@@ -91,7 +91,7 @@ Make a new file named `base.yml` in the same [config](pesticide_backend/src/conf
 
 | key | meaning                                 |
 | --- | --------------------------------------- |
-| url | App frontend url, eg. http://localhost` |
+| url | App frontend url, eg. `http://localhost` |
 
 ## Build the required images
 
