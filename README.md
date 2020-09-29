@@ -89,8 +89,8 @@ Make a new file named `base.yml` in the same [config](pesticide_backend/src/conf
 
 ### frontend
 
-| key | meaning                                 |
-| --- | --------------------------------------- |
+| key | meaning                                  |
+| --- | ---------------------------------------- |
 | url | App frontend url, eg. `http://localhost` |
 
 ## Build the required images
@@ -115,6 +115,14 @@ Then head over to `http://localhost` to start using the app!
 The Django admin can be viewed at `http://localhost/django-admin/`.
 
 The Django REST API pages can be viewed at `http://localhost/api/`.
+
+## How to stop the containers
+
+Stop the running containers using docker-compose.
+
+```bash
+user@system:~/pesticide-docker$ docker-compose down
+```
 
 ## Contributing
 
