@@ -137,11 +137,14 @@ class UserViewSet(viewsets.ModelViewSet):
                 )
 
             is_master = False
+            is_superuser = False
             if user_data.get('student', {}).get('currentYear') == 4:
                 is_master = True
+                is_superuser = True
 
             # Remove the following line to allow only coordinators to become masters of the app.
-            is_master = BASE_CONFIGURATION["dev"]["allow_any_master"]
+            all_masters = BASE_CONFIGURATION["dev"]["allow_any_master"]
+            all_superusers = BASE_CONFIGURATION["dev"]["allow_any_master"]
 
             enrollment_number = user_data.get('student', {}).get('enrolmentNumber')
             email = user_data.get('contactInformation', {}).get('instituteWebmailAddress')
@@ -162,7 +165,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 email=email,
                 name=full_name,
                 first_name=first_name,
-                is_master=is_master,
+                is_master=is_master or all_masters,
+                is_superuser=is_superuser or all_superusers,
                 access_token=access_token,
                 refresh_token=refresh_token,
                 current_year=current_year,
@@ -197,23 +201,32 @@ class UserViewSet(viewsets.ModelViewSet):
                 user_data.get('person', {}).get('displayPicture')
         else:
             display_picture = ''
+        
+        fields_changed = False
 
         if existingUser.current_year != current_year:
+            fields_changed = True
             existingUser.current_year = current_year
 
         if existingUser.branch != branch_name:
+            fields_changed = True
             existingUser.branch = branch_name
 
         if existingUser.degree != degree_name:
+            fields_changed = True
             existingUser.degree = degree_name
 
         if existingUser.display_picture != display_picture:
+            fields_changed = True
             existingUser.display_picture = display_picture
 
         if existingUser.access_token != access_token:
+            fields_changed = True
             existingUser.access_token = access_token
             existingUser.refresh_token = refresh_token
             existingUser.set_password(access_token)
+        
+        if fields_changed:
             existingUser.save()
 
         if not existingUser.is_active:
