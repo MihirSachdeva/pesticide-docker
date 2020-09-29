@@ -2,9 +2,15 @@
 
 ## A clean and feature-rich project-management and bug-tracking app.
 
-Backend written in [Django](https://www.djangoproject.com), with [DjangoREST](https://www.django-rest-framework.org) for APIs.
+Backend: [Django](https://www.djangoproject.com), with [DjangoREST](https://www.django-rest-framework.org) for APIs, and [Django Channels](https://channels.readthedocs.io/en/latest/) for real-time comments.
 
-Frontend written in [React](https://reactjs.org/), with [Material-UI](https://material-ui.com/) and [Redux](https://react-redux.js.org/)
+Frontend: [React](https://reactjs.org/), with [Material-UI](https://material-ui.com/) and [Redux](https://react-redux.js.org/) for state management.
+
+Database management: [MySQL](https://www.mysql.com/). Simple, just works.
+
+Frontend build files are served with [NGINX](https://www.nginx.com/), with proxy_pass for requests to the backend.
+
+Containerized using [Docker](https://www.docker.com/), with [docker-compose](https://docs.docker.com/compose/) for container orchestration.
 
 Made for [IMG IIT Roorkee](https://img.channeli.in) Developers' Summer Project of 2020.
 
@@ -15,13 +21,13 @@ Made for [IMG IIT Roorkee](https://img.channeli.in) Developers' Summer Project o
 Open your terminal in a folder of your choice (where you would want to store your repository.) For example, if you want to clone this project in the Home (~) directory, enter the following command:
 
 ```bash
-user@system:~$ git clone https://github.com/MihirSachdeva/Pesticide.git
+user@system:~$ git clone https://github.com/MihirSachdeva/pesticide-docker.git
 ```
 
-Then move to the newly formed directory called `Pesticide`
+Then move to the newly formed directory called `pesticide-docker`
 
-```base
-user@system:~$ cd Pesticide
+```bash
+user@system:~$ cd pesticide-docker
 ```
 
 ## Set Up The Codebase
@@ -58,7 +64,7 @@ Make a new file named `base.yml` in the same [config](pesticide_backend/src/conf
 | email_host_password | Your emailing service account password                                               |
 | email_use_tls       | This tells Django what secure protocol should be used to connect to the email server |
 
-### services > **database**
+### services > **database** (values must be same as those in [docker-compose.yml](docker-compose.yml))
 
 | key      | meaning                       |
 | -------- | ----------------------------- |
@@ -68,72 +74,47 @@ Make a new file named `base.yml` in the same [config](pesticide_backend/src/conf
 | password | Your database user's password |
 | name     | Database name                 |
 
-### Set Up The Django Backend
+### pagination
 
-#### Install [pipenv](https://realpython.com/pipenv-guide/)
+| key       | meaning                                        |
+| --------- | ---------------------------------------------- |
+| page_size | Your preferred size of items in a page, eg. 10 |
 
-Pipenv is a packaging tool for Python that solves some common problems associated with the typical workflow using pip, virtualenv/venv, and the good old requirements.txt. To install pipenv, enter the following in your terminal:
+### dev
 
-```bash
-user@system:~/Pesticide$ pip3 install pipenv
-```
+| key              | meaning                                                      |
+| ---------------- | ------------------------------------------------------------ |
+| allow_all        | To allow anyone (outside of IMG) to use the app, eg. `false` |
+| allow_any_master | To make everyone master of the app (admin), eg. `false`      |
 
-#### Create a virtual environment and install all required Python packages
+### frontend
 
-Using pipenv, start a virtual environment, and then install all required Python packages from [Pipfile](pesticide_backend/Pipfile):
+| key | meaning                                 |
+| --- | --------------------------------------- |
+| url | App frontend url, eg. http://localhost` |
 
-```bash
-user@system:~/Pesticide$ cd pesticide_backend
-user@system:~/Pesticide/pesticide_backend$ pipenv shell
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend$ pipenv install
-```
+## Build the required images
 
-The `(pesticide_backend)` in the command line indicates that our virtual environment `pesticide_backend` is active. To deactivate it, simply type `exit` in the command line.
-
-#### Set up the Django database
-
-First set up your preferred database. In [settings.py](pesticide_backend/src/pesticide/settings.py), MySQL database has been set up. All required parameters like host, port, user, database and password will be taken from base.yml. After that, to set up the database on your local system:
+Build the required images, such as pesticide-docker_backend, pesticide-docker_frontend, redis, nginx, mysql and node using dockere-compose.
 
 ```bash
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend$ cd src/
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend/src$ python3 manage.py makemigrations peticide_app
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend/src$ python3 manage.py migrate pesticide_app
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend/src$ python3 manage.py makemigrations
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend/src$ python3 manage.py migrate
+user@system:~/pesticide-docker$ docker-compose build
 ```
 
-#### Start a Redis server
+## Start the containers
 
-We will use a channel layer that uses Redis as its backing store. You must have [Docker](https://docs.docker.com/engine/install/) installed in your system. To start a Redis server on port 6379, run the following command:
+Run all the relevant containers using docker-compose.
+NOTE: Make sure that the port 80 is not used by any other service, as we are port forwarding the port 80 of the system to port 8080 of the container.
 
 ```bash
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend$ docker run -p 6379:6379 -d redis:5
+user@system:~/pesticide-docker$ docker-compose up
 ```
 
-### Set Up The React Frontend
+Then head over to `http://localhost` to start using the app!
 
-#### Install all required npm packages:
+The Django admin can be viewed at `http://localhost/django-admin/`.
 
-```bash
-user@system:~/Pesticide$ cd pesticide_frontend/src/
-user@system:~/Pesticide/pesticide_frontend/src$ npm install --save
-```
-
-## Usage
-
-### Start the Django Server:
-
-```bash
-(pesticide_backend) user@system:~/Pesticide/pesticide_backend/src$ python3 manage.py runserver
-```
-
-### Start the React Frontend Server:
-
-```bash
-user@system:~/Pesticide/pesticide_frontend$ npm start
-```
-
-Then head over to 127.0.0.1:3000 to start using the app!
+The Django REST API pages can be viewed at `http://localhost/api/`.
 
 ## Contributing
 
