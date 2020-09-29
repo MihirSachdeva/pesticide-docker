@@ -1,33 +1,33 @@
 i18n:
-  language_code: ""
-  timezone: ""
+  language_code: en-us
+  timezone: Asia/Kolkata
 keys:
   secret_key: ""
   client_id: ""
   client_secret: ""
-  redirect_uri: ""
-  desired_state: ""
+  redirect_uri: http://0.0.0.0:3000/onlogin
+  desired_state: 
 services:
   email:
-    email_host: ""
-    email_port:
-    email_host_user: ""
-    email_host_password: ""
-    email_use_tls:
+    email_host: smtp.gmail.com
+    email_port: 587
+    email_host_user: 
+    email_host_password: 
+    email_use_tls: true
   database:
-    host: "db"
+    host: db
     port: 3306
-    user: "test_user"
-    password: "test_user_password"
-    name: "pesticide_docker"
+    user: test_user
+    password: test_user_password
+    name: pesticide_docker
   channel_layer:
     host: redis
     port: 6379
 pagination:
-  page_size:
+  page_size: 10
 dev:
-  allow_all: True # To allow anyone (outside of IMG) to use the app
-  allow_any_master: True # To make everyone master of the app (admin)
+  allow_all: false # To allow anyone (outside of IMG) to use the app
+  allow_any_master: false # To make everyone master of the app (admin)
 frontend:
-  url: "" # Frontend app url, eg. https://www.example.com or http://localhost:3000
+  url: "http://localhost" # Frontend url, eg. https://www.example.com or http://localhost
   
