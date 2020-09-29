@@ -16,7 +16,7 @@ import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
 import ArrowDownwardRoundedIcon from "@material-ui/icons/ArrowDownwardRounded";
 import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
 import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
@@ -67,6 +67,7 @@ const Issue = (props) => {
   const topRef = React.useRef(null);
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [hoverButtons, showHoverButtons] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
   const scrollFunc = function () {
     var y = document.getElementById("main-main").scrollTop;
@@ -84,7 +85,6 @@ const Issue = (props) => {
     scrollToTop();
     const issueId = props.match.params.issueId;
     const projectSlug = props.match.params.projectslug;
-    console.log(props.match.params);
     axios
       .get(api_links.API_ROOT + `issues/${issueId}/`)
       .then((res) => {
@@ -142,7 +142,7 @@ const Issue = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        window.location.href = "/404";
+        setError("true");
       });
 
     setAlert({
@@ -157,17 +157,28 @@ const Issue = (props) => {
     };
   }, [props.match.params.issueId]);
 
+  let counter = 0;
+
   const waitForSocketConnection = (callback) => {
     setTimeout(() => {
       if (WebSocketInstance.state() === 1) {
         console.log("Connection is secure.");
         callback();
+        props.closeSnackbar();
         return;
       } else {
+        counter++;
+        console.log(counter);
         console.log("Waiting for connection...");
         waitForSocketConnection(callback);
+        counter == 10 &&
+          props.showSnackbar(
+            "error",
+            "Couldn't fetch comments. Check your connection.",
+            600000
+          );
       }
-    }, 100);
+    }, 500);
   };
 
   async function fetchUsersListForIssueAssign(projectId) {
@@ -466,6 +477,7 @@ const Issue = (props) => {
   return (
     <>
       <div ref={topRef} style={{ display: "none" }}></div>
+      {error && <Redirect to="/404" />}
 
       <UtilityComponent
         title={HEADER_NAV_TITLES.ISSUE}
@@ -1231,6 +1243,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showSnackbar: (style, text, duration) =>
       dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
+    closeSnackbar: () => dispatch(snackbarActions.changeSnackbar(false)),
   };
 };
 

@@ -14,7 +14,7 @@ class Issue(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     reporter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_creator')
     tags = models.ManyToManyField(Tag, blank=True)
-    status = models.ForeignKey(IssueStatus, default=IssueStatus.objects.get(status_text="New").id, null=True, on_delete=models.SET_NULL)
+    status = models.ForeignKey(IssueStatus, null=True, on_delete=models.SET_NULL)
     assigned_to = models.ForeignKey(User, blank=True, null=True, related_name='issue_asignee', on_delete=models.SET_NULL)
     timestamp = models.DateTimeField()
 

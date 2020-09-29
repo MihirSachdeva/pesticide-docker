@@ -15,11 +15,14 @@ services:
     email_host_password: ""
     email_use_tls:
   database:
-    host: ""
-    port: ""
-    user: ""
-    password: ""
-    name: ""
+    host: "db"
+    port: 3306
+    user: "test_user"
+    password: "test_user_password"
+    name: "pesticide_docker"
+  channel_layer:
+    host: redis
+    port: 6379
 pagination:
   page_size:
 dev:

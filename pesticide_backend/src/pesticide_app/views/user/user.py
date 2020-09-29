@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authentication import BasicAuthentication, TokenAuthentication
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework.filters import SearchFilter
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import make_password
@@ -21,7 +21,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all().order_by('-current_year')
     permission_classes = [IsAuthenticated & AdminOrReadOnlyPermisions]
-    authentication_classes = [TokenAuthentication, ]
+    authentication_classes = [SessionAuthentication, ]
     filter_backends = [SearchFilter]
     search_fields = ['name', 'enrollment_number']
 

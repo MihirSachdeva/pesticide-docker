@@ -1,6 +1,9 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
 import * as api_links from "../../APILinks";
+import Cookies from "js-cookie";
+axios.defaults.xsrfHeaderName = "X-CSRFToken";
+axios.defaults.xsrfCookieName = "csrftoken";
 
 export const authStart = () => {
   return {
@@ -59,7 +62,10 @@ export const authLogin = (username, password) => {
 export const authCheckState = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
-    localStorage.setItem("hint", "I wish the dark theme was... darker, maybe even as dark as palpatine :)");
+    localStorage.setItem(
+      "hint",
+      "I wish the dark theme were... darker, maybe even as dark as palpatine :)"
+    );
     if (token === undefined) {
       dispatch(logout());
     } else {

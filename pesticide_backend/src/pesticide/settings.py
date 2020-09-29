@@ -76,10 +76,6 @@ DATABASES = {
         'PASSWORD': BASE_CONFIGURATION["services"]["database"]["password"],
         'HOST': BASE_CONFIGURATION["services"]["database"]["host"],
         'PORT': BASE_CONFIGURATION["services"]["database"]["port"],
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
-
     }
 }
 
@@ -122,7 +118,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(BASE_CONFIGURATION["services"]["channel_layer"]["host"], BASE_CONFIGURATION["services"]["channel_layer"]["port"])],
         },
     },
 }
@@ -153,9 +149,10 @@ OAUTH2_PROVIDER = {
 
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    FRONTEND_URL,
-)
+# CORS_ORIGIN_WHITELIST = (
+#     FRONTEND_URL,
+#     'http://localhost'
+# )
 SITE_ID = 1
 
 DJRICHTEXTFIELD_CONFIG = {

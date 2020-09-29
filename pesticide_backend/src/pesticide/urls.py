@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('django-admin/', admin.site.urls),
     path('djrichtextfield/', include('djrichtextfield.urls')),
     path('api/', include('pesticide_app.api.urls')),
     path('rest-auth/', include('rest_auth.urls')),

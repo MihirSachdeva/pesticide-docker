@@ -64,7 +64,12 @@ function Onlogin(props) {
 
   return (
     <>
-      <UtilityComponent not onLogin title={HEADER_NAV_TITLES.ONLOGIN} page="ONLOGIN" />
+      <UtilityComponent
+        not
+        onLogin
+        title={HEADER_NAV_TITLES.ONLOGIN}
+        page="ONLOGIN"
+      />
       {state.got_response ? (
         state.user_found ? (
           <div className="centered">
@@ -85,47 +90,47 @@ function Onlogin(props) {
             <Typography variant="h6">Welcome to Pesticide!</Typography>
           </div>
         ) : (
-            <div
-              className="centered"
-              style={{ justifyContent: "center", margin: "20px" }}
-            >
-              <a href={api_links.RICKROLLED}>
-                <img
-                  src="./debuggingtime.png"
-                  style={{ height: "300px", margin: "40px" }}
-                />
-              </a>
-
-              <Typography>
-                Seems like something went wrong... Either its on us, or you've
-                been disabled by an admin.
-            </Typography>
-              <Link to="/signin">
-                <Button
-                  className="btn-filled btn-filled-error"
-                  style={{ margin: "10px", fontWeight: "900" }}
-                >
-                  Trying Again Never Hurts
-              </Button>
-              </Link>
-            </div>
-          )
-      ) : (
-          <div className="centered">
+          <div
+            className="centered"
+            style={{ justifyContent: "center", margin: "20px" }}
+          >
             <a href={api_links.RICKROLLED}>
               <img
                 src="./debuggingtime.png"
                 style={{ height: "300px", margin: "40px" }}
               />
             </a>
-            <CircularProgress
-              color="secondary"
-              size={50}
-              style={{ marginBottom: "40px" }}
-            />
-            <Typography variant="h6">Loading...</Typography>
+
+            <Typography>
+              Seems like something went wrong... Either its on us, or you've
+              been disabled by an admin.
+            </Typography>
+            <Link to="/signin">
+              <Button
+                className="btn-filled btn-filled-error"
+                style={{ margin: "10px", fontWeight: "900" }}
+              >
+                Trying Again Never Hurts
+              </Button>
+            </Link>
           </div>
-        )}
+        )
+      ) : (
+        <div className="centered">
+          <a href={api_links.RICKROLLED}>
+            <img
+              src="./debuggingtime.png"
+              style={{ height: "300px", margin: "40px" }}
+            />
+          </a>
+          <CircularProgress
+            color="secondary"
+            size={50}
+            style={{ marginBottom: "40px" }}
+          />
+          <Typography variant="h6">Loading...</Typography>
+        </div>
+      )}
     </>
   );
 }

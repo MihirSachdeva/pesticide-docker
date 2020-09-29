@@ -54,6 +54,7 @@ scripts/
 
 # production
 /build
+/pesticide_frontend/build
 
 # misc
 .DS_Store
@@ -74,6 +75,3 @@ pesticide_backend/src/config/base.yml
 
 # pychache
 *__pycache__/
-
-#migrations
-*migrations/

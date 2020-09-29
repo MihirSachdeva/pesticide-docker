@@ -1,13 +1,13 @@
-export const ROOT = 'http://localhost:8000';
+export const ROOT = 'http://localhost';
 export const API_ROOT = `${ROOT}/api/`;
 export const REST_AUTH_LOGIN = `${ROOT}/rest-auth/login/`;
 export const OMNIPORT_OAUTH_ROOT = `https://internet.channeli.in/oauth/authorise`;
 export const CLIENT_ID = `gKUvZEAlIemSbCql1JzDkR2ClVBY6MjGehIyqeeY`;
 export const DESIRED_STATE = `foobarbaz42`;
-export const REDIRECT_URL = `http://localhost:3000/onlogin`;
+export const REDIRECT_URL = `http://localhost/onlogin`;
 export const OMNIPORT_OAUTH = `${OMNIPORT_OAUTH_ROOT}/?client_id=${CLIENT_ID}&redirect_url=${REDIRECT_URL}&state=${DESIRED_STATE}`;
 export const RICKROLLED = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-export const WEBSOCKET_ROOT = 'ws://localhost:8000/ws/';
+export const WEBSOCKET_ROOT = 'ws://localhost/ws/';
 export const UPDATE_PROJECT_MEMBERS = id => `${API_ROOT}projects/${id}/update-project-members/`;
 export const UPDATE_PROJECT_STATUS = id => `${API_ROOT}projects/${id}/update-project-status/`;
 export const UPDATE_ISSUE_STATUS = id => `${API_ROOT}issues/${id}/update-issue-status/`;

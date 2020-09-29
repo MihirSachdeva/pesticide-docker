@@ -114,9 +114,7 @@ const IssueItem = (props) => {
               </>
             ) : (
               <>
-                <Typography style={{ margin: "0 5px", fontSize: "27px" }}>
-                  •
-                </Typography>
+                <Typography style={{ margin: "0 5px" }}>•</Typography>
                 <Typography
                   className="project-issue-date"
                   style={{ fontSize: "15px", whiteSpace: "nowrap" }}

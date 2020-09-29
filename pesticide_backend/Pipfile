@@ -20,6 +20,8 @@ channels-redis = "*"
 mysqlclient = "*"
 python-decouple = "*"
 pyyaml = "*"
+daphne = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

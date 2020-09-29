@@ -21,7 +21,7 @@ class CommentsConsumer(WebsocketConsumer):
         self.send_comments(content)
 
     def new_comment(self, data):
-        commentor = User.objects.filter(id=data['commentor'])[0]
+        commentor = self.scope["user"]
         issue = Issue.objects.filter(id=data['issue'])[0]
         comment = Comment.objects.create(
             commentor=commentor,
@@ -87,17 +87,20 @@ class CommentsConsumer(WebsocketConsumer):
     }
 
     def connect(self):
-        # self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_name = self.scope['url_route']['kwargs']['issue_id']
         self.room_group_name = 'chat_%s' % self.room_name
+        user = self.scope["user"]
+        print(user)
 
-        # Join room group
-        async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
-            self.channel_name
-        )
-
-        self.accept()
+        if user in User.objects.all():
+            # Join room group
+            async_to_sync(self.channel_layer.group_add)(
+                self.room_group_name,
+                self.channel_name
+            )
+            self.accept()
+        else:
+            self.close()
 
     def disconnect(self, close_code):
         # Leave room group
