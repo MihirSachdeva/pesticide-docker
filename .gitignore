@@ -70,6 +70,10 @@ yarn-error.log*
 # media
 pesticide_backend/src/media/
 
+# backend static files
+pesticide_backend/src/static
+pesticide_backend/src/backend-static
+
 # config secrets
 pesticide_backend/src/config/base.yml
 

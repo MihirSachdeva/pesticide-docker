@@ -25,7 +25,7 @@ services:
   backend:
     restart: always
     container_name: pesticide_backend
-    command: bash -c "cd ./src && python check_db.py --service-name db --ip db --port 3306 && python manage.py makemigrations pesticide_app && python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 pesticide.asgi:application"
+    command: bash -c "cd ./src && python check_db.py --service-name db --ip db --port 3306 && python manage.py collectstatic --noinput && python manage.py makemigrations pesticide_app && python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 pesticide.asgi:application"
     build:
       context: ./pesticide_backend/
       dockerfile: Dockerfile
@@ -63,6 +63,8 @@ services:
     volumes:
       - ./nginx/nginx-proxy.conf:/etc/nginx/conf.d/default.conf:ro
       - ./pesticide_frontend/build:/var/www/frontend
+      - ./pesticide_backend/src/media:/backend/src/media
+      - ./pesticide_backend/src/backend-static:/backend/src/backend-static
     depends_on:
       - backend
     networks:
