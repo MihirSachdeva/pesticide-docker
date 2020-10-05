@@ -20,19 +20,19 @@
 
 ## Mobile:
 
-![Home page - mobile - light](./images/16.png)
-![Home page - mobile - dark](./images/17.png)
-![Home page - mobile - solarized light](./images/28.png)
-![Home page - mobile - solarized dark](./images/29.png)
-![Projects page - mobile - light](./images/18.png)
-![Projects page - mobile - dark](./images/19.png)
-![Project page - mobile - light](./images/30.png)
-![Project page - mobile - dark](./images/31.png)
-![Issue page - mobile - light](./images/20.png)
-![Issue page - mobile - dark](./images/21.png)
-![Issue page scrolled - mobile - dark](./images/22.png)
-![User page - mobile - dark](./images/26.png)
-![User page - mobile - light](./images/27.png)
-![Admin page issue status - mobile - light](./images/23.png)
-![Admin page users - mobile - light](./images/24.png)
-![Admin page users - mobile - dark](./images/25.png)
+<img src="./images/16.png" alt="Home page - mobile - light" width="300px" />
+<img src="./images/17.png" alt="Home page - mobile - dark" width="300px" />
+<img src="./images/28.png" alt="Home page - mobile - solarized light" width="300px" />
+<img src="./images/29.png" alt="Home page - mobile - solarized dark" width="300px" />
+<img src="./images/18.png" alt="Projects page - mobile - light" width="300px" />
+<img src="./images/19.png" alt="Projects page - mobile - dark" width="300px" />
+<img src="./images/30.png" alt="Project page - mobile - light" width="300px" />
+<img src="./images/31.png" alt="Project page - mobile - dark" width="300px" />
+<img src="./images/20.png" alt="Issue page - mobile - light" width="300px" />
+<img src="./images/21.png" alt="Issue page - mobile - dark" width="300px" />
+<img src="./images/22.png" alt="Issue page scrolled - mobile - dark" width="300px" />
+<img src="./images/26.png" alt="User page - mobile - dark" width="300px" />
+<img src="./images/27.png" alt="User page - mobile - light" width="300px" />
+<img src="./images/23.png" alt="Admin page issue status - mobile - light" width="300px" />
+<img src="./images/24.png" alt="Admin page users - mobile - light" width="300px" />
+<img src="./images/25.png" alt="Admin page users - mobile - dark" width="300px" />
