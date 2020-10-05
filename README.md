@@ -2,11 +2,11 @@
 
 ## A clean and feature-rich project-management and bug-tracking app.
 
-![Home page - light](./readme-assets/images/1.png)
+![Signin page - light](./readme-assets/images/1.png)
 ![Home page - light](./readme-assets/images/3.png)
-![Home page - light](./readme-assets/images/7.png)
-![Home page - light](./readme-assets/images/9.png)
-![Home page - light](./readme-assets/images/11.png)
+![Project page - light](./readme-assets/images/7.png)
+![Issue page - light](./readme-assets/images/9.png)
+![Issue page scrolled - light](./readme-assets/images/11.png)
 
 ### View more screenshots [here](./readme-assets/images)
 
