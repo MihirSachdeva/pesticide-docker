@@ -8,7 +8,7 @@
 ![Issue page - light](./readme-assets/images/9.png)
 ![Issue page scrolled - light](./readme-assets/images/11.png)
 
-### View more screenshots [here](./readme-assets/images)
+### View more screenshots [here](./readme-assets)
 
 Backend: [Django](https://www.djangoproject.com), with [DjangoREST](https://www.django-rest-framework.org) for APIs, and [Django Channels](https://channels.readthedocs.io/en/latest/) for real-time comments.
 
