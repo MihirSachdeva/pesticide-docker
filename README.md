@@ -2,6 +2,14 @@
 
 ## A clean and feature-rich project-management and bug-tracking app.
 
+![Home page - light](./readme-assets/images/1.png)
+![Home page - light](./readme-assets/images/3.png)
+![Home page - light](./readme-assets/images/7.png)
+![Home page - light](./readme-assets/images/9.png)
+![Home page - light](./readme-assets/images/11.png)
+
+### View more screenshots [here](./readme-assets/images)
+
 Backend: [Django](https://www.djangoproject.com), with [DjangoREST](https://www.django-rest-framework.org) for APIs, and [Django Channels](https://channels.readthedocs.io/en/latest/) for real-time comments.
 
 Frontend: [React](https://reactjs.org/), with [Material-UI](https://material-ui.com/) and [Redux](https://react-redux.js.org/) for state management.
