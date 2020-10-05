@@ -5,7 +5,7 @@ keys:
   secret_key: ""
   client_id: ""
   client_secret: ""
-  redirect_uri: http://0.0.0.0:3000/onlogin
+  redirect_uri: http://localhost:7765/onlogin
   desired_state: 
 services:
   email:
@@ -29,5 +29,5 @@ dev:
   allow_all: false # To allow anyone (outside of IMG) to use the app
   allow_any_master: false # To make everyone master of the app (admin)
 frontend:
-  url: "http://localhost" # Frontend url, eg. https://www.example.com or http://localhost
+  url: "http://localhost:7765" # Frontend url, eg. https://www.example.com or http://localhost
   

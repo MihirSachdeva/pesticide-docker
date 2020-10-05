@@ -60,7 +60,7 @@ class UserViewSet(viewsets.ModelViewSet):
             'client_id': client_id,
             'client_secret': client_secret,
             'grant_type': 'authorization_code',
-            'redirect_url': redirect_uri,
+            'redirect_uri': redirect_uri,
             'code': authorization_code
         }
         token_data = requests.post(url=url, data=data).json()
