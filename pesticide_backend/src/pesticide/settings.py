@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'djrichtextfield',
+    'django_filters',
     'pesticide_app',
 ]
 
