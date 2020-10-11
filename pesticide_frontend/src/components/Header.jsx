@@ -583,7 +583,14 @@ const Header = (props) => {
                             />
                           </div>
                         </ListItemIcon>
-                        <ListItemText primary={project.name} />
+                        <ListItemText
+                          primary={
+                            project.name &&
+                            (project.name.length < 9
+                              ? project.name
+                              : project.name.match(/\b([A-Z])/g).join(""))
+                          }
+                        />
                       </ListItem>
                     </Tooltip>
                   </Link>
