@@ -363,7 +363,12 @@ const HeaderSidePanel = (props) => {
                           </div>
                           <div className="sidepanel-item-context">
                             <div className="sidepanel-item-context-item">
-                              {issue.project_details.name + " •"}
+                              {issue.project_details.name &&
+                                (issue.project_details.name.length < 9
+                                  ? issue.project_details.name
+                                  : issue.project_details.name
+                                      .match(/\b([A-Z])/g)
+                                      .join("")) + " •"}
                             </div>
                             <div className="sidepanel-item-context-item">
                               {issue.status_text.length < 10
@@ -396,7 +401,9 @@ const HeaderSidePanel = (props) => {
                         />
                         <div className="sidepanel-item-contents">
                           <div className="sidepanel-item-title">
-                            {user.name}
+                            {user.name.length < 17
+                              ? user.name
+                              : user.name.slice(0, 17) + "..."}
                           </div>
                           <div className="sidepanel-item-context">
                             <div className="sidepanel-item-context-item">
