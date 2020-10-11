@@ -128,7 +128,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     is_imgian = True
 
             # Remove the following line to allow only members of IMG to use the app.
-            is_imgian = BASE_CONFIGURATION["dev"]["allow_all"]
+            #is_imgian = BASE_CONFIGURATION["dev"]["allow_all"]
 
             if not is_imgian:
                 return Response(
@@ -143,8 +143,11 @@ class UserViewSet(viewsets.ModelViewSet):
                 is_superuser = True
 
             # Remove the following line to allow only coordinators to become masters of the app.
-            all_masters = BASE_CONFIGURATION["dev"]["allow_any_master"]
-            all_superusers = BASE_CONFIGURATION["dev"]["allow_any_master"]
+            #all_masters = BASE_CONFIGURATION["dev"]["allow_any_master"]
+            #all_superusers = BASE_CONFIGURATION["dev"]["allow_any_master"]
+
+            all_masters = False
+            all_superusers = False
 
             enrollment_number = user_data.get('student', {}).get('enrolmentNumber')
             email = user_data.get('contactInformation', {}).get('instituteWebmailAddress')
@@ -154,7 +157,7 @@ class UserViewSet(viewsets.ModelViewSet):
             branch_name = user_data.get('student', {}).get('branch name')
             degree_name = user_data.get('student', {}).get('branch degree name')
             if user_data.get('person', {}).get('displayPicture') != None:
-                display_picture = 'http://internet.channeli.in' + \
+                display_picture = '//internet.channeli.in' + \
                     user_data.get('person', {}).get('displayPicture')
             else:
                 display_picture = ''
@@ -177,8 +180,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 password=make_password(access_token)
             )
 
-            new_user.is_staff = True
-            new_user.is_admin = True
+            new_user.is_staff = False
+            new_user.is_admin = False
             new_user.save()
 
             email_subscriptions = EmailSubscription(
@@ -197,7 +200,7 @@ class UserViewSet(viewsets.ModelViewSet):
         branch_name = user_data.get('student', {}).get('branch name')
         degree_name = user_data.get('student', {}).get('branch degree name')
         if user_data.get('person', {}).get('displayPicture') != None:
-            display_picture = 'http://internet.channeli.in' + \
+            display_picture = '//internet.channeli.in' + \
                 user_data.get('person', {}).get('displayPicture')
         else:
             display_picture = ''

@@ -3,8 +3,8 @@ services:
   redis:
     restart: always
     image: redis:5
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     networks:
       - db-net
 
@@ -17,8 +17,8 @@ services:
       - MYSQL_USER=test_user
       - MYSQL_PASSWORD=test_user_password
       - MYSQL_ROOT_PASSWORD=ROOT_PASSWORD
-    ports:
-      - "3302:3306"
+    expose:
+      - "3306"
     networks:
       - db-net
 
@@ -31,8 +31,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./pesticide_backend:/backend
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     depends_on:
       - db
       - redis
@@ -40,15 +40,14 @@ services:
       - db-net
 
   frontend:
-    command: npm run build
     container_name: pesticide_frontend
     build:
       context: ./pesticide_frontend/
       dockerfile: Dockerfile
     volumes:
       - ./pesticide_frontend:/frontend
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     stdin_open: true
     depends_on:
       - backend

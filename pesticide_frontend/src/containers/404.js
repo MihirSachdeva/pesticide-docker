@@ -24,7 +24,7 @@ const Page404 = (props) => {
           fix some silly bugs.
           <br />
           Feel free to hit me up{" "}
-          <a href="http://www.github.com/mihirsachdeva">
+          <a href="//www.github.com/mihirsachdeva">
             <strong>@MihirSachdeva</strong>
           </a>
         </div>
