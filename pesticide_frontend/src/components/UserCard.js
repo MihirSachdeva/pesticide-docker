@@ -4,8 +4,9 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-
 import { Link, Redirect } from "react-router-dom";
+import designation from "../constants/designation";
+import year from "../constants/year";
 
 export default function UserCard(props) {
   const isMobile = useMediaQuery("(max-width: 700px)");
@@ -63,30 +64,16 @@ export default function UserCard(props) {
               <br />
               {props.current_year && (
                 <>
-                  <span>
-                    {
-                      [
-                        "Webmaster",
-                        "Project Associate",
-                        "Project Leader",
-                        "Coordinator",
-                        "Boomer",
-                      ][props.current_year - 1]
-                    }
-                  </span>
+                  <span>{designation(props.current_year)}</span>
                   <br />
                 </>
               )}
               <span>
                 {props.current_year ? (
-                  [
-                    "First Year",
-                    "Second Year",
-                    "Third Year",
-                    "Fourth Year",
-                    "Fifth Year",
-                    "Boomer",
-                  ][props.current_year - 1]
+                  <>
+                    <span>{year(props.current_year)}</span>
+                    <br />
+                  </>
                 ) : (
                     <Skeleton width={140} animation="wave" />
                   )}
