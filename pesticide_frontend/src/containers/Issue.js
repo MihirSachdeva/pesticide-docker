@@ -68,6 +68,7 @@ const Issue = (props) => {
   const isMobile = useMediaQuery("(max-width: 900px)");
   const [hoverButtons, showHoverButtons] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [numComments, setNumComments] = React.useState(0);
 
   const scrollFunc = function () {
     var y = document.getElementById("main-main").scrollTop;
@@ -89,6 +90,7 @@ const Issue = (props) => {
       .get(api_links.API_ROOT + `issues/${issueId}/`)
       .then((res) => {
         setIssue(res.data);
+        setNumComments(res.data.comments.length)
         fetchUsersListForIssueAssign(res.data.project);
         setNewComment({
           text: "",
@@ -252,6 +254,7 @@ const Issue = (props) => {
         ...prev,
         text: "",
       }));
+      setNumComments(prevNumComments => prevNumComments+1);
       scrollToBottom();
     } else {
       let audio = new Audio("../sounds/alert_error-03.wav");
@@ -276,6 +279,7 @@ const Issue = (props) => {
 
   const handleCommentDelete = (commentID) => {
     WebSocketInstance.deleteComment(commentID);
+    setNumComments(prevNumComments => prevNumComments-1);
     props.showSnackbar("success", "Comment deleted.", 6000);
   };
 
@@ -513,7 +517,7 @@ const Issue = (props) => {
                     <CommentIcon
                       style={{ marginRight: "5px", fontSize: "15px" }}
                     />
-                    <div>{issue.comments.length}</div>
+                    <div>{numComments}</div>
                   </div>
                 </div>
 
@@ -1020,7 +1024,7 @@ const Issue = (props) => {
             </div>
 
             <div className="comments-header">
-              <div>{`${issue.comments.length} Comments`}</div>
+              <div>{numComments != 1 ? `${numComments} Comments` : `${numComments} Comment`}</div>
             </div>
 
             <hr className="divider2" style={{ marginBottom: "0" }} />
