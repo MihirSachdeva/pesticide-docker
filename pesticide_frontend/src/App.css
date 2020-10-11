@@ -173,6 +173,14 @@ a {
   page-break-after: 16px !important;
 }
 
+.MuiTabs-flexContainer {
+  display: block !important;
+}
+
+.MuiTabs-scroller {
+  overflow: auto !important;
+}
+
 .MuiCard-root {
   /* box-shadow: 12px 12px 16px 0 rgba(0, 0, 0, 0.08), -8px -8px 12px 0 rgba(255, 255, 255, 0.02) !important; */
 }
