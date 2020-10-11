@@ -4,7 +4,7 @@ const HEADER_NAV_TITLES = {
   ISSUES: "Issues", // for issues page
   ONLOGIN: "Pesticide", // for onlogin page
   SIGNIN: "Pesticide", // for signin page
-  PROJECTNAME: (projectName) => projectName, // for project page
+  PROJECTNAME: (projectName) => projectName && (projectName.length < 9 ? projectName : projectName.match(/\b([A-Z])/g).join("")), // for project page
   PROJECTS: "Projects", // for all projects page
   SETTINGS: "Settings", // for settings page
   USERS: "Users", // for all users page
