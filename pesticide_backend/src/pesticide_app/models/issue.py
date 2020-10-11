@@ -9,7 +9,7 @@ def upload_path(instance, filename):
     return '/'.join(['issue_images', filename])
 
 class Issue(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=127)
     description = RichTextField(blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     reporter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_creator')
