@@ -1260,6 +1260,7 @@ header.MuiAppBar-positionAbsolute {
   margin-bottom: 10px;
   min-width: 340px;
   font-weight: 600;
+  word-wrap: break-word;
 }
 
 @media screen and (min-width: 800px) {

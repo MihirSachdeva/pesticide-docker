@@ -507,10 +507,20 @@ const Issue = (props) => {
               </div>
               <div className="issue-scroll-details">
                 <div className="issue-scroll-details-heading">
-                  <div className="issue-scroll-title">{issue.title}</div>
+                  <div className="issue-scroll-title">
+                    {issue.title && (
+                        issue.title.length < 20 
+                          ? issue.title 
+                          : `${issue.title.slice(0, 20)}...`
+                    )}
+                  </div>
                   <div>•</div>
                   <div className="issue-scroll-project">
-                    {issue.project_details.name}
+                    {issue.project_details.name && (
+                      issue.project_details.name.length < 9 
+                        ? issue.project_details.name 
+                        : issue.project_details.name.match(/\b([A-Z])/g).join("")
+                    )}
                   </div>
                   <div>•</div>
                   <div className="issue-scroll-comments">
@@ -595,11 +605,14 @@ const Issue = (props) => {
                       style={{ borderRadius: "6px", width: "30px" }}
                     />
                   </div>
-                  {issue.project_details.name}
+                  {issue.project_details.name && (
+                    issue.project_details.name.length < 9 
+                      ? issue.project_details.name 
+                      : issue.project_details.name.match(/\b([A-Z])/g).join("")
+                  )}
                 </Button>
               </Link>
-
-              {" - Issue " + issue.id}
+              {"• Issue " + issue.id}
             </div>
             {(issue.reporter_details.id == props.currentUser.id ||
               props.currentUser.is_master ||
