@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import * as api_links from "../APILinks";
+import * as sidepanelActions from "../store/actions/sidepanel";
 
 const NewProjectForm = (props) => {
   const [formData, setFormData] = React.useState({
@@ -68,7 +69,7 @@ const NewProjectForm = (props) => {
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
-        console.log(res);
+        props.updateSidebar();
         window.location.href = "/projects/";
       })
       .catch((err) => {
@@ -293,4 +294,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, null)(NewProjectForm));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateSidebar: () => dispatch(sidepanelActions.fetchSidepanel()),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(NewProjectForm)
+);

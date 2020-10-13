@@ -15,6 +15,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import Cookies from "js-cookie";
 import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
+import * as sidepanelActions from "../store/actions/sidepanel";
 import * as api_links from "../APILinks";
 
 import axios from "axios";
@@ -154,8 +155,6 @@ const HeaderSidePanel = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
-  const [projects, setProjects] = React.useState([]);
-  const [issues, setIssues] = React.useState([]);
   const [users, setUsers] = React.useState([]);
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -165,22 +164,11 @@ const HeaderSidePanel = (props) => {
   }, [props.isAuthenticated]);
 
   async function getDefaultData() {
-    axios
-      .get(api_links.API_ROOT + "projects/")
-      .then((res) => {
-        setProjects(res.data);
-      })
-      .catch((err) => console.log(err));
+    props.fetchSidepanelData();
     axios
       .get(api_links.API_ROOT + "current_user/")
       .then((res) => {
         setIsAdmin(res.data[0].is_master);
-      })
-      .catch((err) => console.log(err));
-    axios
-      .get(api_links.API_ROOT + "issues/")
-      .then((res) => {
-        setIssues(res.data.results.slice(0, 5));
       })
       .catch((err) => console.log(err));
     axios
@@ -195,9 +183,8 @@ const HeaderSidePanel = (props) => {
     axios
       .get(api_links.API_ROOT + `search?q=${search}`)
       .then((res) => {
-        setIssues(res.data.issues);
+        props.setSearchSidepanelData(res.data.projects, res.data.issues);
         setUsers(res.data.users);
-        setProjects(res.data.projects);
       })
       .catch((err) => console.log(err));
   }
@@ -209,6 +196,24 @@ const HeaderSidePanel = (props) => {
       newSearchQuery != "" ? getSearchData(newSearchQuery) : getDefaultData();
     }
   };
+
+  // const getProjects = () => {
+  //   axios
+  //     .get(api_links.API_ROOT + "projects/")
+  //     .then((res) => {
+  //       setProjects(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  // const getIssues = () => {
+  //   axios
+  //     .get(api_links.API_ROOT + "issues/")
+  //     .then((res) => {
+  //       setIssues(res.data.results.slice(0, 5));
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const special = [
     "zeroth",
@@ -289,13 +294,13 @@ const HeaderSidePanel = (props) => {
               </div>
             </ListItem>
 
-            {projects.length != 0 && (
+            {props.projects && props.projects.length != 0 && (
               <>
                 <div className="sidepanel-section-heading">
                   <div className="sidepanel-section-title">Projects</div>
                   <div className="sidepanel-section-divider"></div>
                 </div>
-                {projects.map((project) => (
+                {props.projects.map((project) => (
                   <Link to={"/projects/" + project.projectslug}>
                     <ListItem button className="drawer-btn-filled">
                       <div className="sidepanel-item sidepanel-item-project">
@@ -334,7 +339,7 @@ const HeaderSidePanel = (props) => {
               </>
             )}
 
-            {issues.length != 0 && (
+            {props.issues && props.issues.length != 0 && (
               <>
                 <div className="sidepanel-section-heading">
                   <div className="sidepanel-section-title">
@@ -342,7 +347,7 @@ const HeaderSidePanel = (props) => {
                   </div>
                   <div className="sidepanel-section-divider"></div>
                 </div>
-                {issues.map((issue) => (
+                {props.issues.map((issue) => (
                   <Link to={"/issues/" + issue.id}>
                     <ListItem button className="drawer-btn-filled">
                       <div className="sidepanel-item sidepanel-item-issue">
@@ -366,7 +371,9 @@ const HeaderSidePanel = (props) => {
                               {issue.project_details.name &&
                                 (issue.project_details.name.length < 9
                                   ? issue.project_details.name
-                                  : issue.project_details.name.match(/\b([a-zA-Z])/g).join("")) + " •"}
+                                  : issue.project_details.name
+                                      .match(/\b([a-zA-Z])/g)
+                                      .join("")) + " •"}
                             </div>
                             <div className="sidepanel-item-context-item">
                               {issue.status_text.length < 10
@@ -436,6 +443,8 @@ const mapStateToProps = (state) => {
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
       state.theme.theme == "palpatine",
+    projects: state.sidepanel.projects,
+    issues: state.sidepanel.issues,
   };
 };
 
@@ -443,6 +452,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     logout: () => dispatch(actions.logout()),
     changeTheme: (newTheme) => dispatch(themeActions.changeTheme(newTheme)),
+    fetchSidepanelData: () => dispatch(sidepanelActions.fetchSidepanel()),
+    setSearchSidepanelData: (projects, issues) =>
+      dispatch(sidepanelActions.setSearchSidepanel(projects, issues)),
   };
 };
 

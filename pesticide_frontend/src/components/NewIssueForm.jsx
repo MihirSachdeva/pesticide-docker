@@ -15,6 +15,7 @@ import { withRouter } from "react-router-dom";
 import axios from "axios";
 import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
+import * as sidepanelActions from "../store/actions/sidepanel";
 
 const NewIssueForm = (props) => {
   const [tags, setTags] = React.useState([]);
@@ -71,6 +72,7 @@ const NewIssueForm = (props) => {
         props.getIssues();
         props.handleClose();
         props.showSnackbar("success", "New issue added!", 6000);
+        props.updateSidebar();
       })
       .catch((err) => {
         console.log(err);
@@ -269,6 +271,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showSnackbar: (style, text, duration) =>
       dispatch(snackbarActions.changeSnackbar(true, style, text, duration)),
+    updateSidebar: () => dispatch(sidepanelActions.fetchSidepanel()),
   };
 };
 

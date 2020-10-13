@@ -5,6 +5,7 @@ import header from "./header";
 import projects from "./api/project/projects";
 import issues from "./api/issue/issues";
 import snackbar from "./snackbar";
+import sidepanel from "./sidepanel";
 
 export default combineReducers({
   auth,
@@ -13,4 +14,5 @@ export default combineReducers({
   projects,
   issues,
   snackbar,
+  sidepanel,
 });
