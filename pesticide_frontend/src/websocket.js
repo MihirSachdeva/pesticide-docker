@@ -19,7 +19,7 @@ class WebsocketService {
     const path = api_links.WEBSOCKET_ROOT + `issue_comments/${issue_id}/`;
     this.sockRef = new WebSocket(path);
     this.sockRef.onopen = () => {
-      console.log("Websocket open.");
+      // console.log("Websocket open.");
     };
     this.socketNewComment(
       JSON.stringify({
@@ -30,10 +30,10 @@ class WebsocketService {
       this.socketNewComment(e.data);
     };
     this.sockRef.onerror = (e) => {
-      console.log(e);
+      // console.log(e);
     };
     this.sockRef.onclose = () => {
-      console.log("Websocket closed.");
+      // console.log("Websocket closed.");
     };
   }
 
@@ -91,7 +91,7 @@ class WebsocketService {
     try {
       this.sockRef.send(JSON.stringify({ ...data }));
     } catch (err) {
-      console.log(err.message);
+      // console.log(err.message);
     }
   }
 

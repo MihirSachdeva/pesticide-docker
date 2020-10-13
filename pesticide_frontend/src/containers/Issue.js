@@ -164,14 +164,14 @@ const Issue = (props) => {
   const waitForSocketConnection = (callback) => {
     setTimeout(() => {
       if (WebSocketInstance.state() === 1) {
-        console.log("Connection is secure.");
+        // console.log("Connection is secure.");
         callback();
         props.closeSnackbar();
         return;
       } else {
         counter++;
-        console.log(counter);
-        console.log("Waiting for connection...");
+        // console.log(counter);
+        // console.log("Waiting for connection...");
         waitForSocketConnection(callback);
         counter == 10 &&
           props.showSnackbar(
