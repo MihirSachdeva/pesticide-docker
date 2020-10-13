@@ -406,7 +406,16 @@ const ProjectPage = (props) => {
   return (
     <div>
       <UtilityComponent
-        title={HEADER_NAV_TITLES.PROJECTNAME(project.name)}
+        title={
+          isMobile
+            ? project.name &&
+              (project.name.length < 12
+                ? HEADER_NAV_TITLES.PROJECTNAME(project.name)
+                : HEADER_NAV_TITLES.PROJECTNAME(
+                    project.name.match(/\b([A-Z])/g).join("")
+                  ))
+            : HEADER_NAV_TITLES.PROJECTNAME(project.name)
+        }
         page="PROJECT"
       />
 

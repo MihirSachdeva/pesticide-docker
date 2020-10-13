@@ -41,6 +41,7 @@ services:
 
   frontend:
     container_name: pesticide_frontend
+    command: npm run build
     build:
       context: ./pesticide_frontend/
       dockerfile: Dockerfile

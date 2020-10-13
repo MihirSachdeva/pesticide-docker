@@ -254,7 +254,7 @@ const Issue = (props) => {
         ...prev,
         text: "",
       }));
-      setNumComments(prevNumComments => prevNumComments+1);
+      setNumComments(prevNumComments => prevNumComments + 1);
       scrollToBottom();
     } else {
       let audio = new Audio("../sounds/alert_error-03.wav");
@@ -279,7 +279,7 @@ const Issue = (props) => {
 
   const handleCommentDelete = (commentID) => {
     WebSocketInstance.deleteComment(commentID);
-    setNumComments(prevNumComments => prevNumComments-1);
+    setNumComments(prevNumComments => prevNumComments - 1);
     props.showSnackbar("success", "Comment deleted.", 6000);
   };
 
@@ -509,18 +509,21 @@ const Issue = (props) => {
                 <div className="issue-scroll-details-heading">
                   <div className="issue-scroll-title">
                     {issue.title && (
-                        issue.title.length < 20 
-                          ? issue.title 
-                          : `${issue.title.slice(0, 20)}...`
+                      issue.title.length < 20
+                        ? issue.title
+                        : `${issue.title.slice(0, 20)}...`
                     )}
                   </div>
                   <div>•</div>
                   <div className="issue-scroll-project">
-                    {issue.project_details.name && (
-                      issue.project_details.name.length < 9 
-                        ? issue.project_details.name 
-                        : issue.project_details.name.match(/\b([A-Z])/g).join("")
-                    )}
+                    {isMobile
+                      ? issue.project_details.name && (
+                        issue.project_details.name.length < 12
+                          ? issue.project_details.name
+                          : issue.project_details.name.match(/\b([A-Z])/g).join("")
+                      )
+                      : issue.project_details.name
+                    }
                   </div>
                   <div>•</div>
                   <div className="issue-scroll-comments">
@@ -598,18 +601,21 @@ const Issue = (props) => {
                         issue.project_details.icon
                           ? api_links.ROOT + issue.project_details.icon
                           : props.theme == "palpatine"
-                          ? "/icon/project/appicon_red.svg"
-                          : "/icon/project/appicon.svg"
+                            ? "/icon/project/appicon_red.svg"
+                            : "/icon/project/appicon.svg"
                       }
                       alt="Issue Reporter"
                       style={{ borderRadius: "6px", width: "30px" }}
                     />
                   </div>
-                  {issue.project_details.name && (
-                    issue.project_details.name.length < 9 
-                      ? issue.project_details.name 
-                      : issue.project_details.name.match(/\b([A-Z])/g).join("")
-                  )}
+                  {isMobile
+                    ? issue.project_details.name && (
+                      issue.project_details.name.length < 12
+                        ? issue.project_details.name
+                        : issue.project_details.name.match(/\b([A-Z])/g).join("")
+                    )
+                    : issue.project_details.name
+                  }
                 </Button>
               </Link>
               {"• Issue " + issue.id}
@@ -617,24 +623,24 @@ const Issue = (props) => {
             {(issue.reporter_details.id == props.currentUser.id ||
               props.currentUser.is_master ||
               projectMembersIdList.includes(props.currentUser.id)) && (
-              <Button
-                className="btn-filled btn-filled-error btn-no-margin btn-round"
-                onClick={() => {
-                  openAlert(
-                    "delete_issue",
-                    "Delete this Issue?",
-                    "This issue, and all it's comments will be deleted permanently.",
-                    "Cancel",
-                    "Delete",
-                    issue.id
-                  );
-                }}
-                size="small"
-              >
-                <DeleteOutlineOutlinedIcon color="error" />{" "}
-                {!isMobile && "Delete"}
-              </Button>
-            )}
+                <Button
+                  className="btn-filled btn-filled-error btn-no-margin btn-round"
+                  onClick={() => {
+                    openAlert(
+                      "delete_issue",
+                      "Delete this Issue?",
+                      "This issue, and all it's comments will be deleted permanently.",
+                      "Cancel",
+                      "Delete",
+                      issue.id
+                    );
+                  }}
+                  size="small"
+                >
+                  <DeleteOutlineOutlinedIcon color="error" />{" "}
+                  {!isMobile && "Delete"}
+                </Button>
+              )}
           </div>
 
           <hr className="divider2" style={{ margin: "0 10px" }} />
@@ -784,8 +790,8 @@ const Issue = (props) => {
                           </Button>
                         ))
                       ) : (
-                        <span style={{ marginRight: "10px" }}>None</span>
-                      )}
+                          <span style={{ marginRight: "10px" }}>None</span>
+                        )}
                     </div>
                   </div>
 
@@ -822,55 +828,102 @@ const Issue = (props) => {
                             </Button>
                           </Link>
                         ) : (
-                          <span style={{ marginRight: "10px" }}>None</span>
-                        )}
+                            <span style={{ marginRight: "10px" }}>None</span>
+                          )}
                         {(issue.reporter_details.id == props.currentUser.id ||
                           props.currentUser.is_master ||
                           projectMembersIdList.includes(
                             props.currentUser.id
                           )) && (
-                          <>
-                            <Button
-                              variant="outlined"
-                              className="project-reporter issue-button-filled-outline"
-                              style={{
-                                textTransform: "none",
-                                borderRadius: "10px",
-                                width: "fit-content",
-                                alignSelf: "flex-start",
-                                fontWeight: "500",
-                              }}
-                              onClick={
-                                (issue.reporter_details.id ==
-                                  props.currentUser.id ||
-                                  props.currentUser.is_master ||
-                                  projectMembersIdList.includes(
-                                    props.currentUser.id
-                                  )) &&
-                                handleClickUsers
-                              }
-                            >
-                              <AssignmentIndIcon
-                                fontSize="small"
-                                style={{ marginRight: !isMobile && "4px" }}
-                              />
-                              {!isMobile && "Change"}
-                            </Button>
-                            <Menu
-                              anchorEl={anchorElUsers}
-                              keepMounted
-                              open={Boolean(anchorElUsers)}
-                              onClose={handleCloseUsers}
-                              style={{ marginTop: "50px" }}
-                            >
-                              <div className="menu-list-section-header">
-                                <div className="menu-list-section-title">
-                                  Project members
+                            <>
+                              <Button
+                                variant="outlined"
+                                className="project-reporter issue-button-filled-outline"
+                                style={{
+                                  textTransform: "none",
+                                  borderRadius: "10px",
+                                  width: "fit-content",
+                                  alignSelf: "flex-start",
+                                  fontWeight: "500",
+                                }}
+                                onClick={
+                                  (issue.reporter_details.id ==
+                                    props.currentUser.id ||
+                                    props.currentUser.is_master ||
+                                    projectMembersIdList.includes(
+                                      props.currentUser.id
+                                    )) &&
+                                  handleClickUsers
+                                }
+                              >
+                                <AssignmentIndIcon
+                                  fontSize="small"
+                                  style={{ marginRight: !isMobile && "4px" }}
+                                />
+                                {!isMobile && "Change"}
+                              </Button>
+                              <Menu
+                                anchorEl={anchorElUsers}
+                                keepMounted
+                                open={Boolean(anchorElUsers)}
+                                onClose={handleCloseUsers}
+                                style={{ marginTop: "50px" }}
+                              >
+                                <div className="menu-list-section-header">
+                                  <div className="menu-list-section-title">
+                                    Project members
                                 </div>
-                                <div className="menu-list-section-divider"></div>
-                              </div>
-                              {usersForIssueAssign.project_members.map(
-                                (user) => (
+                                  <div className="menu-list-section-divider"></div>
+                                </div>
+                                {usersForIssueAssign.project_members.map(
+                                  (user) => (
+                                    <MenuItem
+                                      onClick={() => {
+                                        handleCloseUsers();
+                                        !(assignee && user.id == assignee.id) &&
+                                          openAlert(
+                                            "assign_issue",
+                                            `Assign this issue to ${user.name}?`,
+                                            `${user.name} will get an email notification for the same.`,
+                                            "Cancel",
+                                            "Assign",
+                                            {
+                                              id: user.id,
+                                              name: user.name,
+                                              display_picture:
+                                                user.display_picture,
+                                              enrollment_number:
+                                                user.enrollment_number,
+                                            }
+                                          );
+                                      }}
+                                    >
+                                      <div style={{ display: "flex" }}>
+                                        <div className="project-issue-reported-by-image">
+                                          <img
+                                            src={
+                                              user.display_picture ||
+                                              "/sunglasses.svg"
+                                            }
+                                            alt={user.name}
+                                          />
+                                        </div>
+                                        <Typography
+                                          style={{ marginLeft: "10px" }}
+                                        >
+                                          {user.name}
+                                        </Typography>
+                                      </div>
+                                    </MenuItem>
+                                  )
+                                )}
+                                <div className="menu-list-section-header">
+                                  <div className="menu-list-section-title">
+                                    Other users
+                                </div>
+                                  <div className="menu-list-section-divider"></div>
+                                </div>
+                                {usersForIssueAssign.other_users.map((user) => (
                                   <MenuItem
                                     onClick={() => {
                                       handleCloseUsers();
@@ -878,14 +931,13 @@ const Issue = (props) => {
                                         openAlert(
                                           "assign_issue",
                                           `Assign this issue to ${user.name}?`,
-                                          `${user.name} will get an email notification for the same.`,
+                                          `${user.name} will get an email notification for the same`,
                                           "Cancel",
                                           "Assign",
                                           {
                                             id: user.id,
                                             name: user.name,
-                                            display_picture:
-                                              user.display_picture,
+                                            display_picture: user.display_picture,
                                             enrollment_number:
                                               user.enrollment_number,
                                           }
@@ -902,62 +954,16 @@ const Issue = (props) => {
                                           alt={user.name}
                                         />
                                       </div>
-                                      <Typography
-                                        style={{ marginLeft: "10px" }}
-                                      >
+                                    &nbsp;
+                                    <Typography style={{ marginLeft: "10px" }}>
                                         {user.name}
                                       </Typography>
                                     </div>
                                   </MenuItem>
-                                )
-                              )}
-                              <div className="menu-list-section-header">
-                                <div className="menu-list-section-title">
-                                  Other users
-                                </div>
-                                <div className="menu-list-section-divider"></div>
-                              </div>
-                              {usersForIssueAssign.other_users.map((user) => (
-                                <MenuItem
-                                  onClick={() => {
-                                    handleCloseUsers();
-                                    !(assignee && user.id == assignee.id) &&
-                                      openAlert(
-                                        "assign_issue",
-                                        `Assign this issue to ${user.name}?`,
-                                        `${user.name} will get an email notification for the same`,
-                                        "Cancel",
-                                        "Assign",
-                                        {
-                                          id: user.id,
-                                          name: user.name,
-                                          display_picture: user.display_picture,
-                                          enrollment_number:
-                                            user.enrollment_number,
-                                        }
-                                      );
-                                  }}
-                                >
-                                  <div style={{ display: "flex" }}>
-                                    <div className="project-issue-reported-by-image">
-                                      <img
-                                        src={
-                                          user.display_picture ||
-                                          "/sunglasses.svg"
-                                        }
-                                        alt={user.name}
-                                      />
-                                    </div>
-                                    &nbsp;
-                                    <Typography style={{ marginLeft: "10px" }}>
-                                      {user.name}
-                                    </Typography>
-                                  </div>
-                                </MenuItem>
-                              ))}
-                            </Menu>
-                          </>
-                        )}
+                                ))}
+                              </Menu>
+                            </>
+                          )}
                       </>
                     }
                   </div>
@@ -1058,11 +1064,11 @@ const Issue = (props) => {
                           style={{
                             border: isSentByCurrentUser
                               ? `1px solid ${
-                                  commentThemeColors(props.theme).sent
-                                }`
+                              commentThemeColors(props.theme).sent
+                              }`
                               : `1px solid ${
-                                  commentThemeColors(props.theme).recieved
-                                }`,
+                              commentThemeColors(props.theme).recieved
+                              }`,
                           }}
                         >
                           {" "}
@@ -1095,16 +1101,16 @@ const Issue = (props) => {
                                 </Link>
                                 <div className="commentor-role">
                                   {comment.commentor_details.id ==
-                                  issue.reporter
+                                    issue.reporter
                                     ? "(reporter)"
                                     : issue.assigned_to ==
                                       comment.commentor_details.id
-                                    ? "(assignee)"
-                                    : projectMembersIdList.includes(
+                                      ? "(assignee)"
+                                      : projectMembersIdList.includes(
                                         comment.commentor_details.id
                                       )
-                                    ? "(project member)"
-                                    : ""}
+                                        ? "(project member)"
+                                        : ""}
                                 </div>
                               </Typography>
                             </div>
@@ -1180,29 +1186,29 @@ const Issue = (props) => {
                       onEditorChange={handleNewComment}
                     />
                   ) : (
-                    <Editor
-                      value={newComment.text}
-                      init={{
-                        skin: "oxide-dark",
-                        content_css: "dark",
-                        placeholder: "Type a comment...",
-                        icons: "thin",
-                        height: 250,
-                        menubar: false,
-                        plugins: [
-                          "advlist autolink lists link image charmap print preview anchor",
-                          "searchreplace visualblocks code fullscreen",
-                          "insertdatetime media table code help wordcount table codesample",
-                        ],
-                        toolbar: [
-                          "undo redo | formatselect | bold italic backcolor | \
+                      <Editor
+                        value={newComment.text}
+                        init={{
+                          skin: "oxide-dark",
+                          content_css: "dark",
+                          placeholder: "Type a comment...",
+                          icons: "thin",
+                          height: 250,
+                          menubar: false,
+                          plugins: [
+                            "advlist autolink lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen",
+                            "insertdatetime media table code help wordcount table codesample",
+                          ],
+                          toolbar: [
+                            "undo redo | formatselect | bold italic backcolor | \
                             alignleft aligncenter alignright alignjustify | codesample \
                             bullist numlist outdent indent | removeformat | table | code | help",
-                        ],
-                      }}
-                      onEditorChange={handleNewComment}
-                    />
-                  )}
+                          ],
+                        }}
+                        onEditorChange={handleNewComment}
+                      />
+                    )}
                   <Tooltip title="Send" placement="bottom">
                     <Button
                       type="submit"
