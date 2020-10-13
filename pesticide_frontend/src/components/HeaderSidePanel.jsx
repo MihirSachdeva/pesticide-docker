@@ -366,9 +366,7 @@ const HeaderSidePanel = (props) => {
                               {issue.project_details.name &&
                                 (issue.project_details.name.length < 9
                                   ? issue.project_details.name
-                                  : issue.project_details.name
-                                      .match(/\b([A-Z])/g)
-                                      .join("")) + " •"}
+                                  : issue.project_details.name.match(/\b([a-zA-Z])/g).join("")) + " •"}
                             </div>
                             <div className="sidepanel-item-context-item">
                               {issue.status_text.length < 10

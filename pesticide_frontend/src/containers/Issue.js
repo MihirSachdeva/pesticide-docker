@@ -520,7 +520,7 @@ const Issue = (props) => {
                       ? issue.project_details.name && (
                         issue.project_details.name.length < 12
                           ? issue.project_details.name
-                          : issue.project_details.name.match(/\b([A-Z])/g).join("")
+                          : issue.project_details.name.match(/\b([a-zA-Z])/g).join("")
                       )
                       : issue.project_details.name
                     }
@@ -612,7 +612,7 @@ const Issue = (props) => {
                     ? issue.project_details.name && (
                       issue.project_details.name.length < 12
                         ? issue.project_details.name
-                        : issue.project_details.name.match(/\b([A-Z])/g).join("")
+                        : issue.project_details.name.match(/\b([a-zA-Z])/g).join("")
                     )
                     : issue.project_details.name
                   }

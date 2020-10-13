@@ -412,7 +412,7 @@ const ProjectPage = (props) => {
               (project.name.length < 12
                 ? HEADER_NAV_TITLES.PROJECTNAME(project.name)
                 : HEADER_NAV_TITLES.PROJECTNAME(
-                    project.name.match(/\b([A-Z])/g).join("")
+                    project.name.match(/\b([a-zA-Z])/g).join("")
                   ))
             : HEADER_NAV_TITLES.PROJECTNAME(project.name)
         }
