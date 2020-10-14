@@ -98,7 +98,9 @@ const IssueItem = (props) => {
               style={{ whiteSpace: "nowrap", fontWeight: "600" }}
             >
               {!fullScreen
-                ? props.title
+                ? props.title.length < 80
+                  ? props.title
+                  : props.title.slice(0, 80) + "..."
                 : props.title.length < 15
                 ? props.title
                 : props.title.slice(0, 14) + "..."}
@@ -107,7 +109,10 @@ const IssueItem = (props) => {
               <>
                 <Typography style={{ margin: "0 5px" }}>•</Typography>
                 <Typography className="project-issue">
-                  {props.projectname}
+                  {props.projectname &&
+                    (props.projectname.length < 15
+                      ? props.projectname
+                      : props.projectname.match(/\b([a-zA-Z])/g).join(""))}
                 </Typography>
               </>
             ) : (
