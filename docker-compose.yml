@@ -18,7 +18,7 @@ services:
       - MYSQL_PASSWORD=test_user_password
       - MYSQL_ROOT_PASSWORD=ROOT_PASSWORD
     volumes:
-      - /var/lib/postgresql/pesticide-data:/var/lib/mysql
+      - /home/pesticide-data:/var/lib/mysql
     expose:
       - "3306"
     networks:
