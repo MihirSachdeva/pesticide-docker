@@ -586,7 +586,7 @@ const Header = (props) => {
                         <ListItemText
                           primary={
                             project.name &&
-                            (project.name.length < 12
+                            (project.name.length < 15
                               ? project.name
                               : project.name.match(/\b([a-zA-Z])/g).join(""))
                           }

@@ -518,7 +518,7 @@ const Issue = (props) => {
                   <div className="issue-scroll-project">
                     {isMobile
                       ? issue.project_details.name && (
-                        issue.project_details.name.length < 12
+                        issue.project_details.name.length < 15
                           ? issue.project_details.name
                           : issue.project_details.name.match(/\b([a-zA-Z])/g).join("")
                       )
@@ -610,7 +610,7 @@ const Issue = (props) => {
                   </div>
                   {isMobile
                     ? issue.project_details.name && (
-                      issue.project_details.name.length < 12
+                      issue.project_details.name.length < 15
                         ? issue.project_details.name
                         : issue.project_details.name.match(/\b([a-zA-Z])/g).join("")
                     )

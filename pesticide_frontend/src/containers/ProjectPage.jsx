@@ -409,7 +409,7 @@ const ProjectPage = (props) => {
         title={
           isMobile
             ? project.name &&
-              (project.name.length < 12
+              (project.name.length < 15
                 ? HEADER_NAV_TITLES.PROJECTNAME(project.name)
                 : HEADER_NAV_TITLES.PROJECTNAME(
                     project.name.match(/\b([a-zA-Z])/g).join("")
