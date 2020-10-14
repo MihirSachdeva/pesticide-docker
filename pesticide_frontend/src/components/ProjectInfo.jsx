@@ -72,14 +72,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const memberCardContainer = {
-  display: "flex",
-  flexDirection: "row",
-  padding: "17px",
-  alignItems: "center",
-  overflowY: "auto",
-};
-
 const ProjectInfo = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -94,6 +86,15 @@ const ProjectInfo = (props) => {
   const [expanded, setExpanded] = React.useState(false);
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const memberCardContainer = {
+    display: "flex",
+    flexDirection: "row",
+    padding: "17px",
+    alignItems: "center",
+    overflowY: "auto",
+    flexFlow: !isMobile ? "wrap" : "row",
   };
 
   async function fetchCurrentUserInfo() {
