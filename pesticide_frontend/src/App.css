@@ -802,6 +802,7 @@ header.MuiAppBar-positionAbsolute {
 
 .issue-description {
   font-family: Ubuntu, sans-serif !important;
+  word-wrap: break-word;
 }
 
 .image-with-modal {
