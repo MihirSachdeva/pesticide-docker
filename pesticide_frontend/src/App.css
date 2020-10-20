@@ -520,8 +520,7 @@ header.MuiAppBar-positionAbsolute {
 
 .sidepanel-item-icon {
   width: 55px;
-  height: 55px;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 
 .sidepanel-item-contents {

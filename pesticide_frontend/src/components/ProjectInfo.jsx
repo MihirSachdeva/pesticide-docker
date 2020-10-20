@@ -205,6 +205,9 @@ const ProjectInfo = (props) => {
                         borderRadius: "20px",
                         padding: "4px",
                         backgroundImage: `url(${projecticon})`,
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
                       }}
                       className="image-shadow"
                     ></div>
