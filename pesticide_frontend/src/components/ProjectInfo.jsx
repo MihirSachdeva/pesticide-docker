@@ -97,24 +97,25 @@ const ProjectInfo = (props) => {
     flexFlow: !isMobile ? "wrap" : "row",
   };
 
-  async function fetchCurrentUserInfo() {
+  function fetchCurrentUserAndProjectInfo() {
+    var current_user_id;
     axios
       .get(`${api_links.API_ROOT}current_user/`)
       .then((res) => {
         setCurrentUser(res.data[0]);
+        current_user_id = res.data[0].id;
+        fetchProjectData(current_user_id);
       })
       .catch((err) => console.log(err));
   }
 
-  async function fetchProjectData() {
+  function fetchProjectData(currentUserId) {
     axios
       .get(api_links.API_ROOT + `projects/${props.projectID}/`)
       .then((res) => {
         setProject(res.data);
         setCurrentUserIsMember(() => {
-          return res.data.members
-            .map((member) => member.toString())
-            .includes(currentUser.id);
+          return res.data.members.includes(currentUserId);
         });
         setProjecticon(
           res.data.icon
@@ -128,7 +129,7 @@ const ProjectInfo = (props) => {
       .catch((err) => console.log(err));
   }
 
-  async function fetchProjectIssueStatusTally() {
+  function fetchProjectIssueStatusTally() {
     axios
       .get(api_links.API_ROOT + `project_issue_status/${props.projectID}/`)
       .then((res) => {
@@ -163,8 +164,7 @@ const ProjectInfo = (props) => {
   Prism.highlightAll();
 
   React.useEffect(() => {
-    fetchCurrentUserInfo();
-    fetchProjectData();
+    fetchCurrentUserAndProjectInfo();
     fetchProjectIssueStatusTally();
   }, [props.projectID]);
 
@@ -205,9 +205,9 @@ const ProjectInfo = (props) => {
                         borderRadius: "20px",
                         padding: "4px",
                         backgroundImage: `url(${projecticon})`,
-                        backgroundSize: 'contain',
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'center',
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center",
                       }}
                       className="image-shadow"
                     ></div>

@@ -9,8 +9,8 @@ export default function designation(current_year) {
     case 4:
       return ("Coordinator")
     case 5:
-      return ("IMGian")
+      return ("Emeritus Coordinator")
     default:
-      return ("IMGian")
+      return ("Emeritus Coordinator")
   }
 }
