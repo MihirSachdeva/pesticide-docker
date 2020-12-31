@@ -9,8 +9,8 @@ export default function year(current_year) {
     case 4:
       return ("Fourth Year")
     case 5:
-      return ("Fifth Year")
+      return ("IMGian")
     default:
-      return ("Alumni")
+      return ("IMGian")
   }
 }
