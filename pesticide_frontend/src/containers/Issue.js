@@ -621,15 +621,14 @@ const Issue = (props) => {
               {"• Issue " + issue.id}
             </div>
             {(issue.reporter_details.id == props.currentUser.id ||
-              props.currentUser.is_master ||
-              projectMembersIdList.includes(props.currentUser.id)) && (
+              props.currentUser.is_master) && (
                 <Button
                   className="btn-filled btn-filled-error btn-no-margin btn-round"
                   onClick={() => {
                     openAlert(
                       "delete_issue",
                       "Delete this Issue?",
-                      "This issue, and all it's comments will be deleted permanently.",
+                      "This issue and its comments will be deleted permanently.",
                       "Cancel",
                       "Delete",
                       issue.id
