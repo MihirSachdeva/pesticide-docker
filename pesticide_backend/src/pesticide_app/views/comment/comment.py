@@ -33,7 +33,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         comment = serializer.save()
-        projectPageLink = f"{FRONTEND_URL}/projects/{slugify(comment.issue.project.name)}/{comment.issue.id}"
+        projectPageLink = f"{FRONTEND_URL}/projects/{slugify(comment.issue.project.name)}/issues/{comment.issue.id}"
         email_notification = threading.Thread(
             target=new_comment,
             args=(

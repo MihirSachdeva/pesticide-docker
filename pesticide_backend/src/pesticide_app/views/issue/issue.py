@@ -74,7 +74,7 @@ class IssueViewSet(viewsets.ModelViewSet):
             if issue_image is not None:
                 IssueImage.objects.create(issue=issue, image=issue_image)
 
-            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/{issue.id}"
+            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/issues/{issue.id}"
             email_notification = threading.Thread(
                 target=new_issue_reported,
                 args=(
@@ -120,7 +120,7 @@ class IssueViewSet(viewsets.ModelViewSet):
                 issue.status = new_status
                 issue.save()
                 status_updated_by = user
-                projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/{issue.id}"
+                projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/issues/{issue.id}"
                 email_notification = threading.Thread(
                     target=issue_status_update,
                     args=(
@@ -174,7 +174,7 @@ class IssueViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             assigned_by = request.user
-            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/{issue.id}"
+            projectPageLink = f"{FRONTEND_URL}/projects/{slugify(issue.project.name)}/issues/{issue.id}"
             if assigned_to and assigned_to != previous_assignee:
                 issue.assigned_to = assigned_to
                 issue.save()
