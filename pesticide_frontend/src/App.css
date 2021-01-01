@@ -1257,7 +1257,7 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .issue-heading {
-  font-size: 40px;
+  font-size: 30px;
   margin-bottom: 10px;
   min-width: 340px;
   font-weight: 600;
@@ -1268,6 +1268,11 @@ header.MuiAppBar-positionAbsolute {
   .issue-heading {
     min-width: 400px;
   }
+}
+
+.issue-action-menu {
+  border-radius: 100% !important;
+  padding: 7px !important;
 }
 
 .issue-detail {
@@ -1292,7 +1297,7 @@ header.MuiAppBar-positionAbsolute {
 
 .issue-content {
   margin: 10px 0;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 300;
 }
 
@@ -1416,8 +1421,8 @@ header.MuiAppBar-positionAbsolute {
 
 .commentor-img {
   border-radius: 20px;
-  max-width: 30px;
-  max-height: 30px;
+  max-width: 25px;
+  max-height: 25px;
   margin-right: 5px;
 }
 
@@ -1460,10 +1465,70 @@ header.MuiAppBar-positionAbsolute {
   line-height: 1.3;
 }
 
+.comment-content img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.comment-content a {
+  color: #2196f3;
+}
+
 .comment-bottom {
   display: flex;
   align-items: center;
-  margin: 10px;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+}
+
+.comment-box-buttons > button {
+  padding: 2px;
+  border-radius: 100% !important;
+}
+
+.comment-reactions {
+  margin: 0 4px !important;
+  min-width: 70px;
+}
+
+.comment-reaction {
+  padding: 2px 6px !important;
+  border-radius: 14px !important;
+  margin: 3px !important;
+}
+
+.comment-reactions-tabs {
+  margin-bottom: 30px !important;
+  box-shadow: none !important;
+}
+
+.comment-reactions-modal .MuiPaper-root {
+  max-width: 700px !important;
+}
+
+.comment-reactions-modal .comment-sender {
+  margin-left: 20px !important;
+}
+
+.emoji-picker-menu .MuiPaper-root {
+  width: 270px !important;
+}
+
+.emoji-picker-menu ul {
+  padding-right: 0 !important;
+  width: calc(100% + 6px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-flow: wrap !important;
+  margin: 0 !important;
+}
+
+.comment-timestamp {
+  padding: 12px 10px !important;
+  margin-left: 20px;
 }
 
 .comment-write-form {

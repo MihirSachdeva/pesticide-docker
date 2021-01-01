@@ -3,6 +3,7 @@ import {
   MenuItem,
   Typography,
   Button,
+  IconButton,
   Menu,
   useMediaQuery,
   Card,
@@ -15,12 +16,14 @@ import SendRoundedIcon from "@material-ui/icons/SendRounded";
 import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
 import ArrowDownwardRoundedIcon from "@material-ui/icons/ArrowDownwardRounded";
 import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { connect } from "react-redux";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
 import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
+import CommentBox from "../components/CommentBox";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
@@ -312,9 +315,9 @@ const Issue = (props) => {
 
   const confirmAlert = (action, choice, data) => {
     switch (action) {
-      case "delete_comment":
-        choice && handleCommentDelete(data);
-        break;
+      // case "delete_comment":
+      //   choice && handleCommentDelete(data);
+      //   break;
       case "delete_issue":
         choice && handleIssueDelete();
         break;
@@ -376,59 +379,6 @@ const Issue = (props) => {
     setAnchorElUsers(null);
   };
 
-  const commentThemeColors = (theme) => {
-    switch (theme) {
-      case "default":
-        return {
-          sent: "#008eff4d",
-          sentColor: "#008eff1a",
-          recieved: "#c5c5c5",
-          recievedColor: "#e3e3e3",
-          after: "#f0f2f5",
-        };
-      case "dark":
-        return {
-          sent: "#3c5aa45e",
-          sentColor: "#3c5aa45e",
-          recieved: "#3c3c3ca1",
-          recievedColor: "#3c3c3ca1",
-          after: "#18191a",
-        };
-      case "palpatine":
-        return {
-          sent: "#4a1111",
-          sentColor: "#4a1111",
-          recieved: "#3c3c3ca1",
-          recievedColor: "#3c3c3ca1",
-          after: "#101010",
-        };
-      case "solarizedLight":
-        return {
-          sent: "#ccc7b8a6",
-          sentColor: "#ccc7b8a6",
-          recieved: "#ccc7b8a6",
-          recievedColor: "#ccc7b8a6",
-          after: "#eee8d5",
-        };
-      case "solarizedDark":
-        return {
-          sent: "#183d49b8",
-          sentColor: "#183d49b8",
-          recieved: "#183d49b8",
-          recievedColor: "#183d49b8",
-          after: "#092129",
-        };
-      default:
-        return {
-          sent: "#008eff4d",
-          sentColor: "#008eff1a",
-          recieved: "#e3e3e3",
-          recievedColor: "#e3e3e3",
-          after: "#f0f2f5",
-        };
-    }
-  };
-
   const monthList = [
     "Jan",
     "Feb",
@@ -471,6 +421,17 @@ const Issue = (props) => {
         new Date(timestamp).getFullYear();
     }
     return date;
+  };
+
+
+  const [anchorMenuEl, setAnchorMenuEl] = React.useState(null);
+
+  const handleMenuClick = (event) => {
+    setAnchorMenuEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorMenuEl(null);
   };
 
   return (
@@ -622,23 +583,43 @@ const Issue = (props) => {
             </div>
             {(issue.reporter_details.id == props.currentUser.id ||
               props.currentUser.is_master) && (
-                <Button
-                  className="btn-filled btn-filled-error btn-no-margin btn-round"
-                  onClick={() => {
-                    openAlert(
-                      "delete_issue",
-                      "Delete this Issue?",
-                      "This issue and its comments will be deleted permanently.",
-                      "Cancel",
-                      "Delete",
-                      issue.id
-                    );
-                  }}
-                  size="small"
-                >
-                  <DeleteOutlineOutlinedIcon color="error" />{" "}
-                  {!isMobile && "Delete"}
-                </Button>
+                <>
+                  <IconButton
+                    aria-controls="simple-menu"
+                    aria-haspopup="true"
+                    onClick={handleMenuClick}
+                    className="issue-action-menu"
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorMenuEl}
+                    keepMounted
+                    open={Boolean(anchorMenuEl)}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        openAlert(
+                          "delete_issue",
+                          "Delete this Issue?",
+                          "This issue and its comments will be deleted permanently.",
+                          "Cancel",
+                          "Delete",
+                          issue.id
+                        );
+                        handleMenuClose();
+                      }}
+                      className="btn-filled-error"
+                      style={{
+                        margin: "0 5px",
+                      }}
+                    >
+                      <DeleteOutlineOutlinedIcon color="error" /> Delete
+                  </MenuItem>
+                  </Menu>
+                </>
               )}
           </div>
 
@@ -1057,94 +1038,14 @@ const Issue = (props) => {
                       ? "comment comment-sent"
                       : "comment comment-recieved";
                     return (
-                      <>
-                        <div
-                          className={commentClass}
-                          style={{
-                            border: isSentByCurrentUser
-                              ? `1px solid ${
-                              commentThemeColors(props.theme).sent
-                              }`
-                              : `1px solid ${
-                              commentThemeColors(props.theme).recieved
-                              }`,
-                          }}
-                        >
-                          {" "}
-                          <div
-                            className="comment-header"
-                            style={{
-                              backgroundColor: isSentByCurrentUser
-                                ? commentThemeColors(props.theme).sentColor
-                                : commentThemeColors(props.theme).recievedColor,
-                            }}
-                          >
-                            <div className="comment-sender">
-                              <div className="comment-sender-image">
-                                <img
-                                  src={
-                                    comment.commentor_details.display_picture ||
-                                    "/sunglasses.svg"
-                                  }
-                                  alt="Commentor"
-                                  className="commentor-img"
-                                />
-                              </div>
-                              <Typography className="commentor-name">
-                                <Link
-                                  to={`/users/${comment.commentor_details.enrollment_number}`}
-                                >
-                                  {!isSentByCurrentUser
-                                    ? comment.commentor_details.name
-                                    : "You"}
-                                </Link>
-                                <div className="commentor-role">
-                                  {comment.commentor_details.id ==
-                                    issue.reporter
-                                    ? "(reporter)"
-                                    : issue.assigned_to ==
-                                      comment.commentor_details.id
-                                      ? "(assignee)"
-                                      : projectMembersIdList.includes(
-                                        comment.commentor_details.id
-                                      )
-                                        ? "(project member)"
-                                        : ""}
-                                </div>
-                              </Typography>
-                            </div>
-                            {isSentByCurrentUser && (
-                              <Button
-                                onClick={() => {
-                                  openAlert(
-                                    "delete_comment",
-                                    "Delete this comment?",
-                                    "This comment will be deleted permanently.",
-                                    "Cancel",
-                                    "Delete",
-                                    comment.id
-                                  );
-                                }}
-                                size="small"
-                                style={{
-                                  margin: "0",
-                                }}
-                                className="btn-filled-xs btn-filled-xs-error btn-round btn-no-margin"
-                              >
-                                <DeleteOutlineOutlinedIcon color="error" />
-                              </Button>
-                            )}
-                          </div>
-                          <div
-                            className="comment-content"
-                            dangerouslySetInnerHTML={{ __html: comment.text }}
-                          ></div>
-                          <div className="comment-bottom">
-                            <div>{getDate(comment.timestamp)}</div>
-                          </div>
-                        </div>
-                        <div className="comment-between"></div>
-                      </>
+                      <CommentBox
+                        handleCommentDelete={handleCommentDelete}
+                        commentClass={commentClass}
+                        isSentByCurrentUser={isSentByCurrentUser}
+                        comment={comment}
+                        issue={issue}
+                        projectMembersIdList={projectMembersIdList}
+                      />
                     );
                   })}
 
