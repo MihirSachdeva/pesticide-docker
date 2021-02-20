@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import clsx from "clsx";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Tooltip,
+  InputBase,
+} from "@material-ui/core";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import ListItem from "@material-ui/core/ListItem";
-import DefaultTooltip from "@material-ui/core/Tooltip";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
-import Cookies from "js-cookie";
+import AvatarGroup from "@material-ui/lab/AvatarGroup";
+import axios from "axios";
+
+import Avatar from "./Avatar";
+
 import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
 import * as sidepanelActions from "../store/actions/sidepanel";
 import * as api_links from "../APILinks";
-
-import axios from "axios";
 
 const drawerWidth = 270;
 
@@ -130,18 +135,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const HeaderSidePanel = (props) => {
-  const Tooltip = withStyles({
-    tooltip: {
-      backgroundColor: props.darkTheme ? "#353535" : "#ffffff",
-      color: props.darkTheme ? "#ffffff" : "#353535",
-      backgroundFilter: "blur(20px)",
-      fontSize: "17px",
-      fontWeight: "900",
-      padding: "5px",
-      border: "1px solid #808080b3",
-      borderRadius: "10px",
-    },
-  })(DefaultTooltip);
   const searchClass = {
     position: "relative",
     borderRadius: "7px",
@@ -196,24 +189,6 @@ const HeaderSidePanel = (props) => {
       newSearchQuery != "" ? getSearchData(newSearchQuery) : getDefaultData();
     }
   };
-
-  // const getProjects = () => {
-  //   axios
-  //     .get(api_links.API_ROOT + "projects/")
-  //     .then((res) => {
-  //       setProjects(res.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  // const getIssues = () => {
-  //   axios
-  //     .get(api_links.API_ROOT + "issues/")
-  //     .then((res) => {
-  //       setIssues(res.data.results.slice(0, 5));
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
 
   const special = [
     "zeroth",
@@ -315,21 +290,49 @@ const HeaderSidePanel = (props) => {
                           className="sidepanel-item-icon"
                         />
                         <div className="sidepanel-item-contents">
-                          <div className="sidepanel-item-title">
+                          <div
+                            className="sidepanel-item-title"
+                            title={project.name}
+                          >
                             {project.name.length < 15
                               ? project.name
                               : project.name.slice(0, 15) + "..."}
                           </div>
                           <div className="sidepanel-item-context"></div>
                           <div className="sidepanel-item-members">
-                            {project.project_members.map((member) => (
-                              <img
-                                src={
-                                  member.display_picture || "/sunglasses.svg"
-                                }
-                                className="sidepanel-item-member-image"
-                              />
-                            ))}
+                            <Tooltip
+                              arrow
+                              interactive
+                              title={
+                                <React.Fragment>
+                                  <List dense={true}>
+                                    {project.project_members.map((member) => (
+                                      <ListItem>
+                                        <ListItemText primary={member.name} />
+                                      </ListItem>
+                                    ))}
+                                  </List>
+                                </React.Fragment>
+                              }
+                            >
+                              <AvatarGroup max={4}>
+                                {project.project_members.map((member) =>
+                                  member.display_picture ? (
+                                    <Avatar
+                                      src={member.display_picture}
+                                      className="sidepanel-item-member-avatar"
+                                      type="image"
+                                    />
+                                  ) : (
+                                    <Avatar
+                                      className="sidepanel-item-member-avatar"
+                                      name={member.name}
+                                      type="name"
+                                    ></Avatar>
+                                  )
+                                )}
+                              </AvatarGroup>
+                            </Tooltip>
                           </div>
                         </div>
                       </div>
@@ -351,17 +354,24 @@ const HeaderSidePanel = (props) => {
                   <Link to={"/issues/" + issue.id}>
                     <ListItem button className="drawer-btn-filled">
                       <div className="sidepanel-item sidepanel-item-issue">
-                        <img
-                          src={
-                            (issue.reporter_details &&
-                              issue.reporter_details.display_picture) ||
-                            "/sunglasses.svg"
-                          }
-                          className="sidepanel-item-icon"
-                          style={{ borderRadius: "100px" }}
-                        />
+                        {issue.reporter_details.display_picture ? (
+                          <Avatar
+                            src={issue.reporter_details.display_picture}
+                            className="sidepanel-item-issue-reporter-avatar"
+                            type="image"
+                          />
+                        ) : (
+                          <Avatar
+                            className="sidepanel-item-issue-reporter-avatar"
+                            name={issue.reporter_details.name}
+                            type="name"
+                          ></Avatar>
+                        )}
                         <div className="sidepanel-item-contents">
-                          <div className="sidepanel-item-title">
+                          <div
+                            className="sidepanel-item-title"
+                            title={issue.title}
+                          >
                             {issue.title.length < 15
                               ? issue.title
                               : issue.title.slice(0, 15) + "..."}
@@ -399,11 +409,19 @@ const HeaderSidePanel = (props) => {
                   <Link to={"/users/" + user.enrollment_number}>
                     <ListItem button className="drawer-btn-filled">
                       <div className="sidepanel-item sidepanel-item-issue">
-                        <img
-                          src={user.display_picture || "/sunglasses.svg"}
-                          className="sidepanel-item-icon"
-                          style={{ borderRadius: "100px" }}
-                        />
+                        {user && user.display_picture ? (
+                          <Avatar
+                            src={user.display_picture}
+                            className="sidepanel-item-issue-reporter-avatar"
+                            type="image"
+                          />
+                        ) : (
+                          <Avatar
+                            className="sidepanel-item-issue-reporter-avatar"
+                            name={user.name}
+                            type="name"
+                          ></Avatar>
+                        )}
                         <div className="sidepanel-item-contents">
                           <div className="sidepanel-item-title">
                             {user.name.length < 17

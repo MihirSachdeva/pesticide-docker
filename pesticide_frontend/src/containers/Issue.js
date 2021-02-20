@@ -20,18 +20,21 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { connect } from "react-redux";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import { Editor } from "@tinymce/tinymce-react";
+import Prism from "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
+import axios from "axios";
+
 import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
 import CommentBox from "../components/CommentBox";
-import allEmoticons, { getEmoji } from "../constants/emoticons";
+import { getEmoji } from "../constants/emoticons";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
 import WebSocketInstance from "../websocket";
-import Prism from "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
-import axios from "axios";
+import Avatar from "../components/Avatar";
+
 
 const Issue = (props) => {
   const Tooltip = withStyles({
@@ -236,12 +239,10 @@ const Issue = (props) => {
   };
 
   const setEmComments = (comments) => {
-    console.log(comments);
     setComments(comments);
   };
 
   const addComment = (comment) => {
-    console.log(comment);
     setComments((existingComments) => [...existingComments, comment]);
   };
 
@@ -288,7 +289,6 @@ const Issue = (props) => {
 
   const handleNewReaction = (comment, aria_label) => {
     WebSocketInstance.newReaction(comment, aria_label);
-    console.log('reacting new reaction...')
   };
 
   const handleReactionDelete = (comment, aria_label) => {
@@ -509,7 +509,7 @@ const Issue = (props) => {
               </div>
               <div className="issue-scroll-details">
                 <div className="issue-scroll-details-heading">
-                  <div className="issue-scroll-title">
+                  <div className="issue-scroll-title" title={issue.title}>
                     {issue.title && (
                       issue.title.length < 20
                         ? issue.title
@@ -756,16 +756,20 @@ const Issue = (props) => {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        <div className="project-issue-reported-by-image">
-                          <img
-                            src={
-                              issue.reporter_details.display_picture
-                                ? issue.reporter_details.display_picture
-                                : "/sunglasses.svg"
-                            }
-                            alt="Issue Reporter"
+                        {issue.reporter_details.display_picture ? (
+                          <Avatar
+                            src={issue.reporter_details.display_picture}
+                            type="image"
+                            alt={issue.reporter_details.name}
+                            className="project-issue-reported-by-image"
                           />
-                        </div>
+                        ) : (
+                            <Avatar
+                              name={issue.reporter_details.name}
+                              type="name"
+                              className="project-issue-reported-by-image"
+                            ></Avatar>
+                          )}
                         {issue.reporter_details.name}
                       </Button>
                     </Link>
@@ -835,15 +839,20 @@ const Issue = (props) => {
                                 textTransform: "none",
                               }}
                             >
-                              <div className="project-issue-reported-by-image">
-                                <img
-                                  src={
-                                    assignee.display_picture ||
-                                    "/sunglasses.svg"
-                                  }
-                                  alt="Issue Reporter"
+                              {assignee.display_picture ? (
+                                <Avatar
+                                  src={assignee.display_picture}
+                                  type="image"
+                                  alt={assignee.name}
+                                  className="project-issue-reported-by-image"
                                 />
-                              </div>
+                              ) : (
+                                  <Avatar
+                                    name={assignee.name}
+                                    type="name"
+                                    className="project-issue-reported-by-image"
+                                  ></Avatar>
+                                )}
                               &nbsp;
                               {assignee.name}
                             </Button>
@@ -920,15 +929,20 @@ const Issue = (props) => {
                                       }}
                                     >
                                       <div style={{ display: "flex" }}>
-                                        <div className="project-issue-reported-by-image">
-                                          <img
-                                            src={
-                                              user.display_picture ||
-                                              "/sunglasses.svg"
-                                            }
+                                        {user.display_picture ? (
+                                          <Avatar
+                                            src={user.display_picture}
+                                            type="image"
                                             alt={user.name}
+                                            className="project-issue-reported-by-image"
                                           />
-                                        </div>
+                                        ) : (
+                                            <Avatar
+                                              name={user.name}
+                                              type="name"
+                                              className="project-issue-reported-by-image"
+                                            ></Avatar>
+                                          )}
                                         <Typography
                                           style={{ marginLeft: "10px" }}
                                         >
@@ -966,15 +980,20 @@ const Issue = (props) => {
                                     }}
                                   >
                                     <div style={{ display: "flex" }}>
-                                      <div className="project-issue-reported-by-image">
-                                        <img
-                                          src={
-                                            user.display_picture ||
-                                            "/sunglasses.svg"
-                                          }
+                                      {user.display_picture ? (
+                                        <Avatar
+                                          src={user.display_picture}
+                                          type="image"
                                           alt={user.name}
+                                          className="project-issue-reported-by-image"
                                         />
-                                      </div>
+                                      ) : (
+                                          <Avatar
+                                            name={user.name}
+                                            type="name"
+                                            className="project-issue-reported-by-image"
+                                          ></Avatar>
+                                        )}
                                     &nbsp;
                                     <Typography style={{ marginLeft: "10px" }}>
                                         {user.name}

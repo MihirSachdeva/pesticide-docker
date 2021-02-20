@@ -246,9 +246,9 @@ a {
 }
 
 .header-user-image {
-  width: 30px;
-  height: 30px;
-  border-radius: 50px;
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 0.8rem !important;
 }
 
 .header-user-name {
@@ -362,6 +362,18 @@ header.MuiAppBar-positionAbsolute {
 
 .MuiInputBase-root .Mui-focused {
   border: none !important;
+}
+
+.MuiAvatar-root.sidepanel-item-member-avatar {
+  width: 25px !important;
+  height: 25px !important;
+  font-size: 0.7rem !important;
+}
+
+.MuiAvatar-root.sidepanel-item-issue-reporter-avatar {
+  width: 55px !important;
+  height: 55px !important;
+  font-size: 1.25rem !important;
 }
 
 .bottom-nav {
@@ -554,6 +566,14 @@ header.MuiAppBar-positionAbsolute {
   align-items: center;
   justify-content: flex-start;
   flex-flow: wrap;
+}
+
+.sidepanel-item-members .MuiAvatar-root {
+  width: 25px !important;
+  height: 25px !important;
+  width: 25px !important;
+  height: 25px !important;
+  font-size: 0.7rem !important;
 }
 
 .sidepanel-item-member-image {
@@ -1073,7 +1093,6 @@ header.MuiAppBar-positionAbsolute {
   border: none !important;
   margin-right: 7px !important;
   background-color: rgba(129, 129, 129, 0.1) !important;
-  font-weight: 600 !important;
 }
 
 .project-member-button:hover {
@@ -1126,12 +1145,9 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .project-issue-reported-by-image {
-  display: flex;
-}
-
-.project-issue-reported-by-image img {
-  width: 27px;
-  border-radius: 30px;
+  width: 27px !important;
+  height: 27px !important;
+  font-size: 0.7rem !important;
 }
 
 .project-issue-reporter div {
@@ -1421,10 +1437,10 @@ header.MuiAppBar-positionAbsolute {
 }
 
 .commentor-img {
-  border-radius: 20px;
-  max-width: 25px;
-  max-height: 25px;
+  width: 25px !important;
+  height: 25px !important;
   margin-right: 5px;
+  font-size: 0.8rem !important;
 }
 
 .comment-recieved {

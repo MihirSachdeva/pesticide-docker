@@ -10,31 +10,17 @@ import {
   ListItem,
   ListItemText,
 } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import DefaultTooltip from "@material-ui/core/Tooltip";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import SendRoundedIcon from "@material-ui/icons/SendRounded";
-import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
-import ArrowDownwardRoundedIcon from "@material-ui/icons/ArrowDownwardRounded";
-import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import { connect } from "react-redux";
-import { Link, withRouter, Redirect } from "react-router-dom";
-import { Editor } from "@tinymce/tinymce-react";
+import { Link, withRouter } from "react-router-dom";
 import AlertDialog from "../components/AlertDialog";
-import UtilityComponent from "../components/UtilityComponent";
-import ImageWithModal from "../components/ImageWithModal";
+import Avatar from "./Avatar";
 import CommentReactions from "../components/CommentReactions";
 import { getEmoji } from "../constants/emoticons";
-import HEADER_NAV_TITLES from "../header_nav_titles";
-import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
-import WebSocketInstance from "../websocket";
-import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
-import axios from "axios";
 
 const CommentBox = (props) => {
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -210,8 +196,6 @@ const CommentBox = (props) => {
         }
       });
 
-    console.log("myRxnTypes", myRxnTypes);
-
     return myRxnTypes;
   };
 
@@ -242,14 +226,20 @@ const CommentBox = (props) => {
         >
           <div className="comment-sender">
             <div className="comment-sender-image">
-              <img
-                src={
-                  props.comment.commentor_details.display_picture ||
-                  "/sunglasses.svg"
-                }
-                alt="Commentor"
-                className="commentor-img"
-              />
+              {props.comment.commentor_details.display_picture ? (
+                <Avatar
+                  src={props.comment.commentor_details.display_picture}
+                  alt={props.comment.commentor_details.name}
+                  className="commentor-img"
+                  type="image"
+                />
+              ) : (
+                <Avatar
+                  className="commentor-img"
+                  name={props.comment.commentor_details.name}
+                  type="name"
+                ></Avatar>
+              )}
             </div>
             <Typography className="commentor-name">
               <Link
