@@ -24,6 +24,7 @@ import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
 import CommentBox from "../components/CommentBox";
+import allEmoticons, { getEmoji } from "../constants/emoticons";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
@@ -87,6 +88,7 @@ const Issue = (props) => {
   React.useEffect(() => {
     document.getElementById("main-main").addEventListener("scroll", scrollFunc);
     scrollToTop();
+    getEmoticons();
     const issueId = props.match.params.issueId;
     const projectSlug = props.match.params.projectslug;
     axios
@@ -140,7 +142,9 @@ const Issue = (props) => {
           WebSocketInstance.addCallbacks(
             setEmComments,
             addComment,
-            removeComment
+            removeComment,
+            addReaction,
+            removeReaction
           );
           WebSocketInstance.fetchComments(res.data.id);
         });
@@ -232,10 +236,12 @@ const Issue = (props) => {
   };
 
   const setEmComments = (comments) => {
+    console.log(comments);
     setComments(comments);
   };
 
   const addComment = (comment) => {
+    console.log(comment);
     setComments((existingComments) => [...existingComments, comment]);
   };
 
@@ -243,6 +249,14 @@ const Issue = (props) => {
     setComments((existingComments) =>
       existingComments.filter((comment) => comment.id != commentId)
     );
+  };
+
+  const addReaction = (comment, reaction) => {
+    WebSocketInstance.fetchComments(props.match.params.issueId);
+  };
+
+  const removeReaction = (comment, reaction) => {
+    WebSocketInstance.fetchComments(props.match.params.issueId);
   };
 
   const handleCommentSubmit = (event) => {
@@ -270,6 +284,15 @@ const Issue = (props) => {
       ...prevNewCommentState,
       text: content,
     }));
+  };
+
+  const handleNewReaction = (comment, aria_label) => {
+    WebSocketInstance.newReaction(comment, aria_label);
+    console.log('reacting new reaction...')
+  };
+
+  const handleReactionDelete = (comment, aria_label) => {
+    WebSocketInstance.deleteReaction(comment, aria_label);
   };
 
   const scrollToBottom = () => {
@@ -433,6 +456,24 @@ const Issue = (props) => {
   const handleMenuClose = () => {
     setAnchorMenuEl(null);
   };
+
+  const [emoticons, setEmoticons] = React.useState([]);
+
+  async function getEmoticons() {
+    axios
+      .get(api_links.API_ROOT + "emoticons/")
+      .then((res) => {
+        let added_emoticons = [];
+        res.data.forEach(emoticon => {
+          added_emoticons.push({
+            ...emoticon,
+            emoji: getEmoji(emoticon.aria_label)
+          });
+        });
+        setEmoticons(added_emoticons);
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <>
@@ -1045,6 +1086,9 @@ const Issue = (props) => {
                         comment={comment}
                         issue={issue}
                         projectMembersIdList={projectMembersIdList}
+                        emoticons={emoticons}
+                        handleNewReaction={handleNewReaction}
+                        handleReactionDelete={handleReactionDelete}
                       />
                     );
                   })}

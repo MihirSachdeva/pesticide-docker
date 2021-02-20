@@ -238,7 +238,7 @@ const Header = (props) => {
             }
             style={{
               textAlign: "center",
-              fontWeight: "800",
+              fontWeight: "600",
               position: "absolute",
               left: "0",
               right: "0",

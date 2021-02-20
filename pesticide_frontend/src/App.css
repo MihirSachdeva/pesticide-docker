@@ -716,6 +716,7 @@ header.MuiAppBar-positionAbsolute {
   border: 1px solid #8787874d !important;
   border-top: none !important;
   border-left: none !important;
+  border-right: none !important;
   border-radius: 0 !important;
 }
 
@@ -1407,7 +1408,7 @@ header.MuiAppBar-positionAbsolute {
 
 .commentor-name {
   font-size: 17px !important;
-  font-weight: 900 !important;
+  font-weight: 600 !important;
   display: flex;
   align-items: center;
 }
@@ -1415,7 +1416,7 @@ header.MuiAppBar-positionAbsolute {
 .commentor-role {
   font-size: 13px !important;
   opacity: 0.5;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   margin: 0 7px;
 }
 

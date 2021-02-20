@@ -21,3 +21,5 @@ from .tag.tag import TagViewSet
 from .tag.tag_colors import TagColorsView
 from .comment.comment import CommentViewSet
 from .search.unity_search import SearchView
+from .emoticon.emoticon import EmoticonViewSet
+from .comment_reaction.reaction import ReactorViewSet

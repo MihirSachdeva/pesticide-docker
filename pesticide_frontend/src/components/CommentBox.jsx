@@ -27,7 +27,7 @@ import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
 import CommentReactions from "../components/CommentReactions";
-import emoticons from "../constants/emoticons";
+import { getEmoji } from "../constants/emoticons";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
@@ -196,6 +196,31 @@ const CommentBox = (props) => {
     setAnchorMenuEl(null);
   };
 
+  const myRxnTypesFn = () => {
+    let myRxnTypes = [];
+
+    props.comment &&
+      props.comment.reactions &&
+      props.comment.reactions.forEach((reactionType) => {
+        let index = reactionType.reacters.findIndex(
+          (r) => r.id == props.currentUser.id
+        );
+        if (index > -1) {
+          myRxnTypes.push(reactionType.aria_label);
+        }
+      });
+
+    console.log("myRxnTypes", myRxnTypes);
+
+    return myRxnTypes;
+  };
+
+  const [myReactionTypes, setMyReactionTypes] = React.useState([]);
+
+  React.useEffect(() => {
+    setMyReactionTypes(myRxnTypesFn());
+  }, [props.comment, props.comment.reactions]);
+
   return (
     <>
       <div
@@ -297,63 +322,66 @@ const CommentBox = (props) => {
           className="comment-bottom"
           style={{
             borderTop: props.isSentByCurrentUser
-              ? `1px solid ${commentThemeColors(props.theme).sentColor}`
-              : `1px solid ${commentThemeColors(props.theme).recievedColor}`,
+              ? `1px solid ${commentThemeColors(props.theme).sent}`
+              : `1px solid ${commentThemeColors(props.theme).recieved}`,
           }}
         >
           <div className="comment-reactions">
-            <Tooltip
-              arrow
-              interactive
-              title={
-                <React.Fragment>
-                  <List dense={true}>
-                    <ListItem>
-                      <ListItemText primary="Mihir Sachdeva" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Mihir Sachdeva" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Mihir Sachdeva" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Mihir Sachdeva" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemText primary="Mihir Sachdeva" />
-                    </ListItem>
-                    <ListItem>
-                      <Button onClick={handleModalOpen}>View all</Button>
-                    </ListItem>
-                  </List>
-                </React.Fragment>
-              }
-            >
-              <Button className="comment-reaction">👍 1</Button>
-            </Tooltip>
-            <Button className="comment-reaction">😄 1</Button>
-            <Button className="comment-reaction">👀 1</Button>
-            <Button className="comment-reaction">👍 1</Button>
-            <Button className="comment-reaction">😄 1</Button>
-            <Button className="comment-reaction">👀 1</Button>
-            <Button className="comment-reaction">👍 1</Button>
-            <Button className="comment-reaction">😄 1</Button>
-            <Button className="comment-reaction">👀 1</Button>
-            <Button className="comment-reaction">👍 1</Button>
-            <Button className="comment-reaction">😄 1</Button>
-            <Button className="comment-reaction">👀 1</Button>
+            {props.comment.reactions.map((reaction) => {
+              let reactedByMe = Boolean(
+                reaction.reacters.find(
+                  (reactr) => reactr.id == props.currentUser.id
+                )
+              );
+              return (
+                <Tooltip
+                  arrow
+                  interactive
+                  title={
+                    <React.Fragment>
+                      <List dense={true}>
+                        {reaction.reacters.map((reacter) => (
+                          <ListItem>
+                            <ListItemText primary={reacter.name} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </React.Fragment>
+                  }
+                >
+                  <Button
+                    className={
+                      reactedByMe
+                        ? "comment-reaction btn-filled-xs"
+                        : "comment-reaction"
+                    }
+                    style={
+                      reactedByMe
+                        ? {
+                            border: `1px solid ${
+                              commentThemeColors(props.theme).recieved
+                            }`,
+                          }
+                        : null
+                    }
+                    onClick={() => {
+                      reactedByMe
+                        ? props.handleReactionDelete(
+                            props.comment.id,
+                            reaction.aria_label
+                          )
+                        : props.handleNewReaction(
+                            props.comment.id,
+                            reaction.aria_label
+                          );
+                    }}
+                  >
+                    {getEmoji(reaction.emoticon) + " " + reaction.count}
+                  </Button>
+                </Tooltip>
+              );
+            })}
             <Button
-              // onClick={() => {
-              //   openAlert(
-              //     "delete_comment",
-              //     "Delete this comment?",
-              //     "This comment will be deleted permanently.",
-              //     "Cancel",
-              //     "Delete",
-              //     comment.id
-              //   );
-              // }}
               aria-controls="emoticons-menu"
               aria-haspopup="true"
               onClick={handleEmoticonButtonClick}
@@ -380,22 +408,47 @@ const CommentBox = (props) => {
 
               <br />
 
-              {emoticons.map((emoticon, index) => (
-                <MenuItem
-                  onClick={handleEmoticonButtonClose}
-                  title={emoticon.expression}
-                >
-                  {emoticon.emoji}
-                </MenuItem>
-              ))}
+              {props.emoticons != [] &&
+                props.emoticons.map((emoticon, index) => {
+                  let reactedByMe = myReactionTypes.includes(
+                    emoticon.aria_label
+                  );
+                  return (
+                    <MenuItem
+                      onClick={() => {
+                        reactedByMe
+                          ? props.handleReactionDelete(
+                              props.comment.id,
+                              emoticon.aria_label
+                            )
+                          : props.handleNewReaction(
+                              props.comment.id,
+                              emoticon.aria_label
+                            );
+                        handleEmoticonButtonClose();
+                      }}
+                      title={emoticon.aria_label}
+                      style={
+                        reactedByMe
+                          ? {
+                              border: "1px solid #80808042",
+                              backgroundColor: "#85858524",
+                            }
+                          : null
+                      }
+                    >
+                      {emoticon.emoji}
+                    </MenuItem>
+                  );
+                })}
             </Menu>
           </div>
           <div
             className="comment-timestamp"
             style={{
               borderLeft: props.isSentByCurrentUser
-                ? `1px solid ${commentThemeColors(props.theme).sentColor}`
-                : `1px solid ${commentThemeColors(props.theme).recievedColor}`,
+                ? `1px solid ${commentThemeColors(props.theme).sent}`
+                : `1px solid ${commentThemeColors(props.theme).recieved}`,
             }}
           >
             {getDate(props.comment.timestamp)}

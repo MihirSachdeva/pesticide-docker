@@ -23,6 +23,8 @@ router.register(r'project_members', ProjectMembers, basename='project_members')
 router.register(r'project_issue_status', ProjectIssueStatusViewSet, basename='project_issue_status_tally')
 router.register(r'email_subscriptions', EmailSubscriptionViewset, basename='email_subscriptions')
 router.register(r'user_status', UserStatusViewset, basename='user_status')
+router.register(r'emoticons', EmoticonViewSet, basename='emoticons')
+router.register(r'comment_reactions', ReactorViewSet, basename='comment_reactions')
 urlpatterns = router.urls
 
 urlpatterns += [
