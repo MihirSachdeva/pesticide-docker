@@ -63,56 +63,64 @@ class CommentsConsumer(WebsocketConsumer):
     def new_reaction(self, data):
         user = self.scope["user"]
         comment = Comment.objects.get(id=data['comment'])
-        emoticon = Emoticon.objects.get(aria_label=data['aria_label'])
 
-        reaction = Reactor.objects.create(
-            comment=comment,
-            user=user,
-            emoticon=emoticon,
-        )
+        try:
+            emoticon = Emoticon.objects.get(aria_label=data['aria_label'])
+        except:
+            pass
+        else:
+            reaction = Reactor.objects.create(
+                comment=comment,
+                user=user,
+                emoticon=emoticon,
+            )
 
-        content = {
-            'command': 'new_reaction',
-            'comment': comment.id,
-            'reaction': {
-                'id': reaction.id,
-                'emoticon': emoticon.emoji,
-                'aria_label': emoticon.aria_label,
-                'reacter': {
-                    'id': user.id,
-                    'name': user.name
+            content = {
+                'command': 'new_reaction',
+                'comment': comment.id,
+                'reaction': {
+                    'id': reaction.id,
+                    'emoticon': emoticon.emoji,
+                    'aria_label': emoticon.aria_label,
+                    'reacter': {
+                        'id': user.id,
+                        'name': user.name
+                    }
                 }
             }
-        }
 
-        return self.send_chat_comment(content)
+            return self.send_chat_comment(content)
 
     def delete_reaction(self, data):
         user = self.scope["user"]
         comment = Comment.objects.get(id=data['comment'])
-        reaction = Reactor.objects.get(
-            emoticon__aria_label=data['aria_label'],
-            user=user,
-            comment=comment
-        )
-        comment = reaction.comment
+        try:
+            reaction = Reactor.objects.get(
+                emoticon__aria_label=data['aria_label'],
+                user=user,
+                comment=comment
+            )
+        except:
+            pass
+        else:
+            comment = reaction.comment
 
-        content = {
-            'command': 'delete_reaction',
-            'comment': comment.id,
-            'reaction': {
-                'id': reaction.id,
-                'emoticon': reaction.emoticon.aria_label,
-                'reacter': {
-                    'id': reaction.user.id,
-                    'name': reaction.user.name
+            content = {
+                'command': 'delete_reaction',
+                'comment': comment.id,
+                'reaction': {
+                    'id': reaction.id,
+                    'emoticon': reaction.emoticon.aria_label,
+                    'reacter': {
+                        'id': reaction.user.id,
+                        'name': reaction.user.name
+                    }
                 }
             }
-        }
 
-        reaction.delete()
+            reaction.delete()
 
-        return self.send_chat_comment(content)
+            return self.send_chat_comment(content)
 
     def comments_to_json(self, comments):
         result = []
@@ -175,7 +183,6 @@ class CommentsConsumer(WebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['issue_id']
         self.room_group_name = 'chat_%s' % self.room_name
         user = self.scope["user"]
-        print(user)
 
         if user in User.objects.all():
             # Join room group
