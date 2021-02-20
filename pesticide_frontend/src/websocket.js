@@ -21,13 +21,13 @@ class WebsocketService {
     this.sockRef.onopen = () => {
       // console.log("Websocket open.");
     };
-    this.socketNewComment(
+    this.socketNewMessage(
       JSON.stringify({
         command: "fetch_comments",
       })
     );
     this.sockRef.onmessage = (e) => {
-      this.socketNewComment(e.data);
+      this.socketNewMessage(e.data);
     };
     this.sockRef.onerror = (e) => {
       // console.log(e);
@@ -41,7 +41,7 @@ class WebsocketService {
     this.sockRef.close();
   }
 
-  socketNewComment(data) {
+  socketNewMessage(data) {
     const parsedData = JSON.parse(data);
     const command = parsedData.command;
     if (Object.keys(this.callbacks).length === 0) {
@@ -55,6 +55,12 @@ class WebsocketService {
     }
     if (command === "delete_comment") {
       this.callbacks[command](parsedData.comment_id);
+    }
+    if (command === "new_reaction") {
+      this.callbacks[command](parsedData.comment, parsedData.reaction);
+    }
+    if (command === "delete_reaction") {
+      this.callbacks[command](parsedData.comment, parsedData.reaction);
     }
   }
 
@@ -81,10 +87,34 @@ class WebsocketService {
     });
   }
 
-  addCallbacks(commentsCallback, newCommentCallback, deleteCommentCallback) {
+  newReaction(comment, aria_label) {
+    this.sendMessage({
+      command: "new_reaction",
+      comment: comment,
+      aria_label: aria_label,
+    });
+  }
+
+  deleteReaction(comment, aria_label) {
+    this.sendMessage({
+      command: "delete_reaction",
+      comment: comment,
+      aria_label: aria_label,
+    });
+  }
+
+  addCallbacks(
+    commentsCallback,
+    newCommentCallback,
+    deleteCommentCallback,
+    newReactionCallback,
+    deleteReactionCallback
+  ) {
     this.callbacks["comments"] = commentsCallback;
     this.callbacks["new_comment"] = newCommentCallback;
     this.callbacks["delete_comment"] = deleteCommentCallback;
+    this.callbacks["new_reaction"] = newReactionCallback;
+    this.callbacks["delete_reaction"] = deleteReactionCallback;
   }
 
   sendMessage(data) {

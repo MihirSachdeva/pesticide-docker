@@ -9,7 +9,9 @@ from pesticide_app.models import (
     IssueImage, 
     ProjectIcon,
     IssueStatus,
-    EmailSubscription
+    EmailSubscription,
+    Reactor,
+    Emoticon,
 )
 
 admin.site.register(User)
@@ -21,3 +23,5 @@ admin.site.register(Tag)
 admin.site.register(IssueImage)
 admin.site.register(IssueStatus)
 admin.site.register(EmailSubscription)
+admin.site.register(Reactor)
+admin.site.register(Emoticon)

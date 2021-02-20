@@ -17,6 +17,7 @@ import UtilityComponent from "../components/UtilityComponent";
 import TitleCard from "../components/TitleCard";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as snackbarActions from "../store/actions/snackbar";
+import allEmoticons, { getEmoji } from "../constants/emoticons";
 
 import axios from "axios";
 
@@ -58,6 +59,10 @@ function a11yProps(index) {
 const Admin = (props) => {
   const [tags, setTags] = React.useState([]);
   const [statuses, setStatuses] = React.useState([]);
+  const [emoticons, setEmoticons] = React.useState({
+    added: [],
+    more: []
+  });
   const [statusTypes, setStatusTypes] = React.useState([]);
   const [formDialog, setFormDialog] = React.useState({
     open: false,
@@ -103,12 +108,37 @@ const Admin = (props) => {
       .catch((err) => console.log(err));
   }
 
+  async function fetchEmoticons() {
+    axios
+      .get(api_links.API_ROOT + "emoticons/")
+      .then((res) => {
+        let addedEmoticons = [];
+        let moreEmoticons = [];
+        allEmoticons.forEach((emoticon) => {
+          let extraEmoji = res.data.find(
+            added_emoticon => added_emoticon.aria_label == emoticon.aria_label
+          )
+          if (extraEmoji) {
+            addedEmoticons.push({ ...extraEmoji, emoji: getEmoji(extraEmoji.aria_label) })
+          } else {
+            moreEmoticons.push(emoticon)
+          }
+        });
+        setEmoticons({
+          added: addedEmoticons,
+          more: moreEmoticons
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
   React.useEffect(() => {
     fetchTags();
     fetchStatuses();
     setFormDialog({ open: false });
     fetchUsers();
     fetchIssueStatusTypes();
+    fetchEmoticons();
   }, []);
 
   const openFormDialog = (
@@ -157,6 +187,12 @@ const Admin = (props) => {
         break;
       case "add_status":
         choice && addStatus(fields, options);
+        break;
+      case "add_emoticon":
+        choice && addEmoticon(data);
+        break;
+      case "delete_emoticon":
+        choice && removeEmoticon(data);
         break;
     }
   };
@@ -325,6 +361,50 @@ const Admin = (props) => {
       });
   };
 
+  const addEmoticon = (data) => {
+    const fields = {
+      emoji: data.aria_label,
+      aria_label: data.aria_label
+    }
+    axios.post(api_links.API_ROOT + "emoticons/", fields)
+      .then((res) => {
+        fetchEmoticons();
+        props.showSnackbar(
+          "success",
+          "New emoticon added.",
+          6000
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't add new emoticon. Try again later.",
+          6000
+        );
+      });
+  }
+
+  const removeEmoticon = (data) => {
+    axios.delete(api_links.API_ROOT + `emoticons/${data.id}/`)
+      .then((res) => {
+        fetchEmoticons();
+        props.showSnackbar(
+          "success",
+          "Emoticon deleted.",
+          6000
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        props.showSnackbar(
+          "error",
+          "Couldn't delete emoticon. Try again later.",
+          6000
+        );
+      })
+  }
+
   const confirmAlert = (action, choice, data) => {
     choice && handleUserUpdate(data.id, data.field, data.bool);
   };
@@ -358,8 +438,13 @@ const Admin = (props) => {
             />
             <Tab
               style={{ textTransform: "none" }}
-              label={props.theme == "palpatine" ? "Jedi" : "Users"}
+              label="Comment Reactions"
               {...a11yProps(2)}
+            />
+            <Tab
+              style={{ textTransform: "none" }}
+              label={props.theme == "palpatine" ? "Jedi" : "Users"}
+              {...a11yProps(3)}
             />
           </Tabs>
         </AppBar>
@@ -419,7 +504,7 @@ const Admin = (props) => {
                     <Button
                       style={{
                         textTransform: "none",
-                        fontSize: "17px",
+                        fontSize: "14px",
                         width: "fit-content",
                         margin: "10px auto",
                       }}
@@ -583,6 +668,75 @@ const Admin = (props) => {
           </>
         </TabPanel>
         <TabPanel value={value} index={2}>
+          <>
+            <div style={{ margin: "10px" }}>
+              <h3 style={{ textAlign: 'center' }}>Added emoticons:</h3>
+              <div className="admin-tags-container">
+                {emoticons && emoticons.added &&
+                  emoticons.added.map((emoticon) => (
+                    <Button
+                      style={{
+                        textTransform: "none",
+                        fontSize: "14px",
+                        width: "fit-content",
+                        margin: "10px auto",
+                      }}
+                      className="project-issue-tag issue-button-filled-outline"
+                      onClick={() => {
+                        openFormDialog(
+                          "delete_emoticon",
+                          `Reaction: ${emoticon.emoji} - ${emoticon.aria_label}`,
+                          "This emoticon is already added.",
+                          "Cancel",
+                          "Delete",
+                          {
+                            id: emoticon.id,
+                          },
+                          [],
+                          false,
+                        );
+                      }}
+                    >
+                      <span>{emoticon.emoji + " " + emoticon.aria_label}</span>
+                    </Button>
+                  ))}
+              </div>
+              <h3 style={{ textAlign: 'center' }}>More emoticons:</h3>
+              <div className="admin-tags-container">
+                {emoticons && emoticons.more &&
+                  emoticons.more.map((emoticon) => (
+                    <Button
+                      style={{
+                        textTransform: "none",
+                        fontSize: "14px",
+                        width: "fit-content",
+                        margin: "10px auto",
+                      }}
+                      className="project-issue-tag issue-button-filled-outline"
+                      onClick={() => {
+                        openFormDialog(
+                          "add_emoticon",
+                          `Reaction: ${emoticon.emoji} - ${emoticon.aria_label}`,
+                          "This emoticon can be added. Click on 'Add' to add this emoticon.",
+                          "Cancel",
+                          "Add",
+                          {
+                            aria_label: emoticon.aria_label,
+                            emoji: emoticon.aria_label,
+                          },
+                          [],
+                          false,
+                        );
+                      }}
+                    >
+                      <span>{emoticon.emoji + " " + emoticon.aria_label}</span>
+                    </Button>
+                  ))}
+              </div>
+            </div>
+          </>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
           <div className="user-card-container">
             <div className="user-card-grid">
               {users.map((user) => (
