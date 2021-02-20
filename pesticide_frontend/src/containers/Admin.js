@@ -207,7 +207,6 @@ const Admin = (props) => {
       tag_text: tag_text,
       color: color,
     };
-    console.log(tag);
     axios
       .patch(api_links.API_ROOT + `tags/${id}/`, tag)
       .then((res) => {
@@ -238,7 +237,6 @@ const Admin = (props) => {
       color: color,
       type: type,
     };
-    console.log(status);
     axios
       .patch(api_links.API_ROOT + `issuestatus/${id}/`, status)
       .then((res) => {

@@ -4,9 +4,11 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import designation from "../constants/designation";
 import year from "../constants/year";
+import Avatar from "./Avatar";
 
 export default function UserCard(props) {
   const isMobile = useMediaQuery("(max-width: 700px)");
@@ -22,18 +24,31 @@ export default function UserCard(props) {
       <CardHeader
         avatar={
           <Link to={`/users/${props.enrollment_number}`}>
-            <div
-              style={{
-                width: isMobile ? "100px" : "120px",
-                height: isMobile ? "100px" : "120px",
-                borderRadius: "70px",
-                padding: "4px",
-                backgroundImage: props.display_photo
-                  ? `url(${props.display_photo})`
-                  : "url(/sunglasses.svg)",
-              }}
-              className="image-shadow"
-            ></div>
+            {props.display_picture ? (
+              <Avatar
+                src={props.display_picture}
+                type="image"
+                alt={props.name}
+                style={{
+                  width: isMobile ? "100px" : "120px",
+                  height: isMobile ? "100px" : "120px",
+                  margin: "14px 0",
+                  fontSize: "3.3rem"
+                }}
+
+              />
+            ) : (
+                <Avatar
+                  name={props.name}
+                  type="name"
+                  style={{
+                    width: isMobile ? "100px" : "120px",
+                    height: isMobile ? "100px" : "120px",
+                    margin: "14px 0",
+                    fontSize: "3.3rem"
+                  }}
+                ></Avatar>
+              )}
           </Link>
         }
         title={

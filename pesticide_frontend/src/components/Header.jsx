@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import {
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/SwipeableDrawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import BugReportRoundedIcon from "@material-ui/icons/BugReportRounded";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -17,22 +22,20 @@ import SecurityRoundedIcon from "@material-ui/icons/SecurityRounded";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import PeopleIcon from "@material-ui/icons/People";
 import DefaultTooltip from "@material-ui/core/Tooltip";
 import Brightness4RoundedIcon from "@material-ui/icons/Brightness4Rounded";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
+
 import NewProjectWithModal from "../components/NewProjectWithModal";
 import HeaderSidePanel from "./HeaderSidePanel";
 import BackButton from "./BackButton";
+import Avatar from "./Avatar";
+
 import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
 import * as api_links from "../APILinks";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const drawerWidth = 240;
 
@@ -185,16 +188,9 @@ const Header = (props) => {
   const [projects, setProjects] = React.useState([]);
   const [isAdmin, setIsAdmin] = React.useState(false);
   const [enrNo, setEnrNo] = React.useState();
-  const [user, setUser] = React.useState();
+  const [user, setUser] = React.useState({});
 
   React.useEffect(() => {
-    props.isAuthenticated &&
-      axios
-        .get(api_links.API_ROOT + "projects/")
-        .then((res) => {
-          setProjects(res.data);
-        })
-        .catch((err) => console.log(err));
     props.isAuthenticated &&
       axios
         .get(api_links.API_ROOT + "current_user/")
@@ -202,6 +198,14 @@ const Header = (props) => {
           setEnrNo(res.data[0].enrollment_number);
           setIsAdmin(res.data[0].is_master);
           setUser(res.data[0]);
+        })
+        .catch((err) => console.log(err));
+
+    props.isAuthenticated &&
+      axios
+        .get(api_links.API_ROOT + "projects/")
+        .then((res) => {
+          setProjects(res.data);
         })
         .catch((err) => console.log(err));
   }, [props.isAuthenticated, props.currentTheme]);
@@ -325,12 +329,18 @@ const Header = (props) => {
                   onClick={handleNavMenuOpen}
                   className="header-user-button"
                 >
-                  <img
-                    src={(user && user.display_picture) || "/sunglasses.svg"}
-                    className="header-user-image"
-                  />
-                  {!isMobile && (
-                    <div className="header-user-name">{user && user.name}</div>
+                  {user && user.display_picture ? (
+                    <Avatar
+                      src={user.display_picture}
+                      className="header-user-image"
+                      type="image"
+                    />
+                  ) : (
+                    <Avatar
+                      className="header-user-image"
+                      name={user.name}
+                      type="name"
+                    ></Avatar>
                   )}
                 </div>
                 <Menu

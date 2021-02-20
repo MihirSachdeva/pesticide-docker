@@ -4,9 +4,11 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { Typography } from "@material-ui/core";
 import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
 import { Link } from "react-router-dom";
-import SkeletonIssue from "./SkeletonIssue";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+
+import SkeletonIssue from "./SkeletonIssue";
+import Avatar from "./Avatar";
 
 const projectDetailsLeftRight = {
   display: "flex",
@@ -96,6 +98,7 @@ const IssueItem = (props) => {
             <Typography
               className="project-issue"
               style={{ whiteSpace: "nowrap", fontWeight: "600" }}
+              title={props.title}
             >
               {!fullScreen
                 ? props.title.length < 80
@@ -185,16 +188,20 @@ const IssueItem = (props) => {
                     marginTop: isMobile && "5px",
                   }}
                 >
-                  <div className="project-issue-reported-by-image">
-                    <img
-                      src={
-                        props.reporterDetails.display_picture
-                          ? props.reporterDetails.display_picture
-                          : "/sunglasses.svg"
-                      }
-                      alt="Issue Reporter"
+                  {props.reporterDetails.display_picture ? (
+                    <Avatar
+                      src={props.reporterDetails.display_picture}
+                      className="project-issue-reported-by-image"
+                      type="image"
+                      alt={props.reporterDetails.name}
                     />
-                  </div>
+                  ) : (
+                    <Avatar
+                      className="project-issue-reported-by-image"
+                      name={props.reporterDetails.name}
+                      type="name"
+                    ></Avatar>
+                  )}
                   {props.reporterDetails.name != undefined &&
                     props.reporterDetails.name}
                 </Button>
