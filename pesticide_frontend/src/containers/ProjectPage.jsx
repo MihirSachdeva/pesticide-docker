@@ -734,7 +734,7 @@ const ProjectPage = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+    darkTheme: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     ),
   };

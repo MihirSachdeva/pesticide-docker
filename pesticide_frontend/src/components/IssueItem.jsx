@@ -235,6 +235,8 @@ const mapStateToProps = (state) => {
           return { backgroundColor: "#0d2832" };
         case "palpatine":
           return { backgroundColor: "#171717" };
+        case "dracula":
+          return { backgroundColor: "#242630" };
         default:
           return { backgroundColor: "ffffff" };
       }

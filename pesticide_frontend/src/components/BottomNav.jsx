@@ -45,6 +45,12 @@ const BottomNav = (props) => {
       secondary: { main: "#ff0000", contrastText: "#ff0000" },
       background: { default: "#18191a", paper: "#242526" },
     },
+    dracula: {
+      type: "dark",
+      primary: { main: "#bd93f9", contrastText: "#f8f8f2" },
+      secondary: { main: "#ff0000", contrastText: "#ff0000" },
+      background: { default: "#20222c", paper: "#282a36" },
+    },
   };
 
   const theme = (theme) =>

@@ -419,10 +419,10 @@ const EditProjectForm = (props) => {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.currentUser.id != undefined,
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+    darkTheme: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     ),
-    borderClass: ["dark", "solarizedDark", "palpatine"].includes(
+    borderClass: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     )
       ? {

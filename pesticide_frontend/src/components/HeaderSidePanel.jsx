@@ -465,6 +465,7 @@ const mapStateToProps = (state) => {
     darkTheme:
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
+      state.theme.theme == "dracula" ||
       state.theme.theme == "palpatine",
     projects: state.sidepanel.projects,
     issues: state.sidepanel.issues,

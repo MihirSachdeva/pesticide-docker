@@ -158,6 +158,9 @@ const Header = (props) => {
     palpatine: {
       backgroundColor: "#1a1a1a",
     },
+    dracula: {
+      backgroundColor: "#282a36",
+    },
   };
 
   const theme = useTheme();
@@ -318,6 +321,17 @@ const Header = (props) => {
                     }}
                   >
                     Solarized Dark
+                  </MenuItem>
+                  <MenuItem
+                    className={
+                      props.currentTheme === "dracula" && "active-menu-option"
+                    }
+                    onClick={() => {
+                      handleThemeBtnClose();
+                      props.changeTheme("dracula");
+                    }}
+                  >
+                    Dracula
                   </MenuItem>
                 </Menu>
               </Button>
@@ -632,7 +646,8 @@ const mapStateToProps = (state) => {
     darkTheme:
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
-      state.theme.theme == "palpatine",
+      state.theme.theme == "palpatine" ||
+      state.theme.theme == "dracula",
     showBackButton: state.theme.showBackButton,
   };
 };

@@ -531,14 +531,14 @@ const Issues = (props) => {
               <Typography>No issue to show.</Typography>
             </center>
           ) : (
-            <>
-              <SkeletonIssue first />
-              <SkeletonIssue />
-              <SkeletonIssue />
-              <SkeletonIssue />
-              <SkeletonIssue last />
-            </>
-          )}
+                <>
+                  <SkeletonIssue first />
+                  <SkeletonIssue />
+                  <SkeletonIssue />
+                  <SkeletonIssue />
+                  <SkeletonIssue last />
+                </>
+              )}
         </div>
         {issues.length != 0 && (
           <div className="pagination-container">
@@ -561,7 +561,7 @@ const Issues = (props) => {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.currentUser.id != undefined,
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+    darkTheme: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     ),
   };

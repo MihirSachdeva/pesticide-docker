@@ -269,6 +269,18 @@ const Settings = (props) => {
         >
           Solarized Dark
         </Button>
+        <Button
+          className={
+            props.currentTheme === "dracula"
+              ? "active-menu-option settings-btn"
+              : "settings-btn"
+          }
+          onClick={() => {
+            props.changeTheme("dracula");
+          }}
+        >
+          Dracula
+        </Button>
       </center>
 
       <center style={{ margin: "5px" }}>

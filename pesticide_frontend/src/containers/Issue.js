@@ -1215,7 +1215,7 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.currentUser,
     theme: state.theme.theme,
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+    darkTheme: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     ),
   };
