@@ -279,10 +279,10 @@ const NewProjectForm = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+    darkTheme: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     ),
-    borderClass: ["dark", "solarizedDark", "palpatine"].includes(
+    borderClass: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     )
       ? {

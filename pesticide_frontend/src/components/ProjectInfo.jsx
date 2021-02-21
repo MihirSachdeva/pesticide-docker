@@ -16,11 +16,13 @@ import DefaultTooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
-import EditProjectWithModal from "./EditProjectWithModal";
-import * as api_links from "../APILinks";
-import MemberButton from "./MemberButton";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
+
+import EditProjectWithModal from "./EditProjectWithModal";
+import ProjectLogo from "./ProjectLogo";
+import * as api_links from "../APILinks";
+import MemberButton from "./MemberButton";
 
 const RedTooltip = withStyles({
   tooltip: {
@@ -117,13 +119,7 @@ const ProjectInfo = (props) => {
         setCurrentUserIsMember(() => {
           return res.data.members.includes(currentUserId);
         });
-        setProjecticon(
-          res.data.icon
-            ? api_links.ROOT + res.data.icon
-            : props.currentTheme == "palpatine"
-            ? "../icon/project/appicon_red.svg"
-            : "../icon/project/appicon.svg"
-        );
+        setProjecticon(res.data.icon ? api_links.ROOT + res.data.icon : null);
         setWiki(res.data.wiki);
       })
       .catch((err) => console.log(err));
@@ -196,7 +192,7 @@ const ProjectInfo = (props) => {
           <CardHeader
             avatar={
               <div>
-                {projecticon ? (
+                {/* {projecticon ? (
                   <Link to={"/projects/" + props.projectslug}>
                     <div
                       style={{
@@ -221,7 +217,35 @@ const ProjectInfo = (props) => {
                       borderRadius: "20%",
                     }}
                   />
-                )}
+                )} */}
+                <Link to={"/projects/" + props.projectslug}>
+                  {projecticon ? (
+                    <div
+                      style={{
+                        width: isMobile ? "90px" : "120px",
+                        height: isMobile ? "90px" : "120px",
+                        borderRadius: "20px",
+                        padding: "4px",
+                        backgroundImage: `url(${projecticon})`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center",
+                      }}
+                      className="image-shadow"
+                    ></div>
+                  ) : (
+                    <ProjectLogo
+                      name={project.name}
+                      style={{
+                        width: isMobile ? "90px" : "120px",
+                        height: isMobile ? "90px" : "120px",
+                        borderRadius: "20px",
+                        padding: "4px",
+                      }}
+                      className="image-shadow"
+                    />
+                  )}
+                </Link>
               </div>
             }
             title={

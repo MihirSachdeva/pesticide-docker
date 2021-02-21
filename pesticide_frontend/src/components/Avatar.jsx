@@ -10,7 +10,7 @@ const Avatar = (props) => {
       s = 70;
       l = 70;
     }
-    
+
     if (props.palpatine) {
       return "#e04034";
     }
@@ -45,7 +45,11 @@ const Avatar = (props) => {
       );
     case "name":
       return (
-        <DefaultAvatar className={props.className} style={styles}>
+        <DefaultAvatar
+          className={props.className}
+          style={styles}
+          title={props.name}
+        >
           {props.name &&
             props.name
               .split(" ")
@@ -68,6 +72,7 @@ const mapStateToProps = (state) => {
     darkTheme:
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
+      state.theme.theme == "dracula" ||
       state.theme.theme == "palpatine",
     palpatine: state.theme.theme == "palpatine",
   };

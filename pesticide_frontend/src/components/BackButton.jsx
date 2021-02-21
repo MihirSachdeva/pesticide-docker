@@ -44,6 +44,7 @@ const mapStateToProps = (state) => {
     darkTheme:
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
+      state.theme.theme == "dracula" ||
       state.theme.theme == "palpatine",
     showBack: state.theme.backButton.showBack,
     backText: state.theme.backButton.backText,

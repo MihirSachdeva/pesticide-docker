@@ -55,6 +55,15 @@ const CommentBox = (props) => {
           recievedColor: "#3c3c3ca1",
           after: "#18191a",
         };
+      case "dracula":
+        return {
+          sent: "#bd93f930",
+          sentColor: "#bd93f930",
+          recieved: "#3c3c3ca1",
+          recievedColor: "#3c3c3ca1",
+          after: "#18191a",
+        };
+
       case "palpatine":
         return {
           sent: "#4a1111",
@@ -466,7 +475,7 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.auth.currentUser,
     theme: state.theme.theme,
-    darkTheme: ["dark", "solarizedDark", "palpatine"].includes(
+    darkTheme: ["dark", "solarizedDark", "palpatine", "dracula"].includes(
       state.theme.theme
     ),
   };

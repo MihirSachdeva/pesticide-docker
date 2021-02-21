@@ -20,6 +20,7 @@ import axios from "axios";
 
 import Avatar from "./Avatar";
 
+import ProjectLogo from "./ProjectLogo";
 import * as actions from "../store/actions/auth";
 import * as themeActions from "../store/actions/theme";
 import * as sidepanelActions from "../store/actions/sidepanel";
@@ -279,16 +280,20 @@ const HeaderSidePanel = (props) => {
                   <Link to={"/projects/" + project.projectslug}>
                     <ListItem button className="drawer-btn-filled">
                       <div className="sidepanel-item sidepanel-item-project">
-                        <img
-                          src={
-                            project.icon
-                              ? api_links.ROOT + project.icon
-                              : props.currentTheme == "palpatine"
-                              ? "/icon/project/appicon_red.svg"
-                              : "/icon/project/appicon.svg"
-                          }
-                          className="sidepanel-item-icon"
-                        />
+                        {project.icon ? (
+                          <img
+                            src={api_links.ROOT + project.icon}
+                            className="sidepanel-item-icon"
+                          />
+                        ) : (
+                          <ProjectLogo
+                            name={project.name}
+                            style={{
+                              width: "55px",
+                              height: "55px",
+                            }}
+                          />
+                        )}
                         <div className="sidepanel-item-contents">
                           <div
                             className="sidepanel-item-title"
@@ -460,6 +465,7 @@ const mapStateToProps = (state) => {
     darkTheme:
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
+      state.theme.theme == "dracula" ||
       state.theme.theme == "palpatine",
     projects: state.sidepanel.projects,
     issues: state.sidepanel.issues,

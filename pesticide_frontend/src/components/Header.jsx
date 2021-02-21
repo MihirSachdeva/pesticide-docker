@@ -27,6 +27,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import DefaultTooltip from "@material-ui/core/Tooltip";
 import Brightness4RoundedIcon from "@material-ui/icons/Brightness4Rounded";
 
+import ProjectLogo from "./ProjectLogo";
 import NewProjectWithModal from "../components/NewProjectWithModal";
 import HeaderSidePanel from "./HeaderSidePanel";
 import BackButton from "./BackButton";
@@ -156,6 +157,9 @@ const Header = (props) => {
     },
     palpatine: {
       backgroundColor: "#1a1a1a",
+    },
+    dracula: {
+      backgroundColor: "#282a36",
     },
   };
 
@@ -317,6 +321,17 @@ const Header = (props) => {
                     }}
                   >
                     Solarized Dark
+                  </MenuItem>
+                  <MenuItem
+                    className={
+                      props.currentTheme === "dracula" && "active-menu-option"
+                    }
+                    onClick={() => {
+                      handleThemeBtnClose();
+                      props.changeTheme("dracula");
+                    }}
+                  >
+                    Dracula
                   </MenuItem>
                 </Menu>
               </Button>
@@ -577,20 +592,26 @@ const Header = (props) => {
                       >
                         <ListItemIcon>
                           <div className="drawer-project-icon-container">
-                            <img
-                              src={
-                                project.icon != undefined
-                                  ? api_links.ROOT + project.icon
-                                  : props.currentTheme == "palpatine"
-                                  ? "../icon/project/appicon_red.svg"
-                                  : "../icon/project/appicon.svg"
-                              }
-                              style={{
-                                width: "35px",
-                                borderRadius: "9px",
-                                padding: "2px",
-                              }}
-                            />
+                            {project.icon ? (
+                              <img
+                                src={api_links.ROOT + project.icon}
+                                style={{
+                                  width: "35px",
+                                  borderRadius: "9px",
+                                  padding: "2px",
+                                }}
+                              />
+                            ) : (
+                              <ProjectLogo
+                                name={project.name}
+                                style={{
+                                  width: "35px",
+                                  height: "35px",
+                                  borderRadius: "9px",
+                                  padding: "2px",
+                                }}
+                              />
+                            )}
                           </div>
                         </ListItemIcon>
                         <ListItemText
@@ -625,7 +646,8 @@ const mapStateToProps = (state) => {
     darkTheme:
       state.theme.theme == "dark" ||
       state.theme.theme == "solarizedDark" ||
-      state.theme.theme == "palpatine",
+      state.theme.theme == "palpatine" ||
+      state.theme.theme == "dracula",
     showBackButton: state.theme.showBackButton,
   };
 };
