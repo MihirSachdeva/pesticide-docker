@@ -27,6 +27,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import DefaultTooltip from "@material-ui/core/Tooltip";
 import Brightness4RoundedIcon from "@material-ui/icons/Brightness4Rounded";
 
+import ProjectLogo from "./ProjectLogo";
 import NewProjectWithModal from "../components/NewProjectWithModal";
 import HeaderSidePanel from "./HeaderSidePanel";
 import BackButton from "./BackButton";
@@ -577,20 +578,26 @@ const Header = (props) => {
                       >
                         <ListItemIcon>
                           <div className="drawer-project-icon-container">
-                            <img
-                              src={
-                                project.icon != undefined
-                                  ? api_links.ROOT + project.icon
-                                  : props.currentTheme == "palpatine"
-                                  ? "../icon/project/appicon_red.svg"
-                                  : "../icon/project/appicon.svg"
-                              }
-                              style={{
-                                width: "35px",
-                                borderRadius: "9px",
-                                padding: "2px",
-                              }}
-                            />
+                            {project.icon ? (
+                              <img
+                                src={api_links.ROOT + project.icon}
+                                style={{
+                                  width: "35px",
+                                  borderRadius: "9px",
+                                  padding: "2px",
+                                }}
+                              />
+                            ) : (
+                              <ProjectLogo
+                                name={project.name}
+                                style={{
+                                  width: "35px",
+                                  height: "35px",
+                                  borderRadius: "9px",
+                                  padding: "2px",
+                                }}
+                              />
+                            )}
                           </div>
                         </ListItemIcon>
                         <ListItemText

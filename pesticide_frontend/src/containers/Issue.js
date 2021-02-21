@@ -24,6 +24,7 @@ import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import axios from "axios";
 
+import ProjectLogo from "../components/ProjectLogo";
 import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
 import ImageWithModal from "../components/ImageWithModal";
@@ -598,17 +599,18 @@ const Issue = (props) => {
                   }}
                 >
                   <div className="project-issue-reported-by-image">
-                    <img
-                      src={
-                        issue.project_details.icon
-                          ? api_links.ROOT + issue.project_details.icon
-                          : props.theme == "palpatine"
-                            ? "/icon/project/appicon_red.svg"
-                            : "/icon/project/appicon.svg"
-                      }
-                      alt="Issue Reporter"
-                      style={{ borderRadius: "6px", width: "30px" }}
-                    />
+                    {issue.project_details.icon ? (
+                      <img
+                        src={api_links.ROOT + issue.project_details.icon}
+                        alt="Issue Reporter"
+                        style={{ borderRadius: "6px", width: "30px" }}
+                      />
+                    ) : (
+                        <ProjectLogo
+                          name={issue.project_details.name}
+                          style={{ width: "30px", height: "30px" }}
+                        />
+                      )}
                   </div>
                   {isMobile
                     ? issue.project_details.name && (
