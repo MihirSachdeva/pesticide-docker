@@ -21,7 +21,7 @@ const themes = {
     type: "light",
     primary: { main: "#ffffff", contrastText: "#000000" },
     secondary: { main: "#356fff", contrastText: "#ffffff" },
-    background: { default: "#f0f2f5", paper: "#ffffff" },
+    background: { default: "#f7f7f7", paper: "#ffffff" },
   },
   dark: {
     type: "dark",

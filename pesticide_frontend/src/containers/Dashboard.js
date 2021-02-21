@@ -103,9 +103,7 @@ const Dashboard = (props) => {
             <Typography className="dashboard-hero-quote">
               {props.theme != "palpatine"
                 ? bugQuoteList[Math.floor(Math.random() * bugQuoteList.length)]
-                : starWarsQuoteList[
-                    Math.floor(Math.random() * starWarsQuoteList.length)
-                  ]}
+                : starWarsQuoteList[Math.floor(Math.random() * starWarsQuoteList.length)]}
             </Typography>
             <div className="dashboard-hero-buttons">
               <Link to="/issues">
@@ -152,9 +150,11 @@ const Dashboard = (props) => {
           <PieChart
             donut={true}
             colors={
-              props.theme != "palpatine"
-                ? ["#3b7fff", "#00ea3f", "#ff0021"]
-                : ["#4f0000", "#960000", "#ff0000"]
+              props.theme == "palpatine"
+                ? ["#4f0000", "#960000", "#ff0000"]
+                : props.theme == "dracula"
+                  ? ["#8be9fd", "#50fa7b", "#ff5555"]
+                  : ["#3b7fff", "#00ea3f", "#ff0021"]
             }
             data={projectsStatusData}
             style={{
@@ -177,7 +177,11 @@ const Dashboard = (props) => {
             </p>
           </center>
           <BarChart
-            colors={props.theme != "palpatine" ? ["3b7fff"] : ["ff0000"]}
+            colors={props.theme == "palpatine"
+              ? ["ff0000"]
+              : props.theme == "dracula"
+                ? ["bd93f9"]
+                : ["3b7fff"]}
             data={topReporters}
           />
         </Card>
@@ -202,6 +206,8 @@ const mapStateToProps = (state) => {
           return "url(../bug/bug_sol_dark.svg)";
         case "palpatine":
           return "url(../bug/bug_red.svg)";
+        case "dracula":
+          return "url(../bug/bug_dracula.svg)";
         default:
           return "url(../bug/bug_light.svg)";
       }
