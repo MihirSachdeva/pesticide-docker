@@ -22,6 +22,17 @@ const ProjectLogo = (props) => {
     return "hsl(" + h + ", " + s + "%, " + l + "%)";
   };
 
+  const bg = {
+    default: "#ffffff",
+    dark: "#1d1e1f",
+    solarizedLight: "#eee8d5",
+    solarizedDark: "#0a232c",
+    dracula: "#282a36",
+    palpatine: "#161616",
+  };
+
+  let bgColor = bg[props.theme] || "#ffffff";
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -52,13 +63,13 @@ const ProjectLogo = (props) => {
         />
         <g>
           <path
-            style={{ fill: "#FFFFFF" }}
+            style={{ fill: bgColor }}
             d="M157.649,394.515c-4.625,8.011-13.046,12.494-21.693,12.495c-4.239,0-8.531-1.077-12.458-3.344l0,0   c-11.938-6.892-16.043-22.212-9.151-34.15l4.917-8.516h57.735L157.649,394.515z"
             data-original="#FFFFFF"
             class=""
           />
           <path
-            style={{ fill: "#FFFFFF" }}
+            style={{ fill: bgColor }}
             d="M110.5,341c-13.785,0-25-11.215-25-25s11.215-25,25-25h49.178l67.454-116.834l-18.281-31.664   c-6.892-11.938-2.788-27.258,9.15-34.151h0.001c11.938-6.892,27.258-2.786,34.15,9.151l3.848,6.665l3.848-6.664   c6.895-11.939,22.215-16.043,34.15-9.151c5.783,3.339,9.92,8.73,11.648,15.18c1.729,6.45,0.841,13.188-2.498,18.971L217.413,291   h54.079l28.868,50H110.5z"
             data-original="#FFFFFF"
             class=""
@@ -66,21 +77,21 @@ const ProjectLogo = (props) => {
         </g>
         <g>
           <path
-            style={{ fill: "#FFFFFF" }}
+            style={{ fill: bgColor }}
             d="M401.5,341h-20.311l16.463,28.515c6.893,11.937,2.788,27.257-9.149,34.15   c-3.853,2.224-8.129,3.361-12.461,3.361c-2.172,0-4.356-0.285-6.511-0.863c-6.451-1.729-11.842-5.866-15.181-11.65l-86.804-150.348   l28.867-50L352.322,291H401.5c13.785,0,25,11.215,25,25S415.285,341,401.5,341z"
             data-original="#F2F2F2"
             class=""
             data-old_color="#F2F2F2"
           />
           <polygon
-            style={{ fill: "#FFFFFF" }}
+            style={{ fill: bgColor }}
             points="256,291 256,341 300.36,341 271.493,291  "
             data-original="#F2F2F2"
             class=""
             data-old_color="#F2F2F2"
           />
           <path
-            style={{ fill: "#FFFFFF" }}
+            style={{ fill: bgColor }}
             d="M305.646,123.531c-1.729-6.45-5.865-11.842-11.648-15.18c-11.936-6.892-27.256-2.789-34.15,9.151   L256,124.166l0,0v100l47.148-81.664C306.487,136.719,307.375,129.982,305.646,123.531z"
             data-original="#F2F2F2"
             class=""
@@ -100,6 +111,7 @@ const mapStateToProps = (state) => {
       state.theme.theme == "dracula" ||
       state.theme.theme == "palpatine",
     palpatine: state.theme.theme == "palpatine",
+    theme: state.theme.theme,
   };
 };
 
