@@ -55,7 +55,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-        url = 'https://internet.channeli.in/open_auth/token/'
+        url = 'https://channeli.in/open_auth/token/'
         data = {
             'client_id': client_id,
             'client_secret': client_secret,
@@ -77,7 +77,7 @@ class UserViewSet(viewsets.ModelViewSet):
             'Authorization': 'Bearer ' + access_token
         }
         user_data = requests.get(
-            url='https://internet.channeli.in/open_auth/get_user_data/', headers=headers).json()
+            url='https://channeli.in/open_auth/get_user_data/', headers=headers).json()
         # if (user_data.status_code != 200):
         #     return Response(
         #         data = user_data['detail'],
@@ -98,7 +98,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # if is_expired:
         #     access_token.delete()
 
-        #     url = 'https://internet.channeli.in/open_auth/token/'
+        #     url = 'https://channeli.in/open_auth/token/'
         #     data = {
         #         'client_id': 'yW4AebldMW55KMs6xxX54DKd3KT2RvBgsognYmai',
         #         'client_secret': 'OvLyovuXnUhRxLvFfjzZqKhlw9s98CUpPCQc15xWZZf4XoUPnCtlEFTR1SQZCgWMj61Kfi6QWsETx9qSkdh2Q6uOt3o0NFoJ2N2ddecmsDEcGWJemWjZxiHruUIPnPWS',
@@ -113,7 +113,7 @@ class UserViewSet(viewsets.ModelViewSet):
         # headers = {
         #     'Authorization': 'Bearer ' + access_token
         # }
-        # user_data = requests.get(url='https://internet.channeli.in/open_auth/get_user_data/', headers=headers).json()
+        # user_data = requests.get(url='https://channeli.in/open_auth/get_user_data/', headers=headers).json()
 
         try:
             existingUser = User.objects.get(
@@ -157,7 +157,7 @@ class UserViewSet(viewsets.ModelViewSet):
             branch_name = user_data.get('student', {}).get('branch name')
             degree_name = user_data.get('student', {}).get('branch degree name')
             if user_data.get('person', {}).get('displayPicture') != None:
-                display_picture = '//internet.channeli.in' + \
+                display_picture = '//channeli.in' + \
                     user_data.get('person', {}).get('displayPicture')
             else:
                 display_picture = ''
@@ -200,7 +200,7 @@ class UserViewSet(viewsets.ModelViewSet):
         branch_name = user_data.get('student', {}).get('branch name')
         degree_name = user_data.get('student', {}).get('branch degree name')
         if user_data.get('person', {}).get('displayPicture') != None:
-            display_picture = '//internet.channeli.in' + \
+            display_picture = '//channeli.in' + \
                 user_data.get('person', {}).get('displayPicture')
         else:
             display_picture = ''
