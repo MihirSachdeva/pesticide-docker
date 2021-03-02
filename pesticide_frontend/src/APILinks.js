@@ -1,7 +1,7 @@
 export const ROOT = 'http://localhost:7765';
 export const API_ROOT = `${ROOT}/api/`;
 export const REST_AUTH_LOGIN = `${ROOT}/rest-auth/login/`;
-export const OMNIPORT_OAUTH_ROOT = `https://internet.channeli.in/oauth/authorise`;
+export const OMNIPORT_OAUTH_ROOT = `https://channeli.in/oauth/authorise`;
 export const CLIENT_ID = `gKUvZEAlIemSbCql1JzDkR2ClVBY6MjGehIyqeeY`;
 export const DESIRED_STATE = `foobarbaz42`;
 export const REDIRECT_URL = `http://localhost:7765/onlogin`;
