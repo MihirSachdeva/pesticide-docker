@@ -67,6 +67,8 @@ const mapStateToProps = (state) => {
           return "../404/404_sol_dark.svg";
         case "palpatine":
           return "../404/404_red.svg";
+        case "dracula":
+          return "../404/404_dracula.svg";
         default:
           return "../404/404_light.svg";
       }
