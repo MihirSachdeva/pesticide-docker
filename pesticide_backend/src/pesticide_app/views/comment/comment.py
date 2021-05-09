@@ -42,7 +42,7 @@ class CommentViewSet(viewsets.ModelViewSet):
                 comment.issue,
                 comment.issue.reporter.name,
                 comment.text,
-                comment.commentor.name,
+                comment.commentor,
                 comment.issue.reporter,
                 comment.issue.assigned_to,
                 comment.issue.project.members.all(),

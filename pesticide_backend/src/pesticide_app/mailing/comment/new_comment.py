@@ -4,15 +4,19 @@ from ...mailing.mail_templates.new_comment import NewCommentTemplate
 from pesticide.settings import FRONTEND_URL
 
 
-def new_comment(project_name, project_page_link, issue_title, issue_reporter_name, comment, commentor_name, issue_reporter, issue_assignee, project_members=[]):
+def new_comment(project_name, project_page_link, issue_title, issue_reporter_name, comment, commentor, issue_reporter, issue_assignee, project_members=[]):
     """
     Send email to notify members of the project, reporter of the issue and issue assignee that a new comment
     has been added in the concerning issue. \n
-    Takes args(project_name, project_page_link, issue_title, issue_reporter_name, comment, commentor_name, issue_reporter, issue_assignee, project_members=[])
+    Takes args(project_name, project_page_link, issue_title, issue_reporter_name, comment, commentor, issue_reporter, issue_assignee, project_members=[])
     """
 
     for member in project_members:
+        if member == commentor:
+            continue
+
         if member.email_subscriptions.on_new_comment:
+            commentor_name = commentor.name
             mail_template = NewCommentTemplate(
                 project_name,
                 project_page_link,
