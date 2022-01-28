@@ -121,3 +121,15 @@ class IssueProjectCreatorOrMembers(permissions.BasePermission):
             return request.user in obj.project.members.all() or obj.project.creator == request.user
 
         return False
+
+class ProjectMemberOrAdmin(permissions.BasePermission):
+    """
+    Allow webhook edit/add/delete access to only the members of the project and admins.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS :
+            return True
+        if request.user in obj.project.members.all() or request.user.is_master:
+            return True
+        return False

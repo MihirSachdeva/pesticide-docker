@@ -1,3 +1,4 @@
+import imp
 from .user import User
 from .project import Project
 from .project_icon import ProjectIcon
@@ -9,3 +10,4 @@ from .issue_status import IssueStatus
 from .email_subscription import EmailSubscription
 from .emoticon import Emoticon
 from .reactor import Reactor
+from .webhookDetails import WebhookDetails

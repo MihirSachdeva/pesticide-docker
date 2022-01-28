@@ -12,7 +12,10 @@ from pesticide_app.models import (
     EmailSubscription,
     Reactor,
     Emoticon,
+    WebhookDetails,
 )
+
+# from pesticide_app.models.webhookDetails import WebhookDetails
 
 admin.site.register(User)
 admin.site.register(Project)
@@ -25,3 +28,4 @@ admin.site.register(IssueStatus)
 admin.site.register(EmailSubscription)
 admin.site.register(Reactor)
 admin.site.register(Emoticon)
+admin.site.register(WebhookDetails)

@@ -23,3 +23,6 @@ from .comment.comment import CommentViewSet
 from .search.unity_search import SearchView
 from .emoticon.emoticon import EmoticonViewSet
 from .comment_reaction.reaction import ReactorViewSet
+from .webhook.webhook_details import WebhookDetailsView
+from .webhook.webhook_flask import WebhookFlaskView
+from .webhook.webhook import WebhookViewSet

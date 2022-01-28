@@ -1,3 +1,4 @@
+from posixpath import basename
 from django.urls import path
 from django.conf.urls import url
 from rest_framework.routers import DefaultRouter
@@ -25,6 +26,7 @@ router.register(r'email_subscriptions', EmailSubscriptionViewset, basename='emai
 router.register(r'user_status', UserStatusViewset, basename='user_status')
 router.register(r'emoticons', EmoticonViewSet, basename='emoticons')
 router.register(r'comment_reactions', ReactorViewSet, basename='comment_reactions')
+router.register(r'webhook',WebhookViewSet, basename='webhook')
 urlpatterns = router.urls
 
 urlpatterns += [
@@ -32,4 +34,6 @@ urlpatterns += [
     url(r'tag_colors', TagColorsView.as_view()),
     url(r'issue_status_colors', IssueStatusColorsView.as_view()),
     url(r'search', SearchView.as_view()),
+    path('webhook_flask/<str:pk>/details',WebhookFlaskView.as_view()),
+    path('webhook_details/<int:pk>/',WebhookDetailsView.as_view()),
 ]

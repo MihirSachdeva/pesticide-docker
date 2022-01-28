@@ -7,3 +7,4 @@ from .token import TokenSerializer
 from .email_subscription import EmailSubscriptionSerializer
 from .emoticon import EmoticonSerializer
 from .reactor import ReactorSerializer
+from .webhook_details import WebhookFlaskSerializer, WebhookSerializer
