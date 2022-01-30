@@ -4,14 +4,9 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Input from "@material-ui/core/Input";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Chip from "@material-ui/core/Chip";
 import axios from "axios";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { Editor } from "@tinymce/tinymce-react";
 import * as api_links from "../APILinks";
 import * as sidepanelActions from "../store/actions/sidepanel";
 
@@ -24,6 +19,7 @@ const NewWebhookForm = (props) => {
     path:"",
     identifier:"",
     secret: "",
+    project: props.projectID,
   });
 
   const handleFormChange = (event) => {
@@ -33,8 +29,6 @@ const NewWebhookForm = (props) => {
       [name]: value,
     }));
   };
-
-  //fetch current project details.
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -46,7 +40,8 @@ const NewWebhookForm = (props) => {
     data.append("branch", formData.branch);
     data.append("identifier", formData.identifier);
     data.append("secret", formData.secret);
-    //add project_id
+    data.append("project",formData.project);
+    data.append("creator",1);
     axios
       .post(api_links.API_ROOT + "webhook/", data, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -56,8 +51,7 @@ const NewWebhookForm = (props) => {
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
-        props.updateSidebar(); //check if needed?
-        window.location.href = "/projects/";//check if needed?
+        window.location.href = `/projects/${props.projectslug}`;//check if needed?
       })
       .catch((err) => {
         console.log(err);
@@ -91,7 +85,7 @@ const NewWebhookForm = (props) => {
                 onChange={handleFormChange}
               />
             </Grid>
-
+            
             <Typography className="form-label">Repository Name*</Typography>
             <Grid
               item

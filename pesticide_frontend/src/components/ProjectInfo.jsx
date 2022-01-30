@@ -23,6 +23,7 @@ import EditProjectWithModal from "./EditProjectWithModal";
 import ProjectLogo from "./ProjectLogo";
 import * as api_links from "../APILinks";
 import MemberButton from "./MemberButton";
+import NewWebhookWithModal from "../webhook_components/NewWebhookWithModal";
 
 const RedTooltip = withStyles({
   tooltip: {
@@ -425,6 +426,10 @@ const ProjectInfo = (props) => {
               />
               Details
             </Button>
+          </Card>
+        )}
+        {!isMobile && (
+          <Card className="project-info-large-actions" variant="outlined">
             <div>
               {(currentUserIsMember ||
                 project.creator == currentUser.id ||
@@ -436,7 +441,12 @@ const ProjectInfo = (props) => {
                     large
                     fetchData={fetchProjectData}
                   />
-
+                  <NewWebhookWithModal
+                    projectID={props.projectID}
+                    projectName={project.name}
+                    large
+                    projectslug={project.projectslug}
+                  />
                   <Button
                     className="btn-filled btn-filled-error"
                     onClick={() => {

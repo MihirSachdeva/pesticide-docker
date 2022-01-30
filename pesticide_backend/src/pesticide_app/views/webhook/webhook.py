@@ -13,3 +13,5 @@ class WebhookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated & ProjectMemberOrAdmin ]
     authentication_classes = [SessionAuthentication, ]
 
+    def perform_create(self,serializer):
+       serializer.save(creator = self.request.user)
