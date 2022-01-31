@@ -46,7 +46,7 @@ services:
 
   frontend:
     container_name: pesticide_frontend
-    command: npm run build
+    command: npm start
     build:
       context: ./pesticide_frontend/
       dockerfile: Dockerfile
@@ -54,6 +54,8 @@ services:
       - ./pesticide_frontend:/frontend
     expose:
       - "3000"
+    ports:
+      - 3000:3000
     stdin_open: true
     depends_on:
       - backend

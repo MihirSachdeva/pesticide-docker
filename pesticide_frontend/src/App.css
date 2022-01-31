@@ -1999,6 +1999,19 @@ img.vert-move {
   animation: mover 1s infinite alternate;
 }
 
+.webhook-info-large-actions{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 10px 10px 10px 0 !important;
+  min-width: 230px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  height: 227px !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+}
+
 @-webkit-keyframes mover {
   0% {
     transform: translateY(0);

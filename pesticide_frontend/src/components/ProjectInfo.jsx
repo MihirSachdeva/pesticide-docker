@@ -14,7 +14,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import DefaultTooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link, NavLink, withRouter } from "react-router-dom";
 import axios from "axios";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -358,6 +358,16 @@ const ProjectInfo = (props) => {
                       >
                         <DeleteOutlineOutlinedIcon color="error" />
                       </Button>
+                      <a href={api_links.ROOT+'/webhooks/'+project.id+'/'}>
+                        <Button className="btn-filled-small">
+                          <OpenInNewIcon />
+                        </Button>
+                      </a>
+                      <NewWebhookWithModal
+                        projectID={props.projectID}
+                        projectName={project.name}
+                        projectslug={project.projectslug}
+                      />
                     </div>
                   )}
                 </div>
@@ -412,6 +422,15 @@ const ProjectInfo = (props) => {
                 </Button>
               </a>
             )}
+            {(currentUserIsMember ||
+                project.creator == currentUser.id ||
+                currentUser.is_master) && (
+                  <Button href={api_links.ROOT+'/webhooks/'+project.id+'/'} className="btn-filled" style={{marginBottom:"10px" }}>
+                    <OpenInNewIcon style={{ marginRight: "7px"}} />
+                    View All Webhooks
+                  </Button>
+            )}
+            
             <Button
               onClick={handleExpandClick}
               aria-expanded={expanded}
@@ -428,7 +447,10 @@ const ProjectInfo = (props) => {
             </Button>
           </Card>
         )}
-        {!isMobile && (
+        {!isMobile && (currentUserIsMember ||
+                project.creator == currentUser.id ||
+                currentUser.is_master)
+                && (
           <Card className="project-info-large-actions" variant="outlined">
             <div>
               {(currentUserIsMember ||

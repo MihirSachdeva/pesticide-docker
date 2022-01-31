@@ -12,8 +12,8 @@ class WebhookDetails(models.Model):
     secret = models.CharField(max_length=10000)
     branch = models.CharField(max_length=1000)
     identifier = models.CharField(max_length=100, unique=True) #used to identify webhook url
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='webhook_creator')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='webhooks')
+    creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='webhook_creator')
     timestamp = models.DateTimeField(default=datetime.now, blank=True, null=True)
 
     def __str__(self):
