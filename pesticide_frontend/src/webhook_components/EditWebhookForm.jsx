@@ -10,15 +10,17 @@ import { withRouter } from "react-router-dom";
 import * as api_links from "../APILinks";
 import * as sidepanelActions from "../store/actions/sidepanel";
 
-const NewWebhookForm = (props) => {
+const EditWebhookForm = (props) => {
+  const webhookID = props.webhookID;
+  const webhookDetails = props.webhookDetails;
   const [formData, setFormData] = React.useState({
-    name: "",
-    repoName:"",
-    sshurl:"",
-    branch:"",
-    path:"",
-    identifier:"",
-    secret: "",
+    name: webhookDetails.name,
+    repoName:webhookDetails.repository_name ,
+    sshurl:webhookDetails.ssh_url ,
+    branch:webhookDetails.branch ,
+    path:webhookDetails.path ,
+    identifier:webhookDetails.identifier ,
+    secret: "" ,
     project: props.projectID,
   });
 
@@ -40,10 +42,8 @@ const NewWebhookForm = (props) => {
     data.append("branch", formData.branch);
     data.append("identifier", formData.identifier);
     data.append("secret", formData.secret);
-    data.append("project",formData.project);
-    data.append("creator",1);
     axios
-      .post(api_links.API_ROOT + "webhook/", data, {
+      .patch(api_links.API_ROOT + `webhook/${webhookID}/`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
@@ -65,11 +65,12 @@ const NewWebhookForm = (props) => {
   }, []);
 
   return (
+      <>
     <Container component="main" maxWidth="xs">
       <div style={{ margin: "20px 5px" }}>
         <form noValidate onSubmit={handleFormSubmit}>
           <Grid container spacing={2}>
-
+            
             <Typography className="form-label">Webhook Name*</Typography>
             <Grid
               item
@@ -190,12 +191,13 @@ const NewWebhookForm = (props) => {
               color="secondary"
               style={{ marginTop: "20px" }}
             >
-              Create Webhook
+              Save
             </Button>
           </Grid>
         </form>
       </div>
     </Container>
+    </>
   );
 };
 
@@ -224,5 +226,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(NewWebhookForm)
+  connect(mapStateToProps, mapDispatchToProps)(EditWebhookForm)
 );

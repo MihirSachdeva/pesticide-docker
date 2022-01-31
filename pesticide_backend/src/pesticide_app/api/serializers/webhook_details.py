@@ -21,7 +21,7 @@ class WebhookDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebhookDetails
-        fields = ['name','repository_name','ssh_url','path','branch','identifier','project','creator','timestamp']
+        fields = ['id','name','repository_name','ssh_url','path','branch','identifier','project','creator','timestamp']
 
 
 

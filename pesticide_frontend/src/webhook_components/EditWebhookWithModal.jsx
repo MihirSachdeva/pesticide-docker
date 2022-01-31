@@ -9,11 +9,11 @@ import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import Grow from "@material-ui/core/Grow";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 
-import NewWebhookForm from "./NewWebhookForm";
+import EditWebhookForm from "./EditWebhookForm";
 
 const isMobile = window.innerWidth < 850;
 
-export default function NewWebhookWithModal(props) {
+export default function EditWebhookWithModal(props) {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -31,7 +31,7 @@ export default function NewWebhookWithModal(props) {
       {props.large ? (
         <Button onClick={handleClickOpen} className="btn-filled">
           <EditRoundedIcon style={{ marginRight: "7px" }} />
-          Add Webhook
+             Edit
         </Button>
       ) : (
         <Button onClick={handleClickOpen} className="btn-filled-small">
@@ -59,11 +59,11 @@ export default function NewWebhookWithModal(props) {
           >
             <CloseRoundedIcon />
           </Button>
-          Create New Webhook • {props.projectName}
+          Edit Webhook • {props.webhookName} 
         </DialogTitle>
 
         <DialogContent style={{ padding: "5px 10px" }}>
-           <NewWebhookForm projectID={props.projectID} projectName={props.projectName} projectslug={props.projectslug}/>
+           <EditWebhookForm projectID={props.projectID} webhookID={props.webhookID} webhookDetails = {props.webhookDetails}/>
         </DialogContent>
       </Dialog>
     </div>

@@ -20,8 +20,7 @@ import axios from "axios";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
-
-import EditProjectWithModal from "../components/EditProjectWithModal";
+import EditWebhookWithModal from "./EditWebhookWithModal";
 import * as api_links from "../APILinks";
 import MemberButton from "../components/MemberButton";
 
@@ -209,21 +208,23 @@ const WebhookInfo = (props) => {
               {project.members && (
                 <div>
                     <div style={{ display: "flex" }}>
-                      <EditProjectWithModal
+                      <EditWebhookWithModal
+                        webhookName={webhook.name}
                         projectID={props.projectID}
-                        projectName={project.name}
+                        webhookID={webhook.id}
+                        webhookDetails = {webhook}
                         // fetchData={fetchProjectData}
                       />
                       <Button
                         className="btn-filled-small btn-filled-small-error"
                         onClick={() => {
                           props.openAlert(
-                            "delete_project",
-                            "Delete project " + project.name + "?",
-                            "This project, its issues their comments will be deleted permanently.",
+                            "delete_webhook",
+                            "Delete Webhook " + webhook.name + "?",
+                            "This webhook will be deleted permanently.",
                             "Cancel",
                             "Delete",
-                            props.projectID
+                            webhook.id
                           );
                         }}
                       >
@@ -269,22 +270,23 @@ const WebhookInfo = (props) => {
             {!isMobile && (
             
             <Card className="project-info-large-actions" variant="outlined">
-                <EditProjectWithModal
-                    projectID={props.projectID}
-                    projectName={project.name}
-                    large
-                    // fetchData={fetchProjectData}
+                <EditWebhookWithModal
+                  webhookName={webhook.name}
+                  projectID={props.projectID}
+                  webhookID={webhook.id}
+                  large
+                  webhookDetails = {webhook}
                 />
                 <Button
                     className="btn-filled btn-filled-error"
                     onClick={() => {
                       props.openAlert(
-                        "delete_project",
-                        "Delete project " + project.name + "?",
-                        "This project, its issues and their comments will be deleted permanently.",
+                        "delete_webhook",
+                        "Delete Webhook " + webhook.name + "?",
+                        "This webhook will be deleted permanently.",
                         "Cancel",
                         "Delete",
-                        props.projectID
+                        webhook.id
                       );
                     }}
                 >

@@ -92,8 +92,6 @@ const Webhook = (props) => {
         };
     }, []);
 
-    let counter = 0;
-
     async function fetchProjectDetails() {
         axios
         .get(`${api_links.API_ROOT}projects/${projectID}/`)
@@ -126,10 +124,6 @@ const Webhook = (props) => {
           .catch((err) => console.log(err));
     }
 
-    const scrollToBottom = () => {
-        commentsEndRef.current.scrollIntoView({ behavior: "smooth" });
-    };
-
     const scrollToTop = () => {
         document.getElementById("main-main").scrollTo(0, 0);
     };
@@ -154,52 +148,31 @@ const Webhook = (props) => {
 
     const confirmAlert = (action, choice, data) => {
         switch (action) {
-        // case "delete_comment":
-        //   choice && handleCommentDelete(data);
-        //   break;
-        case "delete_issue":
-            choice && handleIssueDelete();
-            break;
-        case "assign_issue":
-            choice && handleIssueAssign(data);
-            break;
-        case "update_issue_status":
-            choice && handleIssueStatusUpdate(data);
+        case "delete_webhook":
+            choice && handleWebhookDelete(data);
             break;
         }
     };
 
-    const [anchorElStatus, setAnchorElStatus] = React.useState(null);
-
-    const handleClickStatus = (event) => {
-        setAnchorElStatus(event.currentTarget);
+    const handleWebhookDelete = (webhookID) => {
+      axios
+        .delete(api_links.API_ROOT + `webhook/${webhookID}/`)
+        .then((res) => {
+          let audio = new Audio(
+            "../sounds/navigation_selection-complete-celebration.wav"
+          );
+          audio.play();
+          setTimeout(() => {
+            window.location.href = `/webhooks/${projectID}`;
+          }, 1000);
+        })
+        .catch((err) => {
+          console.log(err);
+          let audio = new Audio("../sounds/alert_error-03.wav");
+          audio.play();
+        });
     };
-
-    const handleCloseStatus = () => {
-        setAnchorElStatus(null);
-    };
-
-    const [anchorElUsers, setAnchorElUsers] = React.useState(null);
-
-    const handleClickUsers = (event) => {
-        setAnchorElUsers(event.currentTarget);
-    };
-
-    const handleCloseUsers = () => {
-        setAnchorElUsers(null);
-    };
-
-    const [anchorMenuEl, setAnchorMenuEl] = React.useState(null);
-
-    const handleMenuClick = (event) => {
-        setAnchorMenuEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorMenuEl(null);
-    };
-
-
+    
   return (
     <>
       <div ref={topRef} style={{ display: "none" }}></div>
@@ -268,10 +241,24 @@ const Webhook = (props) => {
                   <WebhookInfo 
                     webhookDetails={webhook}
                     projectInfo = {project}
+                    projectID={project.id}
+                    openAlert={openAlert}
                   />
               </div>
           ))}
+           <AlertDialog
+            open={alert.open}
+            action={alert.action}
+            title={alert.title || ""}
+            description={alert.description || ""}
+            cancel={alert.cancel || ""}
+            confirm={alert.confirm || ""}
+            confirmAlert={confirmAlert}
+            data={alert.data || ""}
+            closeAlert={closeAlert}
+          />
           </> 
+          
         )}
     </>
   );
