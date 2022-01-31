@@ -29,8 +29,8 @@ export default function EditProjectWithModal(props) {
   return (
     <div>
       {props.large ? (
-        <Button onClick={handleClickOpen} className="btn-filled">
-          <EditRoundedIcon style={{ marginRight: "7px" }} />
+        <Button onClick={handleClickOpen} className="btn-filled-2" >
+          <EditRoundedIcon style={{ marginRight: "5px"}} />
           Edit
         </Button>
       ) : (

@@ -8,6 +8,7 @@ import { useTheme } from "@material-ui/core/styles";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import Grow from "@material-ui/core/Grow";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 
 import NewWebhookForm from "./NewWebhookForm";
 
@@ -30,12 +31,12 @@ export default function NewWebhookWithModal(props) {
     <div>
       {props.large ? (
         <Button onClick={handleClickOpen} className="btn-filled">
-          <EditRoundedIcon style={{ marginRight: "7px" }} />
+          <AddToPhotosIcon style={{ marginRight: "7px" }} />
           Add Webhook
         </Button>
       ) : (
         <Button onClick={handleClickOpen} className="btn-filled-small">
-          <EditRoundedIcon />
+          <AddToPhotosIcon />
         </Button>
       )}
 

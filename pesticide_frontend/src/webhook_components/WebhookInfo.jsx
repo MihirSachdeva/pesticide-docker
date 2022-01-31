@@ -20,6 +20,7 @@ import axios from "axios";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import GitHubIcon from "@material-ui/icons/GitHub";
 import EditWebhookWithModal from "./EditWebhookWithModal";
 import * as api_links from "../APILinks";
 import MemberButton from "../components/MemberButton";
@@ -122,7 +123,7 @@ const WebhookInfo = (props) => {
             <CardHeader
                 avatar={
                   <div>
-                    <EditRoundedIcon/>
+                    <GitHubIcon/>
                   </div>
                 }
                 title={

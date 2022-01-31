@@ -132,4 +132,4 @@ class ProjectMemberOrAdmin(permissions.BasePermission):
             return True
         if request.user in obj.project.members.all() or request.user.is_master:
             return True
-        return False
+        return obj.creator

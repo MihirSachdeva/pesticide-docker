@@ -7,6 +7,8 @@ import CardContent from "@material-ui/core/CardContent";
 import Collapse from "@material-ui/core/Collapse";
 import Button from "@material-ui/core/Button";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+// import WebhookIcon from "@material-ui/icons/Webhook";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Skeleton from "@material-ui/lab/Skeleton";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
@@ -193,32 +195,6 @@ const ProjectInfo = (props) => {
           <CardHeader
             avatar={
               <div>
-                {/* {projecticon ? (
-                  <Link to={"/projects/" + props.projectslug}>
-                    <div
-                      style={{
-                        width: isMobile ? "90px" : "120px",
-                        height: isMobile ? "90px" : "120px",
-                        borderRadius: "20px",
-                        padding: "4px",
-                        backgroundImage: `url(${projecticon})`,
-                        backgroundSize: "contain",
-                        backgroundRepeat: "no-repeat",
-                        backgroundPosition: "center",
-                      }}
-                      className="image-shadow"
-                    ></div>
-                  </Link>
-                ) : (
-                  <Skeleton
-                    width={132}
-                    height={200}
-                    animation="wave"
-                    style={{
-                      borderRadius: "20%",
-                    }}
-                  />
-                )} */}
                 <Link to={"/projects/" + props.projectslug}>
                   {projecticon ? (
                     <div
@@ -268,6 +244,11 @@ const ProjectInfo = (props) => {
                             {project.name}
                           </Link>
                           &nbsp;&nbsp;
+                          {project.link && (
+                            <a href={project.link} target="_blank">
+                                <OpenInNewIcon style={{ marginRight: "7px" }} />
+                            </a>
+                          )}
                         </>
                       )}
                     </div>
@@ -279,9 +260,17 @@ const ProjectInfo = (props) => {
                     {!project.name ? (
                       <Skeleton width={100} height={50} animation="wave" />
                     ) : (
+                      <>
                       <Link to={"/projects/" + props.projectslug}>
                         {project.name}
                       </Link>
+                      &nbsp;&nbsp;
+                      {project.link && (
+                        <a href={project.link} target="_blank">
+                            <OpenInNewIcon style={{ marginRight: "7px" }} />
+                        </a>
+                      )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -299,6 +288,37 @@ const ProjectInfo = (props) => {
                     new Date(project.timestamp).getFullYear()}
                   <br />
                   <span style={{ fontWeight: "500" }}>{project.status}</span>
+                  {!isMobile && (currentUserIsMember ||
+                project.creator == currentUser.id ||
+                currentUser.is_master)&&(
+                  <div style={{ display: "flex", marginTop:'2%',width:"100px" }}>
+                    <EditProjectWithModal
+                      projectID={props.projectID}
+                      projectName={project.name}
+                      large
+                      fetchData={fetchProjectData}
+                    />
+                    <Button
+                      className="btn-filled btn-filled-error"
+                      onClick={() => {
+                        props.openAlert(
+                          "delete_project",
+                          "Delete project " + project.name + "?",
+                          "This project, its issues and their comments will be deleted permanently.",
+                          "Cancel",
+                          "Delete",
+                          props.projectID
+                        );
+                      }}
+                    >
+                      <DeleteOutlineOutlinedIcon
+                        color="error"
+                        // style={{ marginRight: "7px" }}
+                      />
+                      Delete
+                    </Button>
+                 </div>
+                  )}
                 </div>
               )
             }
@@ -311,13 +331,13 @@ const ProjectInfo = (props) => {
                 alignItems: "center",
               }}
             >
-              {project.link && (
+              {/* {project.link && (
                 <a href={project.link} target="_blank">
                   <Button className="btn-filled-small">
                     <OpenInNewIcon />
                   </Button>
                 </a>
-              )}
+              )} */}
               <Button
                 onClick={handleExpandClick}
                 aria-expanded={expanded}
@@ -360,7 +380,7 @@ const ProjectInfo = (props) => {
                       </Button>
                       <a href={api_links.ROOT+'/webhooks/'+project.id+'/'}>
                         <Button className="btn-filled-small">
-                          <OpenInNewIcon />
+                          <VisibilityIcon />
                         </Button>
                       </a>
                       <NewWebhookWithModal
@@ -374,6 +394,7 @@ const ProjectInfo = (props) => {
               )}
             </div>
           )}
+          
           <div style={memberCardContainer}>
             {!project.id ? (
               <>
@@ -400,7 +421,7 @@ const ProjectInfo = (props) => {
               project.members.map((member) => <MemberButton user={member} />)
             )}
           </div>
-
+          
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
               <div className="issue-content">
@@ -414,21 +435,29 @@ const ProjectInfo = (props) => {
         </div>
         {!isMobile && (
           <Card className="project-info-large-actions" variant="outlined">
-            {project.link && (
+            {/* {project.link && (
               <a href={project.link} target="_blank">
                 <Button className="btn-filled">
                   <OpenInNewIcon style={{ marginRight: "7px" }} />
                   Checkout App
                 </Button>
               </a>
-            )}
+            )} */}
             {(currentUserIsMember ||
                 project.creator == currentUser.id ||
                 currentUser.is_master) && (
+                  <>
+                  <NewWebhookWithModal
+                    projectID={props.projectID}
+                    projectName={project.name}
+                    large
+                    projectslug={project.projectslug}
+                  />
                   <Button href={api_links.ROOT+'/webhooks/'+project.id+'/'} className="btn-filled" style={{marginBottom:"10px" }}>
-                    <OpenInNewIcon style={{ marginRight: "7px"}} />
+                    <VisibilityIcon style={{ marginRight: "7px"}} />
                     View All Webhooks
                   </Button>
+                  </>
             )}
             
             <Button
@@ -447,52 +476,7 @@ const ProjectInfo = (props) => {
             </Button>
           </Card>
         )}
-        {!isMobile && (currentUserIsMember ||
-                project.creator == currentUser.id ||
-                currentUser.is_master)
-                && (
-          <Card className="project-info-large-actions" variant="outlined">
-            <div>
-              {(currentUserIsMember ||
-                project.creator == currentUser.id ||
-                currentUser.is_master) && (
-                <div>
-                  <EditProjectWithModal
-                    projectID={props.projectID}
-                    projectName={project.name}
-                    large
-                    fetchData={fetchProjectData}
-                  />
-                  <NewWebhookWithModal
-                    projectID={props.projectID}
-                    projectName={project.name}
-                    large
-                    projectslug={project.projectslug}
-                  />
-                  <Button
-                    className="btn-filled btn-filled-error"
-                    onClick={() => {
-                      props.openAlert(
-                        "delete_project",
-                        "Delete project " + project.name + "?",
-                        "This project, its issues and their comments will be deleted permanently.",
-                        "Cancel",
-                        "Delete",
-                        props.projectID
-                      );
-                    }}
-                  >
-                    <DeleteOutlineOutlinedIcon
-                      color="error"
-                      style={{ marginRight: "7px" }}
-                    />
-                    Delete
-                  </Button>
-                </div>
-              )}
-            </div>
-          </Card>
-        )}
+        
       </div>
       <div className="project-info-issue-status-bar">
         {projectIssueStatus && (

@@ -93,12 +93,19 @@ const Webhook = (props) => {
     }, []);
 
     async function fetchProjectDetails() {
+        var current_user_id;
         axios
         .get(`${api_links.API_ROOT}projects/${projectID}/`)
         .then((res) => {
             setProject(res.data);
-            console.log(res.data)
             fetchWebhooksForTheProject();
+            axios
+            .get(`${api_links.API_ROOT}current_user/`)
+            .then((response) => {
+              current_user_id = response.data[0].id;
+              (res.data.members.includes(current_user_id )||res.data.creator==current_user_id||response.data[0].is_master)?(""):(setError(true))
+            })
+            .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
     }
@@ -111,17 +118,6 @@ const Webhook = (props) => {
             fetchCurrentUser();
         })
         .catch((err) => console.log(err));
-    }
-
-    function fetchCurrentUser() {
-        var current_user_id;
-        axios
-          .get(`${api_links.API_ROOT}current_user/`)
-          .then((res) => {
-            current_user_id = res.data[0].id;
-            (res.data.members.includes(current_user_id ))?(""):(setError(true))
-          })
-          .catch((err) => console.log(err));
     }
 
     const scrollToTop = () => {
@@ -235,7 +231,11 @@ const Webhook = (props) => {
           </div>
                   
           <hr className="divider2" style={{ margin: "0 10px" }} />
-
+          {(webhooks.length==0)?(
+            <Typography variant="subtitle1" style={{ margin: "10px" }} color="text.secondary" component="div">
+              No webhooks added yet.
+            </Typography>
+          ):("")}
           {webhooks.map((webhook) => (
               <div>
                   <WebhookInfo 
