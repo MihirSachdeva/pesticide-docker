@@ -1,6 +1,14 @@
 from rest_framework import permissions
 from pesticide_app.models import *
+import os
+import yaml
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_CONFIG_FILE = open(os.path.join(
+    BASE_DIR,
+    'config/base.yml'
+))
+BASE_CONFIGURATION = yaml.load(BASE_CONFIG_FILE, Loader=yaml.FullLoader)
 
 class CommentorPermissions(permissions.BasePermission):
     """
@@ -133,3 +141,12 @@ class ProjectMemberOrAdmin(permissions.BasePermission):
         if request.user in obj.project.members.all() or request.user.is_master:
             return True
         return obj.creator
+
+class IsFlaskRequest(permissions.BasePermission):
+    """
+    Verify Flask user with token authentication.
+    """
+    def has_permission(self, request, view):
+        if request.method == 'GET' :
+            return request.headers['Token'] == BASE_CONFIGURATION["flaskToken"]["token"]
+        return False

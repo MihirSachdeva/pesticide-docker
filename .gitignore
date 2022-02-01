@@ -78,5 +78,7 @@ pesticide_backend/src/backend-static
 pesticide_backend/src/config/base.yml
 ./docker-compose.yml
 docker-compose.yml
+/docker-compose.yml
+
 # pychache
 *__pycache__/
