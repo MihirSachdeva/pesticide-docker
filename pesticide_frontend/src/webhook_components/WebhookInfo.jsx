@@ -8,21 +8,16 @@ import CardContent from "@material-ui/core/CardContent";
 import Collapse from "@material-ui/core/Collapse";
 import Button from "@material-ui/core/Button";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Skeleton from "@material-ui/lab/Skeleton";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
-import DefaultTooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import axios from "axios";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import EditWebhookWithModal from "./EditWebhookWithModal";
-import * as api_links from "../APILinks";
 import MemberButton from "../components/MemberButton";
 
 const useStyles = makeStyles((theme) => ({

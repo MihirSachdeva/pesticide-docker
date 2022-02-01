@@ -1,25 +1,13 @@
 import React from "react";
 import {
-  MenuItem,
   Typography,
   Button,
-  IconButton,
-  Menu,
   useMediaQuery,
-  Card,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import DefaultTooltip from "@material-ui/core/Tooltip";
-import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
-import SendRoundedIcon from "@material-ui/icons/SendRounded";
-import CommentIcon from "@material-ui/icons/QuestionAnswerRounded";
-import ArrowDownwardRoundedIcon from "@material-ui/icons/ArrowDownwardRounded";
-import ArrowUpwardRoundedIcon from "@material-ui/icons/ArrowUpwardRounded";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { connect } from "react-redux";
 import { Link, withRouter, Redirect } from "react-router-dom";
-import { Editor } from "@tinymce/tinymce-react";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import axios from "axios";
@@ -28,14 +16,9 @@ import { useParams } from 'react-router-dom';
 import ProjectLogo from "../components/ProjectLogo";
 import AlertDialog from "../components/AlertDialog";
 import UtilityComponent from "../components/UtilityComponent";
-import ImageWithModal from "../components/ImageWithModal";
-import CommentBox from "../components/CommentBox";
-import { getEmoji } from "../constants/emoticons";
 import HEADER_NAV_TITLES from "../header_nav_titles";
 import * as api_links from "../APILinks";
 import * as snackbarActions from "../store/actions/snackbar";
-import WebSocketInstance from "../websocket";
-import Avatar from "../components/Avatar";
 import WebhookInfo from "./WebhookInfo";
 import NewWebhookWithModal from "./NewWebhookWithModal";
 

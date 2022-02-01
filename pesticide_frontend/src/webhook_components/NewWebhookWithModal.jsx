@@ -7,7 +7,6 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import Grow from "@material-ui/core/Grow";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 
 import NewWebhookForm from "./NewWebhookForm";
