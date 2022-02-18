@@ -51,7 +51,7 @@ const NewWebhookForm = (props) => {
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
-        window.location.href = `/webhooks/${props.projectID}`;//check if needed?
+        window.location.href = `/webhooks/${props.projectID}`;
       })
       .catch((err) => {
         console.log(err);
