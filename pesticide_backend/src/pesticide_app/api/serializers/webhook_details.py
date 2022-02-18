@@ -1,9 +1,6 @@
 from django.core.serializers import serialize
 from rest_framework import serializers
-from pesticide_app.models import WebhookDetails, Project, ProjectIcon, User, IssueStatus, Issue
-from slugify import slugify
-from .project import ProjectNameSlugSerializer
-from .user import UserEnrollementNoSerializer
+from pesticide_app.models import WebhookDetails
 
 class WebhookSerializer(serializers.ModelSerializer):
 

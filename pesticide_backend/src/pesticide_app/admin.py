@@ -15,8 +15,6 @@ from pesticide_app.models import (
     WebhookDetails,
 )
 
-# from pesticide_app.models.webhookDetails import WebhookDetails
-
 admin.site.register(User)
 admin.site.register(Project)
 admin.site.register(ProjectIcon)

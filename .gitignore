@@ -76,7 +76,6 @@ pesticide_backend/src/backend-static
 
 # config secrets
 pesticide_backend/src/config/base.yml
-.docker-compose.yml
 
 # pychache
 *__pycache__/

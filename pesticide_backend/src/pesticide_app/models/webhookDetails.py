@@ -7,9 +7,9 @@ class WebhookDetails(models.Model):
    
     name = models.CharField(max_length=100, unique=True)
     repository_name = models.CharField(max_length=500)
-    ssh_url = models.CharField(max_length=10000)
-    path = models.CharField(max_length=10000) #wrt omniport codebase
-    secret = models.CharField(max_length=10000)
+    ssh_url = models.CharField(max_length=1000)
+    path = models.CharField(max_length=1000) #wrt omniport codebase
+    secret = models.CharField(max_length=1000)
     branch = models.CharField(max_length=1000)
     identifier = models.CharField(max_length=100, unique=True) #used to identify webhook url
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='webhooks')

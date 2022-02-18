@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from pesticide_app.permissions import ReadOnlyPermissions
 from rest_framework.authentication import SessionAuthentication
 from pesticide_app.api.serializers import WebhookDetailsSerializer
-from pesticide_app.models import WebhookDetails, Project
+from pesticide_app.models import Project
 
 
 class WebhookDetailsView(APIView):
