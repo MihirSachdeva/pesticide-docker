@@ -9,3 +9,4 @@ from .issue_status import IssueStatus
 from .email_subscription import EmailSubscription
 from .emoticon import Emoticon
 from .reactor import Reactor
+from .webhookDetails import WebhookDetails

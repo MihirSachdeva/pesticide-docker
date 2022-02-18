@@ -12,7 +12,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 PAGE_SIZE = BASE_CONFIGURATION["pagination"]["page_size"]
 FRONTEND_URL = BASE_CONFIGURATION["frontend"]["url"]
-
+FLASK_TOKEN = BASE_CONFIGURATION["flaskToken"]["token"]
 # Application definition
 
 INSTALLED_APPS = [

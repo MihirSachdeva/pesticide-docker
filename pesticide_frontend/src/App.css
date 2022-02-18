@@ -980,7 +980,21 @@ header.MuiAppBar-positionAbsolute {
   white-space: nowrap;
 }
 
-.btn-filled:hover {
+.btn-filled-2 {
+  display: flex !important;
+  border-radius: 7px !important;
+  background-color: rgba(141, 141, 141, 0.096) !important;
+  width: 100%;
+  text-transform: none !important;
+  padding: 10px !important;
+  margin-left: 0px !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  font-weight: 700 !important;
+  white-space: nowrap;
+}
+
+.btn-filled:hover,.btn-filled-2:hover {
   background-color: rgba(129, 129, 129, 0.212) !important;
 }
 
@@ -1997,6 +2011,19 @@ img.vert-move {
 img.vert-move {
   -webkit-animation: mover 1s infinite alternate;
   animation: mover 1s infinite alternate;
+}
+
+.webhook-info-large-actions{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 10px 10px 10px 0 !important;
+  min-width: 230px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  height: 227px !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
 }
 
 @-webkit-keyframes mover {

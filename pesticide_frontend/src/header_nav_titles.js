@@ -10,6 +10,7 @@ const HEADER_NAV_TITLES = {
   USERS: "Users", // for all users page
   USER: "User", // for user page
   ISSUE: "Issue", // for issue page
+  WEBHOOK: "Webhooks",//for webhooks page (webhooks of a certain project)
 };
 
 export default HEADER_NAV_TITLES;

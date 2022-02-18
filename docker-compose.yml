@@ -16,7 +16,7 @@ services:
       - MYSQL_DATABASE=pesticide_docker
       - MYSQL_USER=test_user
       - MYSQL_PASSWORD=test_user_password
-      - MYSQL_ROOT_PASSWORD=ROOT_PASSWORD
+      - MYSQL_ROOT_PASSWORD=
     volumes:
       - /home/pesticide-data:/var/lib/mysql
     expose:
@@ -27,12 +27,15 @@ services:
   backend:
     restart: always
     container_name: pesticide_backend
-    command: bash -c "cd ./src && python check_db.py --service-name db --ip db --port 3306 && python manage.py collectstatic --noinput && python manage.py makemigrations pesticide_app && python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 pesticide.asgi:application"
+    command: bash -c "cd ./src && python check_db.py --service-name db --ip db --port 3306 && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 pesticide.asgi:application"
     build:
       context: ./pesticide_backend/
       dockerfile: Dockerfile
     volumes:
-      - ./pesticide_backend:/backend
+      - type: bind
+        source: ./pesticide_backend
+        target: /backend
+        read_only: false
     expose:
       - "8000"
     depends_on:
@@ -43,7 +46,7 @@ services:
 
   frontend:
     container_name: pesticide_frontend
-    command: npm run build
+    command: npm start
     build:
       context: ./pesticide_frontend/
       dockerfile: Dockerfile
@@ -51,6 +54,8 @@ services:
       - ./pesticide_frontend:/frontend
     expose:
       - "3000"
+    ports:
+      - 3000:3000
     stdin_open: true
     depends_on:
       - backend

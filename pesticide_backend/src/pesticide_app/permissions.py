@@ -1,6 +1,6 @@
 from rest_framework import permissions
 from pesticide_app.models import *
-
+from pesticide.settings import FLASK_TOKEN
 
 class CommentorPermissions(permissions.BasePermission):
     """
@@ -120,4 +120,25 @@ class IssueProjectCreatorOrMembers(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS or request.method == 'PATCH':
             return request.user in obj.project.members.all() or obj.project.creator == request.user
 
+        return False
+
+class ProjectMemberOrAdmin(permissions.BasePermission):
+    """
+    Allow webhook edit/add/delete access to only the members of the project and admins.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS :
+            return True
+        if request.user in obj.project.members.all() or request.user.is_master:
+            return True
+        return obj.creator
+
+class IsFlaskRequest(permissions.BasePermission):
+    """
+    Verify Flask user with token authentication.
+    """
+    def has_permission(self, request, view):
+        if request.method == 'GET' :
+            return request.headers['Token'] == FLASK_TOKEN
         return False
