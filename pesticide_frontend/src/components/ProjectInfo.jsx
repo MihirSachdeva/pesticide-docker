@@ -7,7 +7,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Collapse from "@material-ui/core/Collapse";
 import Button from "@material-ui/core/Button";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-// import WebhookIcon from "@material-ui/icons/Webhook";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -313,7 +312,6 @@ const ProjectInfo = (props) => {
                     >
                       <DeleteOutlineOutlinedIcon
                         color="error"
-                        // style={{ marginRight: "7px" }}
                       />
                       Delete
                     </Button>
@@ -331,13 +329,6 @@ const ProjectInfo = (props) => {
                 alignItems: "center",
               }}
             >
-              {/* {project.link && (
-                <a href={project.link} target="_blank">
-                  <Button className="btn-filled-small">
-                    <OpenInNewIcon />
-                  </Button>
-                </a>
-              )} */}
               <Button
                 onClick={handleExpandClick}
                 aria-expanded={expanded}
@@ -435,14 +426,6 @@ const ProjectInfo = (props) => {
         </div>
         {!isMobile && (
           <Card className="project-info-large-actions" variant="outlined">
-            {/* {project.link && (
-              <a href={project.link} target="_blank">
-                <Button className="btn-filled">
-                  <OpenInNewIcon style={{ marginRight: "7px" }} />
-                  Checkout App
-                </Button>
-              </a>
-            )} */}
             {(currentUserIsMember ||
                 project.creator == currentUser.id ||
                 currentUser.is_master) && (

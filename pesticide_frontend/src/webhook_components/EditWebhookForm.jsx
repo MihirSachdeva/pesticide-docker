@@ -15,12 +15,12 @@ const EditWebhookForm = (props) => {
   const webhookDetails = props.webhookDetails;
   const [formData, setFormData] = React.useState({
     name: webhookDetails.name,
-    repoName:webhookDetails.repository_name ,
-    sshurl:webhookDetails.ssh_url ,
-    branch:webhookDetails.branch ,
-    path:webhookDetails.path ,
-    identifier:webhookDetails.identifier ,
-    secret: "" ,
+    repoName: webhookDetails.repository_name,
+    sshurl: webhookDetails.ssh_url,
+    branch: webhookDetails.branch,
+    path: webhookDetails.path,
+    identifier: webhookDetails.identifier,
+    secret: "",
     project: props.projectID,
   });
 
@@ -51,7 +51,7 @@ const EditWebhookForm = (props) => {
           "../sounds/navigation_selection-complete-celebration.wav"
         );
         audio.play();
-        window.location.href = `/webhooks/${props.projectID}`;//check if needed?
+        window.location.href = `/webhooks/${props.projectID}`;
       })
       .catch((err) => {
         console.log(err);
@@ -61,142 +61,142 @@ const EditWebhookForm = (props) => {
   };
 
   React.useEffect(() => {
-    
+
   }, []);
 
   return (
-      <>
-    <Container component="main" maxWidth="xs">
-      <div style={{ margin: "20px 5px" }}>
-        <form noValidate onSubmit={handleFormSubmit}>
-          <Grid container spacing={2}>
-            
-            <Typography className="form-label">Webhook Name*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="name"
-                fullWidth
-                id="webhookname"
-                value={formData.name}
-                onChange={handleFormChange}
-              />
-            </Grid>
-            
-            <Typography className="form-label">Repository Name*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="repoName"
-                fullWidth
-                id="repositoryname"
-                value={formData.repoName}
-                onChange={handleFormChange}
-              />
-            </Grid>
+    <>
+      <Container component="main" maxWidth="xs">
+        <div style={{ margin: "20px 5px" }}>
+          <form noValidate onSubmit={handleFormSubmit}>
+            <Grid container spacing={2}>
 
-            <Typography className="form-label">SSH URL*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="sshurl"
-                fullWidth
-                id="sshurl"
-                value={formData.sshurl}
-                onChange={handleFormChange}
-              />
-            </Grid>
+              <Typography className="form-label">Webhook Name*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="name"
+                  fullWidth
+                  id="webhookname"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                />
+              </Grid>
 
-            <Typography className="form-label">Branch*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="branch"
-                fullWidth
-                id="branch"
-                value={formData.branch}
-                onChange={handleFormChange}
-              />
-            </Grid>
+              <Typography className="form-label">Repository Name*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="repoName"
+                  fullWidth
+                  id="repositoryname"
+                  value={formData.repoName}
+                  onChange={handleFormChange}
+                />
+              </Grid>
 
-            <Typography className="form-label">Secret*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="secret"
-                fullWidth
-                id="secret"
-                value={formData.secret}
-                onChange={handleFormChange}
-              />
-            </Grid>
+              <Typography className="form-label">SSH URL*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="sshurl"
+                  fullWidth
+                  id="sshurl"
+                  value={formData.sshurl}
+                  onChange={handleFormChange}
+                />
+              </Grid>
 
-            <Typography className="form-label">Path*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="path"
-                fullWidth
-                id="path"
-                value={formData.path}
-                onChange={handleFormChange}
-                placeholder="w.r.t. codebase as current folder"
-              />
-            </Grid>
+              <Typography className="form-label">Branch*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="branch"
+                  fullWidth
+                  id="branch"
+                  value={formData.branch}
+                  onChange={handleFormChange}
+                />
+              </Grid>
 
-            <Typography className="form-label">Identifier*</Typography>
-            <Grid
-              item
-              xs={12}
-              className="custom-form-outline"
-              style={props.borderClass}
-            >
-              <TextField
-                name="identifier"
-                fullWidth
-                id="identifier"
-                value={formData.identifier}
-                onChange={handleFormChange}
-              />
-            </Grid>
+              <Typography className="form-label">Secret*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="secret"
+                  fullWidth
+                  id="secret"
+                  value={formData.secret}
+                  onChange={handleFormChange}
+                />
+              </Grid>
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="secondary"
-              style={{ marginTop: "20px" }}
-            >
-              Save
+              <Typography className="form-label">Path*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="path"
+                  fullWidth
+                  id="path"
+                  value={formData.path}
+                  onChange={handleFormChange}
+                  placeholder="w.r.t. codebase as current folder"
+                />
+              </Grid>
+
+              <Typography className="form-label">Identifier*</Typography>
+              <Grid
+                item
+                xs={12}
+                className="custom-form-outline"
+                style={props.borderClass}
+              >
+                <TextField
+                  name="identifier"
+                  fullWidth
+                  id="identifier"
+                  value={formData.identifier}
+                  onChange={handleFormChange}
+                />
+              </Grid>
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="secondary"
+                style={{ marginTop: "20px" }}
+              >
+                Save
             </Button>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            </Grid>
+          </form>
+        </div>
+      </Container>
     </>
   );
 };
@@ -210,15 +210,14 @@ const mapStateToProps = (state) => {
       state.theme.theme
     )
       ? {
-          border: "1px solid #ffffff6e",
-        }
+        border: "1px solid #ffffff6e",
+      }
       : {
-          border: "1.5px solid #00000042",
-        },
+        border: "1.5px solid #00000042",
+      },
   };
 };
 
-//check functionality
 const mapDispatchToProps = (dispatch) => {
   return {
     updateSidebar: () => dispatch(sidepanelActions.fetchSidepanel()),

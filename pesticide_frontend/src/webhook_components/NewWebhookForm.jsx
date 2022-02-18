@@ -13,11 +13,11 @@ import * as sidepanelActions from "../store/actions/sidepanel";
 const NewWebhookForm = (props) => {
   const [formData, setFormData] = React.useState({
     name: "",
-    repoName:"",
-    sshurl:"",
-    branch:"",
-    path:"",
-    identifier:"",
+    repoName: "",
+    sshurl: "",
+    branch: "",
+    path: "",
+    identifier: "",
     secret: "",
     project: props.projectID,
   });
@@ -40,8 +40,8 @@ const NewWebhookForm = (props) => {
     data.append("branch", formData.branch);
     data.append("identifier", formData.identifier);
     data.append("secret", formData.secret);
-    data.append("project",formData.project);
-    data.append("creator",1);
+    data.append("project", formData.project);
+    data.append("creator", 1);
     axios
       .post(api_links.API_ROOT + "webhook/", data, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -61,7 +61,7 @@ const NewWebhookForm = (props) => {
   };
 
   React.useEffect(() => {
-    
+
   }, []);
 
   return (
@@ -85,7 +85,7 @@ const NewWebhookForm = (props) => {
                 onChange={handleFormChange}
               />
             </Grid>
-            
+
             <Typography className="form-label">Repository Name*</Typography>
             <Grid
               item
@@ -208,15 +208,14 @@ const mapStateToProps = (state) => {
       state.theme.theme
     )
       ? {
-          border: "1px solid #ffffff6e",
-        }
+        border: "1px solid #ffffff6e",
+      }
       : {
-          border: "1.5px solid #00000042",
-        },
+        border: "1.5px solid #00000042",
+      },
   };
 };
 
-//check functionality
 const mapDispatchToProps = (dispatch) => {
   return {
     updateSidebar: () => dispatch(sidepanelActions.fetchSidepanel()),

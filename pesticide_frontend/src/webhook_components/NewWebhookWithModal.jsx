@@ -63,7 +63,7 @@ export default function NewWebhookWithModal(props) {
         </DialogTitle>
 
         <DialogContent style={{ padding: "5px 10px" }}>
-           <NewWebhookForm projectID={props.projectID} projectName={props.projectName} projectslug={props.projectslug}/>
+          <NewWebhookForm projectID={props.projectID} projectName={props.projectName} projectslug={props.projectslug} />
         </DialogContent>
       </Dialog>
     </div>

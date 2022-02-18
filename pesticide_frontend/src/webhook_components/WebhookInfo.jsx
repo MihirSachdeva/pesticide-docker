@@ -79,7 +79,7 @@ const WebhookInfo = (props) => {
   const getDate = (timestamp) => {
     let date;
     if (new Date(timestamp).getMinutes() > 9) {
-    date =
+      date =
         new Date(timestamp).getHours() +
         ":" +
         new Date(timestamp).getMinutes() +
@@ -90,7 +90,7 @@ const WebhookInfo = (props) => {
         ", " +
         new Date(timestamp).getFullYear();
     } else {
-    date =
+      date =
         new Date(timestamp).getHours() +
         ":" +
         "0" +
@@ -115,71 +115,71 @@ const WebhookInfo = (props) => {
             borderRadius: "10px",
           }}
         >
-            <CardHeader
-                avatar={
-                  <div>
-                    <GitHubIcon/>
-                  </div>
-                }
-                title={
-                    !isMobile ? (
-                      <>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <div style={{ fontSize: 25, fontWeight: "600" }}>
-                            {!webhook.name ? (
-                              <Skeleton width={100} height={50} animation="wave" />
-                            ) : (
-                              <>
-                                {webhook.name}
+          <CardHeader
+            avatar={
+              <div>
+                <GitHubIcon />
+              </div>
+            }
+            title={
+              !isMobile ? (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div style={{ fontSize: 25, fontWeight: "600" }}>
+                      {!webhook.name ? (
+                        <Skeleton width={100} height={50} animation="wave" />
+                      ) : (
+                        <>
+                          {webhook.name}
                                 &nbsp;&nbsp;
                               </>
-                            )}
-                          </div>
-                        </div>
-                      </>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <div style={{ fontSize: 25, fontWeight: "600" }}>
+                    {!webhook.name ? (
+                      <Skeleton width={100} height={50} animation="wave" />
                     ) : (
-                      <div>
-                        <div style={{ fontSize: 25, fontWeight: "600" }}>
-                          {!webhook.name ? (
-                            <Skeleton width={100} height={50} animation="wave" />
-                          ) : (
-                            webhook.name
-                          )}
-                        </div>
-                      </div>
-                    )
-                  }
-            />
-            {!isMobile&&(
-                <div style={WebhookDetailContainer}>
-                    <Typography variant="subtitle1" color="text.secondary" component="div">
-                       <strong> Repository Name : </strong> {webhook.repository_name}
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary" component="div">
-                       <strong> SSH URL : </strong> {webhook.ssh_url}
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary" component="div">
-                       <strong> Branch : </strong> {webhook.branch}
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary" component="div">
-                        <strong> Identifier : </strong> {webhook.identifier}
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary" component="div">
-                        <strong> Path : </strong> {webhook.path}
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary" component="div">
-                        <strong> Created by : </strong> <MemberButton user={webhook.creator} />
-                        • {getDate(webhook.timestamp)}
-                    </Typography>
+                      webhook.name
+                    )}
+                  </div>
                 </div>
-            )}
-            {isMobile && (
+              )
+            }
+          />
+          {!isMobile && (
+            <div style={WebhookDetailContainer}>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                <strong> Repository Name : </strong> {webhook.repository_name}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                <strong> SSH URL : </strong> {webhook.ssh_url}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                <strong> Branch : </strong> {webhook.branch}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                <strong> Identifier : </strong> {webhook.identifier}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                <strong> Path : </strong> {webhook.path}
+              </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                <strong> Created by : </strong> <MemberButton user={webhook.creator} />
+                        • {getDate(webhook.timestamp)}
+              </Typography>
+            </div>
+          )}
+          {isMobile && (
             <div
               style={{
                 display: "flex",
@@ -203,99 +203,98 @@ const WebhookInfo = (props) => {
               </Button>
               {project.members && (
                 <div>
-                    <div style={{ display: "flex" }}>
-                      <EditWebhookWithModal
-                        webhookName={webhook.name}
-                        projectID={props.projectID}
-                        webhookID={webhook.id}
-                        webhookDetails = {webhook}
-                        // fetchData={fetchProjectData}
-                      />
-                      <Button
-                        className="btn-filled-small btn-filled-small-error"
-                        onClick={() => {
-                          props.openAlert(
-                            "delete_webhook",
-                            "Delete Webhook " + webhook.name + "?",
-                            "This webhook will be deleted permanently.",
-                            "Cancel",
-                            "Delete",
-                            webhook.id
-                          );
-                        }}
-                      >
-                        <DeleteOutlineOutlinedIcon color="error" />
-                      </Button>
-                    </div>
-                  
+                  <div style={{ display: "flex" }}>
+                    <EditWebhookWithModal
+                      webhookName={webhook.name}
+                      projectID={props.projectID}
+                      webhookID={webhook.id}
+                      webhookDetails={webhook}
+                    />
+                    <Button
+                      className="btn-filled-small btn-filled-small-error"
+                      onClick={() => {
+                        props.openAlert(
+                          "delete_webhook",
+                          "Delete Webhook " + webhook.name + "?",
+                          "This webhook will be deleted permanently.",
+                          "Cancel",
+                          "Delete",
+                          webhook.id
+                        );
+                      }}
+                    >
+                      <DeleteOutlineOutlinedIcon color="error" />
+                    </Button>
+                  </div>
+
                 </div>
               )}
             </div>
-            )}
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <CardContent>
-                <div className="issue-content">
-                    {isMobile&&(
-                        <div style={WebhookDetailContainer}>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                            <strong> Repository Name : </strong> {webhook.repository_name}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                            <strong> SSH URL : </strong> {webhook.ssh_url}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                            <strong> Branch : </strong> {webhook.branch}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <strong> Identifier : </strong> {webhook.identifier}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <strong> Path : </strong> {webhook.path}
-                            </Typography>
-                            <Typography variant="subtitle1" color="text.secondary" component="div">
-                                <strong> Created by : </strong> <MemberButton user={webhook.creator} />
+          )}
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <div className="issue-content">
+                {isMobile && (
+                  <div style={WebhookDetailContainer}>
+                    <Typography variant="subtitle1" color="text.secondary" component="div">
+                      <strong> Repository Name : </strong> {webhook.repository_name}
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" component="div">
+                      <strong> SSH URL : </strong> {webhook.ssh_url}
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" component="div">
+                      <strong> Branch : </strong> {webhook.branch}
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" component="div">
+                      <strong> Identifier : </strong> {webhook.identifier}
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" component="div">
+                      <strong> Path : </strong> {webhook.path}
+                    </Typography>
+                    <Typography variant="subtitle1" color="text.secondary" component="div">
+                      <strong> Created by : </strong> <MemberButton user={webhook.creator} />
                                 • {getDate(webhook.timestamp)}
-                            </Typography>
-                        </div>
-                    )}
-                   
-                </div>
-                </CardContent>
-            </Collapse>
+                    </Typography>
+                  </div>
+                )}
+
+              </div>
+            </CardContent>
+          </Collapse>
         </div>
-            {!isMobile && (
-            
-            <Card className="project-info-large-actions" variant="outlined">
-                <EditWebhookWithModal
-                  webhookName={webhook.name}
-                  projectID={props.projectID}
-                  webhookID={webhook.id}
-                  large
-                  webhookDetails = {webhook}
-                />
-                <Button
-                    className="btn-filled btn-filled-error"
-                    onClick={() => {
-                      props.openAlert(
-                        "delete_webhook",
-                        "Delete Webhook " + webhook.name + "?",
-                        "This webhook will be deleted permanently.",
-                        "Cancel",
-                        "Delete",
-                        webhook.id
-                      );
-                    }}
-                >
-                    <DeleteOutlineOutlinedIcon
-                      color="error"
-                      style={{ marginRight: "7px" }}
-                    />
+        {!isMobile && (
+
+          <Card className="project-info-large-actions" variant="outlined">
+            <EditWebhookWithModal
+              webhookName={webhook.name}
+              projectID={props.projectID}
+              webhookID={webhook.id}
+              large
+              webhookDetails={webhook}
+            />
+            <Button
+              className="btn-filled btn-filled-error"
+              onClick={() => {
+                props.openAlert(
+                  "delete_webhook",
+                  "Delete Webhook " + webhook.name + "?",
+                  "This webhook will be deleted permanently.",
+                  "Cancel",
+                  "Delete",
+                  webhook.id
+                );
+              }}
+            >
+              <DeleteOutlineOutlinedIcon
+                color="error"
+                style={{ marginRight: "7px" }}
+              />
                     Delete
                 </Button>
-            </Card>
-            )}
+          </Card>
+        )}
       </div>
-      
+
     </Card>
   );
 };

@@ -59,11 +59,11 @@ export default function EditWebhookWithModal(props) {
           >
             <CloseRoundedIcon />
           </Button>
-          Edit Webhook • {props.webhookName} 
+          Edit Webhook • {props.webhookName}
         </DialogTitle>
 
         <DialogContent style={{ padding: "5px 10px" }}>
-           <EditWebhookForm projectID={props.projectID} webhookID={props.webhookID} webhookDetails = {props.webhookDetails}/>
+          <EditWebhookForm projectID={props.projectID} webhookID={props.webhookID} webhookDetails={props.webhookDetails} />
         </DialogContent>
       </Dialog>
     </div>
