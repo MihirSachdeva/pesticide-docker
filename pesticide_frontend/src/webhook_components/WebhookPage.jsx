@@ -86,7 +86,10 @@ const Webhook = (props) => {
           .get(`${api_links.API_ROOT}current_user/`)
           .then((response) => {
             current_user_id = response.data[0].id;
-            (res.data.members.includes(current_user_id) || res.data.creator == current_user_id || response.data[0].is_master) ? ("") : (setError(true))
+            
+            if(!(res.data.members.includes(current_user_id) || res.data.creator == current_user_id || response.data[0].is_master)){
+              setError(true);
+            }
           })
           .catch((err) => console.log(err));
       })
