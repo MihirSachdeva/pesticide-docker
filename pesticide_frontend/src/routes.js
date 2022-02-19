@@ -14,6 +14,7 @@ import UserPage from "./containers/UserPage";
 import Admin from "./containers/Admin";
 import Issue from "./containers/Issue";
 import Page404 from "./containers/404";
+import Webhook from "./webhook_components/WebhookPage";
 
 const BaseRouter = (props) => {
   return (
@@ -28,6 +29,7 @@ const BaseRouter = (props) => {
       <Route exact path="/admin" component={Admin} />
       <Route exact path="/users/:enrollmentNumber" component={UserPage} />
       <Route exact path="/projects/:projectslug" component={ProjectPage} />
+      <Route exact path="/webhooks/:projectID" component={Webhook} />
       <Route
         exact
         path="/projects/:projectslug/issues/:issueId"

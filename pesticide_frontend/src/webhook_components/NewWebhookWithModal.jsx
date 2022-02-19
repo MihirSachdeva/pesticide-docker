@@ -7,13 +7,13 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import Grow from "@material-ui/core/Grow";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import AddToPhotosIcon from "@material-ui/icons/AddToPhotos";
 
-import EditProjectForm from "./EditProjectForm";
+import NewWebhookForm from "./NewWebhookForm";
 
 const isMobile = window.innerWidth < 850;
 
-export default function EditProjectWithModal(props) {
+export default function NewWebhookWithModal(props) {
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -29,13 +29,13 @@ export default function EditProjectWithModal(props) {
   return (
     <div>
       {props.large ? (
-        <Button onClick={handleClickOpen} className="btn-filled-2" >
-          <EditRoundedIcon style={{ marginRight: "5px"}} />
-          Edit
+        <Button onClick={handleClickOpen} className="btn-filled">
+          <AddToPhotosIcon style={{ marginRight: "7px" }} />
+          Add Webhook
         </Button>
       ) : (
         <Button onClick={handleClickOpen} className="btn-filled-small">
-          <EditRoundedIcon />
+          <AddToPhotosIcon />
         </Button>
       )}
 
@@ -59,11 +59,11 @@ export default function EditProjectWithModal(props) {
           >
             <CloseRoundedIcon />
           </Button>
-          Edit Project • {props.projectName}
+          Create New Webhook • {props.projectName}
         </DialogTitle>
 
         <DialogContent style={{ padding: "5px 10px" }}>
-          <EditProjectForm projectID={props.projectID} fetchData={props.fetchData} />
+          <NewWebhookForm projectID={props.projectID} projectName={props.projectName} projectslug={props.projectslug} />
         </DialogContent>
       </Dialog>
     </div>

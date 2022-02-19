@@ -12,6 +12,7 @@ from pesticide_app.models import (
     EmailSubscription,
     Reactor,
     Emoticon,
+    WebhookDetails,
 )
 
 admin.site.register(User)
@@ -25,3 +26,4 @@ admin.site.register(IssueStatus)
 admin.site.register(EmailSubscription)
 admin.site.register(Reactor)
 admin.site.register(Emoticon)
+admin.site.register(WebhookDetails)

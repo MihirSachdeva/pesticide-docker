@@ -30,3 +30,8 @@ class UserLoggedInSerializer(serializers.ModelSerializer):
         model = User
         read_only_fields = ('is_master', )
         fields = ('username', 'id', 'is_master')
+
+class UserEnrollementNoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id','enrollment_number', 'name','display_picture')
