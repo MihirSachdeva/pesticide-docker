@@ -98,7 +98,6 @@ const Webhook = (props) => {
       .get(`${api_links.API_ROOT}webhook_details/${projectID}/`)
       .then((res) => {
         setWebhooks(res.data)
-        fetchCurrentUser();
       })
       .catch((err) => console.log(err));
   }
